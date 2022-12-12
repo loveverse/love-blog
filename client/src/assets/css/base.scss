@@ -1,0 +1,14 @@
+
+// 过渡
+.tranition {
+  .move-enter-active,
+  .move-leave-active {
+    transition: all 0.2s ease;
+  }
+
+  .move-enter-from,
+  .move-leave-to {
+    opacity: 0;
+    // transform: translateY(10px);
+  }
+}

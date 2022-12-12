@@ -1,0 +1,33 @@
+{
+  "name": "vue_music",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
+    "axios": "^1.2.1",
+    "element-plus": "^2.2.26",
+    "vue": "^3.2.41",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.10",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vitejs/plugin-vue": "^3.2.0",
+    "eslint": "^8.29.0",
+    "eslint-plugin-vue": "^9.8.0",
+    "sass": "^1.56.2",
+    "sass-loader": "^13.2.0",
+    "typescript": "^4.9.3",
+    "unplugin-auto-import": "^0.12.0",
+    "unplugin-vue-components": "^0.22.11",
+    "vite": "^3.2.3",
+    "vite-plugin-vue-setup-extend": "^0.4.0"
+  }
+}

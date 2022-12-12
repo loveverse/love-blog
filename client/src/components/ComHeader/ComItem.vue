@@ -12,7 +12,6 @@
   </template>
 </template>
 <script setup lang="ts" name="ComItem">
-import { ElMenuItem, ElSubMenu } from "element-plus";
 // 传递给defineProps的泛型参数本身不能是一个导入的类型，因为vue组件时单独编译的
 interface IProps {
   menuItem: {

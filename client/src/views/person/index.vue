@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" ref="contentRef">
     <ul class="out" :class="state.flag && 'outPad'">
       <li class="card" v-for="item in state.findData" :key="item.id">
         <div class="artcle">
@@ -88,6 +88,7 @@ const state = reactive<IState>({
   compare: "",
   flag: false,
 });
+const contentRef = ref<any>(null);
 onMounted(() => {
   getFindExcerptData();
   scrollBottom();
@@ -148,7 +149,8 @@ const del = async (id: number) => {
 };
 const scrollBottom = () => {
   nextTick(() => {
-    window.scrollTo(0, document.body.scrollHeight);
+    // 滚动到底部
+    contentRef.value.scrollIntoView(false);
   });
 };
 </script>

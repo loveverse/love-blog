@@ -1,33 +1,19 @@
-const Koa = require("koa");
-const http = require("http");
-const WebSocket = require("ws");
-const cors = require("koa2-cors");
 const router = require("koa-router")();
 const DB = require("../mysql/index");
 
-// 创建一个Koa对象
-const app = new Koa();
-const server = http.createServer(app.callback());
-const wss = new WebSocket.Server({ server }); // 同一端口监听不同的服务
+const response = require("../utils/resData");
 
-// const path = require('path')
-// const staticFiles = require('koa-static')
-// app.use(staticFiles(path.join(__dirname + '/dist/')))
-
-wss.on("connection", function connection(ws) {
-  ws.on("message", async function incoming(message) {
-    // 消息id
-    let messageIndex = 0;
-    const result = await DB.query(findExcerptSql);
-    wss.clients.forEach((client) => {
-      messageIndex++;
-      client.send(JSON.stringify(result));
-    });
-  });
-});
-// 处理跨域
-app.use(cors());
-app.use(router.routes());
+// wss.on("connection", function connection(ws) {
+//   ws.on("message", async function incoming(message) {
+//     // 消息id
+//     let messageIndex = 0;
+//     const result = await DB.query(findExcerptSql);
+//     wss.clients.forEach((client) => {
+//       messageIndex++;
+//       client.send(JSON.stringify(result));
+//     });
+//   });
+// });
 
 // 网易热评的接口----------------------------------------------------------------
 const findSql = "select * from hot";
@@ -69,11 +55,16 @@ const delExcerptSql = "delete from excerpt where id = ?";
 
 router.get("/findExcerpt", async (ctx, next) => {
   console.log(ctx);
-  ctx.body = await DB.query(findExcerptSql);
+  try {
+    ctx.body = response.SUCESS_RES.getCode(await DB.query(findExcerptSql));
+  } catch (error) {
+    console.log(error);
+    // ctx.body = resData.fail(500, "查询失败");
+  }
 });
 
 router.get("/addExcerpt", async (ctx, next) => {
-  const { content, author, flag, date } = JSON.parse(ctx.request.query.params);
+  const { content, author, flag, date } = ctx.request.query;
   const addExcerptSqlParams = [content, author, flag, date];
   ctx.body = await DB.query(addExcerptSql, addExcerptSqlParams);
 });
@@ -89,5 +80,4 @@ router.get("/delExcerpt", async (ctx, next) => {
   ctx.body = await DB.query(findExcerptSql);
 });
 
-server.listen(40001);
-console.log("服务器地址:http://localhost/findExcerpt");
+module.exports = router;

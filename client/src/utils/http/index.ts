@@ -1,11 +1,12 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { showMessage } from "./status";
+import { domain } from "@/config/index";
 // 进行类型覆盖
 interface RequestConfig extends AxiosRequestConfig {
   headers?: any;
 }
 const http: AxiosInstance = axios.create({
-  baseURL: "/",
+  baseURL: domain,
   timeout: 50000, // 超时时间
   withCredentials: false, // 表示跨域请求时是否需要使用凭证
 });

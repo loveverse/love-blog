@@ -8,7 +8,7 @@ interface RequestConfig extends AxiosRequestConfig {
 const http: AxiosInstance = axios.create({
   baseURL: domain,
   timeout: 50000, // 超时时间
-  withCredentials: false, // 表示跨域请求时是否需要使用凭证
+  // withCredentials: false, // 表示跨域请求时是否需要使用凭证
 });
 
 http.interceptors.request.use((config: RequestConfig) => {
@@ -77,7 +77,7 @@ export function post(url: string, data = {}, config = {}, type = "POST") {
       // 处理网络问题失败的请求，且不会继续向下执行
       .catch((error: any) => {
         // 错误会从上面传递下来
-        // Message.error(error);
+        ElMessage.error(error);
       });
   });
 }
@@ -101,10 +101,14 @@ export function get(url: string, config = {}, type = "GET") {
         break;
     }
     promise
-      .then((result: AxiosResponse) => resolve(result.data))
+      .then((result: AxiosResponse) => {
+        console.log(result);
+
+        resolve(result.data);
+      })
       // 处理失败的请求
       .catch((error: any) => {
-        // Message.error(error);
+        ElMessage.error(error);
       });
   });
 }

@@ -125,6 +125,7 @@ const addExcerptData = async () => {
     await reqAddExcerptData(params);
     ElMessage.success("内容发布成功！");
     state.text = "";
+    state.author = "";
   }
 };
 // 编辑模式

@@ -28,6 +28,10 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/:path(.*)*",
+    component: () => import("@/views/404.vue"),
+  },
 ];
 const router = createRouter({
   history: createWebHashHistory(),

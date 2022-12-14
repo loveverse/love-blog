@@ -70,6 +70,7 @@ import {
   reqDelExcerptData,
 } from "@/api/person";
 import { formatterTime } from "@/utils/common";
+import { Message } from "@element-plus/icons-vue";
 
 interface IState {
   findData: any[];
@@ -108,7 +109,11 @@ watch(
 );
 const getFindExcerptData = async () => {
   const result = await reqFindExcerptData();
-  state.findData = result;
+  if (result.code === 200) {
+    state.findData = result.data;
+  } else {
+    Message.error(result.msg);
+  }
 };
 // 添加数据
 const addExcerptData = async () => {

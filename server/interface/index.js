@@ -54,30 +54,44 @@ const updateExcerptSql = "update excerpt set content = ? where id = ?";
 const delExcerptSql = "delete from excerpt where id = ?";
 
 router.get("/findExcerpt", async (ctx, next) => {
-  console.log(ctx);
   try {
     ctx.body = response.SUCESS_RES.getCode(await DB.query(findExcerptSql));
   } catch (error) {
     console.log(error);
-    // ctx.body = resData.fail(500, "查询失败");
+    ctx.body = response.ERROR_RES.getCode(null);
   }
 });
 
 router.get("/addExcerpt", async (ctx, next) => {
-  const { content, author, flag, date } = ctx.request.query;
-  const addExcerptSqlParams = [content, author, flag, date];
-  ctx.body = await DB.query(addExcerptSql, addExcerptSqlParams);
+  try {
+    const { content, author, flag, date } = ctx.request.query;
+    const addExcerptSqlParams = [content, author, flag, date];
+    ctx.body = await DB.query(addExcerptSql, addExcerptSqlParams);
+  } catch (error) {
+    console.log(error);
+    ctx.body = response.ERROR_RES.getCode(null);
+  }
 });
 
 router.get("/updateExcerpt", async (ctx, next) => {
-  const { id, content } = ctx.request.query;
-  const updateExcerptSqlParams = [content, id];
-  await DB.query(updateExcerptSql, updateExcerptSqlParams);
-  ctx.body = await DB.query(findExcerptSql);
+  try {
+    const { id, content } = ctx.request.query;
+    const updateExcerptSqlParams = [content, id];
+    await DB.query(updateExcerptSql, updateExcerptSqlParams);
+    ctx.body = await DB.query(findExcerptSql);
+  } catch (error) {
+    console.log(error);
+    ctx.body = response.ERROR_RES.getCode(null);
+  }
 });
 router.get("/delExcerpt", async (ctx, next) => {
-  await DB.query(delExcerptSql, ctx.request.query.id);
-  ctx.body = await DB.query(findExcerptSql);
+  try {
+    await DB.query(delExcerptSql, ctx.request.query.id);
+    ctx.body = await DB.query(findExcerptSql);
+  } catch (error) {
+    console.log(error);
+    ctx.body = response.ERROR_RES.getCode(null);
+  }
 });
 
 module.exports = router;

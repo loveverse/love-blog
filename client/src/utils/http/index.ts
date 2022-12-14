@@ -5,6 +5,11 @@ import { domain } from "@/config/index";
 interface RequestConfig extends AxiosRequestConfig {
   headers?: any;
 }
+interface IResponse<T = any> {
+  code: number | string;
+  data?: T;
+  msg: string;
+}
 const http: AxiosInstance = axios.create({
   baseURL: domain,
   timeout: 50000, // 超时时间
@@ -30,7 +35,12 @@ http.interceptors.response.use(
   }
 );
 
-export function post(url: string, data = {}, config = {}, type = "POST") {
+export function post<T = any>(
+  url: string,
+  data: object = {},
+  config: AxiosRequestConfig = {},
+  type: string = "POST"
+): Promise<T> {
   //是否进入我教的课班级详情
 
   //判断类型是否要转
@@ -72,7 +82,8 @@ export function post(url: string, data = {}, config = {}, type = "POST") {
     }
     promiseData
       .then((result: AxiosResponse) => {
-        resolve(result.data);
+        const data: IResponse = result.data;
+        resolve(data as T);
       })
       // 处理网络问题失败的请求，且不会继续向下执行
       .catch((error: any) => {
@@ -81,7 +92,12 @@ export function post(url: string, data = {}, config = {}, type = "POST") {
       });
   });
 }
-export function get(url: string, config = {}, type = "GET") {
+// 返回一个promise类型
+export function get<T = any>(
+  url: string,
+  config: AxiosRequestConfig = {},
+  type: string = "GET"
+): Promise<T> {
   let promise: Promise<AxiosResponse<any, any>>;
   return new Promise((resolve) => {
     switch (type) {
@@ -102,9 +118,9 @@ export function get(url: string, config = {}, type = "GET") {
     }
     promise
       .then((result: AxiosResponse) => {
-        console.log(result);
-
-        resolve(result.data);
+        // const { data } = result;
+        const data: IResponse = result.data;
+        resolve(data as T);
       })
       // 处理失败的请求
       .catch((error: any) => {

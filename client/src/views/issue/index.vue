@@ -14,6 +14,7 @@ interface IState {
 const state = reactive<IState>({
   issueList: [
     {
+      id: new Date,
       content: "aa",
       link: "",
     },

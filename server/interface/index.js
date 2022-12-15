@@ -35,6 +35,7 @@ router.get("/wy/find", async (ctx, next) => {
 router.get("/wy/pageQuery", async (ctx, next) => {
   try {
     const { limit, page } = ctx.request.query;
+    console.log(limit,page);
     /* 
     第一页：0，10（0，10）
     第二页：10，20（10，10）
@@ -50,6 +51,7 @@ router.get("/wy/pageQuery", async (ctx, next) => {
     // })
     ctx.body = SUCESS_RES.getCode({ total: total.length, list });
   } catch (error) {
+    console.log(error);
     ctx.body = ERROR_RES.getCode(null);
   }
 });

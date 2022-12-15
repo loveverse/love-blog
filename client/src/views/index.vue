@@ -11,6 +11,7 @@
         </transition>
       </router-view>
     </el-main>
+    <!-- <ComFooter /> -->
   </el-container>
 </template>
 
@@ -22,5 +23,9 @@
   .el-main {
     padding: 0;
   }
+  // .el-footer {
+  //   padding: 0;
+  //   background-color: antiquewhite;
+  // }
 }
 </style>

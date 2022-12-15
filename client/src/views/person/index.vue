@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" ref="contentRef">
+  <div class="wrapper" ref="contentRef" v-loading="loading">
     <ul class="out" :class="state.flag && 'outPad'">
       <li class="card" v-for="item in state.findData" :key="item.id">
         <div class="artcle">
@@ -57,9 +57,7 @@
     <el-backtop :bottom="100">
       <div class="backtop"></div>
     </el-backtop>
-    <div class="records">
-      <a href="https://beian.miit.gov.cn">备案号：鄂ICP备2021020610号</a>
-    </div>
+    
   </div>
 </template>
 <script setup lang="ts" name="person">
@@ -88,6 +86,7 @@ const state = reactive<IState>({
   compare: "",
   flag: false,
 });
+const loading = ref(true);
 const contentRef = ref<any>(null);
 onMounted(() => {
   getFindExcerptData();
@@ -107,19 +106,17 @@ watch(
   }
 );
 const getFindExcerptData = async () => {
-  try {
-    const result = await reqFindExcerptData();
-    if (result.code === 200) {
-      state.findData = result.data.map((item: any) => {
-        item.date = formatterTime(item.date);
-        return item;
-      });
-    } else {
-      ElMessage.error(result.msg);
-    }
-  } catch (error) {
-    console.log(error);
+  loading.value = true;
+  const result = await reqFindExcerptData();
+  if (result.code === 200) {
+    state.findData = result.data.map((item: any) => {
+      item.date = formatterTime(item.date);
+      return item;
+    });
+  } else {
+    ElMessage.error(result.msg);
   }
+  loading.value = false;
 };
 // 添加数据
 const addExcerptData = async () => {
@@ -182,72 +179,6 @@ const scrollBottom = () => {
 };
 </script>
 <style lang="scss" scoped>
-// .out {
-//   background: #efeeee;
-//   padding: 30px;
-//   .card {
-//     position: relative;
-//     // border: 1px solid #454;
-
-//     &:last-child {
-//       margin-bottom: 0;
-//     }
-//     .artcle {
-//       margin: 0 auto 30px;
-//       padding: 10px;
-//       word-wrap: break-word;
-//       border-radius: 15px;
-//       box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.2),
-//         -18px -18px 30px rgba(255, 255, 255, 1);
-//       /* 过渡时间 ease-out是指先快速 后慢速 */
-//       transition: all 0.2s ease-out;
-//       // box-shadow: 5px 5px 10px #868b8d,
-//       //       -5px -5px 10px #ffffff;
-//       &:hover {
-//         /* inset 是内部阴影 默认是外部阴影outset */
-//         box-shadow: 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 rgba(255, 255, 255, 0.8),
-//           inset 18px 18px 30px rgba(0, 0, 0, 0.1),
-//           inset -18px -18px 30px rgba(255, 255, 255, 1);
-//         // box-shadow: inset 5px 5px 10px #868b8d,
-//         //     inset -5px -5px 10px #ffffff;
-//       }
-//       .title {
-//         font-size: 20px;
-//         color: #66b1ff;
-//         text-align: center;
-//         font-weight: 600;
-//         padding-bottom: 13px;
-//         // margin-bottom: 10px;
-//       }
-//       .songName {
-//         text-align: right;
-//       }
-//     }
-
-//     // a{
-//     //   display: block;
-//     // }
-
-//     .del {
-//       position: absolute;
-//       right: -70px;
-//       top: 50%;
-//       transform: translateY(-50%);
-//     }
-//   }
-// }
-// .outPad {
-//   padding-right: 100px;
-// }
-// .iptText {
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: center;
-//   margin: 30px auto;
-//   .el-textarea {
-//     margin-bottom: 20px !important;
-//   }
-// }
 .wrapper {
   padding: 20px;
   box-sizing: border-box;

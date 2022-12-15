@@ -8,6 +8,7 @@ import router from "@/router";
 
 // 弹窗不显示，需要手动引入样式,参考：https://github.com/element-plus/element-plus/issues/5108（官方文档也有说明）
 import "element-plus/es/components/message/style/css";
+import "element-plus/es/components/notification/style/css";
 
 const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

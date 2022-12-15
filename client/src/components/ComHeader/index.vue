@@ -36,6 +36,20 @@ const state = reactive<IState>({
       path: "/home/hotword",
       title: "网易热评",
       permiss: "1",
+      children: [],
+    },
+    {
+      icon: "",
+      path: "/home/issue",
+      title: "学习问题",
+      permiss: "1",
+      children: [],
+    },
+    {
+      icon: "",
+      path: "/aaa",
+      title: "未来目录",
+      permiss: "1",
       children: [
         {
           icon: "",
@@ -60,13 +74,6 @@ const state = reactive<IState>({
           children: [],
         },
       ],
-    },
-    {
-      icon: "",
-      path: "/home/issue",
-      title: "学习问题",
-      permiss: "1",
-      children: [],
     },
   ],
 });

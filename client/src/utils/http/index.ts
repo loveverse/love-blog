@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { showMessage } from "./status";
 import { domain } from "@/config/index";
+
 // 进行类型覆盖
 interface RequestConfig extends AxiosRequestConfig {
   headers?: any;
@@ -17,6 +18,7 @@ const http: AxiosInstance = axios.create({
 });
 
 http.interceptors.request.use((config: RequestConfig) => {
+  // 暂时没保存token
   if (localStorage.getItem("token")) {
     config.headers["LOVE-TOKEN"] = localStorage.getItem("token");
   }
@@ -26,12 +28,13 @@ http.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error: any) => {
+  (error) => {
     // 错误响应信息
     if (error && error.response) {
       return Promise.reject(showMessage(error.response.status));
     }
     return Promise.reject(showMessage(""));
+    
   }
 );
 
@@ -86,7 +89,8 @@ export function post<T = any>(
         resolve(data as T);
       })
       // 处理网络问题失败的请求，且不会继续向下执行
-      .catch((error: any) => {
+      .catch((error) => {
+        
         // 错误会从上面传递下来
         ElMessage.error(error);
       });
@@ -119,11 +123,13 @@ export function get<T = any>(
     promise
       .then((result: AxiosResponse) => {
         // const { data } = result;
+        // 服务器错误会返回
         const data: IResponse = result.data;
         resolve(data as T);
       })
       // 处理失败的请求
-      .catch((error: any) => {
+      .catch((error) => {
+        // 自己接口api写错会执行
         ElMessage.error(error);
       });
   });

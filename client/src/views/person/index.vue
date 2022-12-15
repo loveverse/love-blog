@@ -70,7 +70,6 @@ import {
   reqDelExcerptData,
 } from "@/api/person";
 import { formatterTime } from "@/utils/common";
-import { Message } from "@element-plus/icons-vue";
 
 interface IState {
   findData: any[];
@@ -108,11 +107,18 @@ watch(
   }
 );
 const getFindExcerptData = async () => {
-  const result = await reqFindExcerptData();
-  if (result.code === 200) {
-    state.findData = result.data;
-  } else {
-    Message.error(result.msg);
+  try {
+    const result = await reqFindExcerptData();
+    if (result.code === 200) {
+      state.findData = result.data.map((item: any) => {
+        item.date = formatterTime(item.date);
+        return item;
+      });
+    } else {
+      ElMessage.error(result.msg);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 // 添加数据
@@ -121,17 +127,20 @@ const addExcerptData = async () => {
     ElMessage.warning("输入的内容不能为空！");
     state.text = "";
   } else {
-    let dateData = formatterTime(new Date());
     const params = {
       content: state.text.trim(),
       author: state.author,
       flag: 1,
-      date: dateData,
+      date: new Date(),
     };
-    await reqAddExcerptData(params);
-    ElMessage.success("内容发布成功！");
-    state.text = "";
-    state.author = "";
+    const result = await reqAddExcerptData(params);
+    if (result.code === 200) {
+      ElMessage.success("内容发布成功！");
+      state.text = "";
+      state.author = "";
+    } else {
+      ElMessage.error(result.msg);
+    }
   }
 };
 // 编辑模式
@@ -144,13 +153,26 @@ const edit = (e: MouseEvent | any, content: string) => {
 const update = async (id: number, content: string) => {
   state.aId = 0;
   if (state.compare !== content) {
-    await reqUpdateExcerptData(id, content);
-    ElMessage.success("内容修改成功！");
+    const params = {
+      id,
+      content,
+    };
+    const result = await reqUpdateExcerptData(params);
+    if (result.code === 200) {
+      ElMessage.success("内容修改成功！");
+    } else {
+      ElMessage.error(result.msg);
+    }
   }
 };
 const del = async (id: number) => {
-  await reqDelExcerptData(id);
-  ElMessage.success("内容删除成功！");
+  const params = { id };
+  const result = await reqDelExcerptData(params);
+  if (result.code === 200) {
+    ElMessage.success("内容删除成功！");
+  } else {
+    ElMessage.error(result.msg);
+  }
 };
 const scrollBottom = () => {
   nextTick(() => {

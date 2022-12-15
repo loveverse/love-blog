@@ -7,9 +7,23 @@ import { get } from "@/utils/http/index";
 // export const reqPageFindData = (limit, page) => get('/wy/pageQuery', {limit,page})
 
 // 书摘API---------------------------------------
+interface IUpdExcerpt {
+  id: number;
+  content: string;
+}
+interface IDelExcerpt {
+  id: number;
+}
+interface IAddExcerpt {
+  content: string;
+  author: string;
+  flag: number;
+  date: Date;
+}
 export const reqFindExcerptData = () => get("/findExcerpt");
-export const reqAddExcerptData = (params: any) =>
+export const reqAddExcerptData = (params: IAddExcerpt) =>
   get("/addExcerpt", { params });
-export const reqUpdateExcerptData = (id: any, content: any) =>
-  get("/updateExcerpt", { id, content });
-export const reqDelExcerptData = (id: any) => get("/delExcerpt", { id });
+export const reqUpdateExcerptData = (params: IUpdExcerpt) =>
+  get("/updateExcerpt", { params });
+export const reqDelExcerptData = (params: IDelExcerpt) =>
+  get("/delExcerpt", { params });

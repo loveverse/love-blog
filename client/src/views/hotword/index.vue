@@ -88,9 +88,6 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .hotword {
-  // max-width: 1200px;
-  padding: 20px;
-  box-sizing: border-box;
   .out {
     // background: #efeeee;;
     .card {

@@ -1,13 +1,17 @@
 const Koa = require("koa");
 const http = require("http");
 const cors = require("koa2-cors");
+const bodyParser = require('koa-bodyparser')
 // const WebSocket = require("ws");
-const router = require("./interface/index");
+const router = require("./controllers/index");
 
 // 创建一个Koa对象
 const app = new Koa();
 const server = http.createServer(app.callback());
 // const wss = new WebSocket.Server({ server }); // 同一端口监听不同的服务
+
+// 解析请求体
+app.use(bodyParser());
 // 处理跨域
 app.use(cors());
 app.use(router.routes());

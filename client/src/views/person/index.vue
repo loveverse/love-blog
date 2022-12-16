@@ -179,10 +179,6 @@ const scrollBottom = () => {
 };
 </script>
 <style lang="scss" scoped>
-.wrapper {
-  padding: 20px;
-  box-sizing: border-box;
-}
 .out {
   .card {
     position: relative;

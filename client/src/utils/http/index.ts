@@ -34,7 +34,6 @@ http.interceptors.response.use(
       return Promise.reject(showMessage(error.response.status));
     }
     return Promise.reject(showMessage(""));
-    
   }
 );
 
@@ -90,7 +89,6 @@ export function post<T = any>(
       })
       // 处理网络问题失败的请求，且不会继续向下执行
       .catch((error) => {
-        
         // 错误会从上面传递下来
         ElMessage.error(error);
       });
@@ -99,6 +97,7 @@ export function post<T = any>(
 // 返回一个promise类型
 export function get<T = any>(
   url: string,
+  data: object = {},
   config: AxiosRequestConfig = {},
   type: string = "GET"
 ): Promise<T> {
@@ -106,16 +105,16 @@ export function get<T = any>(
   return new Promise((resolve) => {
     switch (type) {
       case "GET":
-        promise = http.get(url, config);
+        promise = http.get(url, { params: data, ...config });
         break;
       case "DELETE":
         promise = http.delete(url, config);
         break;
       case "HEAD":
-        promise = http.head(url, config);
+        promise = http.head(url, { params: data, ...config });
         break;
       case "OPTIONS":
-        promise = http.options(url, config);
+        promise = http.options(url, { params: data, ...config });
         break;
       default:
         break;

@@ -9,4 +9,4 @@ interface IPageFind {
 export const reqFindData = () => get("/wy/find");
 // 分页查询
 export const reqPageFindData = (params: IPageFind) =>
-  get("/wy/pageQuery", { params });
+  get("/wy/pageQuery", params);

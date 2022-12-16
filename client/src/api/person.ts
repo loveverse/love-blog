@@ -22,8 +22,8 @@ interface IAddExcerpt {
 }
 export const reqFindExcerptData = () => get("/findExcerpt");
 export const reqAddExcerptData = (params: IAddExcerpt) =>
-  get("/addExcerpt", { params });
+  get("/addExcerpt", params);
 export const reqUpdateExcerptData = (params: IUpdExcerpt) =>
-  get("/updateExcerpt", { params });
+  get("/updateExcerpt", params);
 export const reqDelExcerptData = (params: IDelExcerpt) =>
-  get("/delExcerpt", { params });
+  get("/delExcerpt", params);

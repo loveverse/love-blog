@@ -143,4 +143,8 @@ router.post("/addIssue", async (ctx, next) => {
   }
 });
 
+router.post("/file/upload", async (ctx, next) => {
+  
+});
+
 module.exports = router;

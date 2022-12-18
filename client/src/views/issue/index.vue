@@ -23,7 +23,17 @@
         </template>
       </el-table-column>
       <el-table-column prop="content" label="问题图片" width="auto">
-        <template v-slot="{ row }"> </template>
+        <template v-slot="{ row }">
+          <el-upload
+            v-model:file-list="row.fileList"
+            class="upload-demo"
+            action="#"
+            :auto-upload="false"
+            :on-change="handleChange"
+          >
+            <el-button type="primary">上传</el-button>
+          </el-upload>
+        </template>
       </el-table-column>
 
       <el-table-column label="操作" width="200">
@@ -38,12 +48,16 @@
 </template>
 <script setup lang="ts" name="issue">
 import { reqIssueList, reqAddIssue } from "@/api/issue";
+import { reqUpload } from "@/api/common";
+import type { UploadUserFile, UploadProps } from "element-plus";
 interface IState {
   issueList: object[];
 }
+
 const state = reactive<IState>({
   issueList: [],
 });
+
 const loading = ref(true);
 const getIssueList = async () => {
   loading.value = true;
@@ -72,6 +86,20 @@ const handleSaveIssue = async (row: any) => {
   if (result.code === 200) {
     ElMessage.success("保存成功");
     getIssueList();
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
+const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
+  console.log("[ uploadFile ] >", uploadFile);
+  handleUpload(uploadFile.raw);
+};
+const handleUpload = async (file: any) => {
+  const params = new FormData();
+  params.append("file", file);
+  const result = await reqUpload(params);
+  if (result.code === 200) {
+    ElMessage.success("上传成功");
   } else {
     ElMessage.error(result.msg);
   }

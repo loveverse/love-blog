@@ -1,9 +1,9 @@
 const Koa = require("koa");
 const http = require("http");
 const cors = require("koa2-cors");
-const bodyParser = require('koa-bodyparser')
+const bodyParser = require("koa-bodyparser");
 // const WebSocket = require("ws");
-const router = require("./controllers/index");
+const router = require("./router/index");
 
 // 创建一个Koa对象
 const app = new Koa();

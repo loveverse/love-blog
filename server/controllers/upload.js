@@ -4,7 +4,7 @@ const { SUCESS_RES, ERROR_UPLOAD } = require("../utils/resData");
 
 function uploadFile(req, res) {
   try {
-    console.log(req.files, res, 111);
+    console.log(req, res, 111);
     // fs.readFile(req.file.path, (err, data) => {
     if (err) {
       res.send(ERROR_UPLOAD.getCode(null));

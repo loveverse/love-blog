@@ -4,7 +4,7 @@ const { SUCESS_RES, ERROR_RES } = require("../utils/resData");
 // 问题接口
 const findIssuetSql = "select * from issue";
 const addIssueSql =
-  "insert into issue(title,link,status,fileId,fileName,fileUrl) values(?,?,?,?,?,?)";
+  "insert into issue(title,link,status,file_id,file_name,file_url) values(?,?,?,?,?,?)";
 // const updateIssueSql = "update issue set content = ? where id = ?";
 const delIssueSql = "delete from issue where id = ?";
 
@@ -28,8 +28,8 @@ async function addIssue(ctx, next) {
         name: "",
       };
     }
-    const { id: fileId, url: fileUrl, name: fileName } = file;
-    const params = [title, link, status, fileId, fileName, fileUrl];
+    const { id: file_id, url: file_url, name: file_name } = file;
+    const params = [title, link, status, file_id, file_name, file_url];
     console.log(params);
     ctx.body = SUCESS_RES.getCode(await DB.query(addIssueSql, params));
   } catch (error) {

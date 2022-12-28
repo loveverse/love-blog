@@ -1,21 +1,14 @@
-const DB = require("../mysql/index");
-
+// const DB = require("../mysql/index");
+const Mperson = require("../model/person");
 const { SUCESS_RES, ERROR_RES } = require("../utils/resData");
 
 // 书摘的接口----------------------------------------------------------------
-const findExcerptSql = "select * from excerpt";
-const addExcerptSql =
-  "insert into excerpt(content, author, flag,date) values(?,?,?,?)";
-const updateExcerptSql = "update excerpt set content = ? where id = ?";
-const delExcerptSql = "delete from excerpt where id = ?";
 // 构造函数写法
 function Person() {}
 // 资源共享，节约内存
 Person.prototype.findExcerpt = async function (ctx, next) {
   try {
-    // const clientIp = getIp(ctx)
-    // console.log(ctx.request.ip);
-    ctx.body = SUCESS_RES.getCode(await DB.query(findExcerptSql));
+    ctx.body = SUCESS_RES.getCode(await Mperson.findAll());
   } catch (error) {
     console.log(error);
     ctx.body = ERROR_RES.getCode(null);
@@ -24,9 +17,8 @@ Person.prototype.findExcerpt = async function (ctx, next) {
 Person.prototype.addExcerpt = async function (ctx, next) {
   try {
     const { content, author, flag, date } = ctx.request.query;
-    const addExcerptSqlParams = [content, author, flag, date];
     ctx.body = SUCESS_RES.getCode(
-      await DB.query(addExcerptSql, addExcerptSqlParams)
+      await Mperson.create({ content, author, flag, date })
     );
   } catch (error) {
     console.log(error);
@@ -36,9 +28,16 @@ Person.prototype.addExcerpt = async function (ctx, next) {
 Person.prototype.updateExcerpt = async function (ctx, next) {
   try {
     const { id, content } = ctx.request.query;
-    const updateExcerptSqlParams = [content, id];
-    await DB.query(updateExcerptSql, updateExcerptSqlParams);
-    ctx.body = SUCESS_RES.getCode(await DB.query(findExcerptSql));
+    ctx.body = SUCESS_RES.getCode(
+      await Mperson.update(
+        { content: content },
+        {
+          where: {
+            id: id,
+          },
+        }
+      )
+    );
   } catch (error) {
     console.log(error);
     ctx.body = ERROR_RES.getCode(null);
@@ -46,8 +45,13 @@ Person.prototype.updateExcerpt = async function (ctx, next) {
 };
 Person.prototype.delExcerpt = async function (ctx, next) {
   try {
-    await DB.query(delExcerptSql, ctx.request.query.id);
-    ctx.body = SUCESS_RES.getCode(await DB.query(findExcerptSql));
+    ctx.body = SUCESS_RES.getCode(
+      await Mperson.destroy({
+        where: {
+          id: ctx.request.query.id,
+        },
+      })
+    );
   } catch (error) {
     console.log(error);
     ctx.body = ERROR_RES.getCode(null);

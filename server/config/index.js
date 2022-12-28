@@ -1,5 +1,5 @@
 // 上线时只需要需改pathBase即可
-const pathBase = "env";
+const pathBase = "pro";
 let APP_PORT, APP_HOST, DATA_BASE, USERNAME, PASSWORD;
 if (pathBase === "env") {
   APP_PORT = 40001;

@@ -1,10 +1,10 @@
-let basePath = "dev";
 let domain: string;
-if (basePath === "dev") {
+console.log("[ import. ] >", import.meta.env.DEV);
+if (import.meta.env.DEV) {
   domain = "http://localhost:40001";
 } else {
   // 线上环境
-  domain = "http://1.15.42.9:40001";
+  domain = "https://api.loveverse.top";
 }
 
 export { domain };

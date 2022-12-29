@@ -9,10 +9,19 @@ class User {
     try {
       const { userName: user_name, password } = ctx.request.body;
       if (!user_name || !password) {
-        response.verifyMsg("用户名或密码为空");
+        ctx.body = response.verifyMsg("用户名或密码不能为空");
         return;
       }
-
+      // 判断用户是否存在
+      const isExist = await Muser.findOne({
+        where: {
+          user_name: user_name,
+        },
+      });
+      if (isExist) {
+        ctx.body = response.verifyMsg("用户已经存在");
+        return;
+      }
       ctx.body = response.SUCESS_RES.getCode(
         await Muser.create({ user_name, password })
       );

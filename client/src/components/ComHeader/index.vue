@@ -150,6 +150,8 @@ const handleRegister = (formEl: FormInstance | undefined) => {
       if (result.code === 200) {
         ElMessage.success("注册成功");
         state.registerDiaVis = false;
+      } else {
+        ElMessage.error(result.msg);
       }
     } else {
       return false;

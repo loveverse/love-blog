@@ -13,7 +13,7 @@
       :current-page="state.currentPage"
       :page-size="10"
       :pager-count="5"
-      layout="prev, pager, next, total"
+      layout="->,prev, pager, next, total"
       :total="state.total"
     >
     </el-pagination>

@@ -1,6 +1,7 @@
 const hotword = require("./hotword");
 const issue = require("./issue");
 const person = require("./person");
+const user = require("./user");
 const upload = require('./upload');
 // wss.on("connection", function connection(ws) {
 //   ws.on("message", async function incoming(message) {
@@ -17,5 +18,6 @@ module.exports = {
   hotword,
   issue,
   person,
+  user,
   upload
 };

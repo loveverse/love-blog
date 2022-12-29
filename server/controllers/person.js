@@ -1,4 +1,3 @@
-// const DB = require("../mysql/index");
 const Mperson = require("../model/person");
 const { SUCESS_RES, ERROR_RES } = require("../utils/resData");
 

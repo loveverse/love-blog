@@ -35,7 +35,7 @@ const Mperson = seq.define(
   }
 );
 
-seq.sync();
+// seq.sync();
 // 强制同步数据库
 // seq.sync({ force: true });
 

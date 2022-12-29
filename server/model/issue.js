@@ -35,7 +35,7 @@ const Missue = seq.define(
       unique: false,
       comment: "文件名",
     },
-    file_name: {
+    file_url: {
       type: DataTypes.CHAR(255),
       allowNull: true,
       unique: false,
@@ -47,7 +47,7 @@ const Missue = seq.define(
     freezeTableName: true,
   }
 );
-seq.sync();
+// seq.sync();
 // 强制同步数据库
 // seq.sync({ force: true });
 

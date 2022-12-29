@@ -1,5 +1,11 @@
 const router = require("koa-router")();
-const { hotword, person, issue, upload } = require("../controllers/index");
+const {
+  hotword,
+  person,
+  issue,
+  upload,
+  user,
+} = require("../controllers/index");
 
 // 上传图片的模板
 const multer = require("multer");
@@ -18,4 +24,5 @@ router.get("/delExcerpt", person.delExcerpt);
 router.post("/findIssue", issue.findIssue);
 router.post("/addIssue", issue.addIssue);
 
+router.post("/register/user", user.register);
 module.exports = router;

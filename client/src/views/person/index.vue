@@ -57,7 +57,6 @@
     <el-backtop :bottom="100">
       <div class="backtop"></div>
     </el-backtop>
-    
   </div>
 </template>
 <script setup lang="ts" name="person">
@@ -68,6 +67,7 @@ import {
   reqDelExcerptData,
 } from "@/api/person";
 import { formatterTime } from "@/utils/common";
+import Ws from "@/utils/websocket";
 
 interface IState {
   findData: any[];
@@ -89,6 +89,7 @@ const state = reactive<IState>({
 const loading = ref(true);
 const contentRef = ref<any>(null);
 onMounted(() => {
+  Ws.initWebsocket();
   getFindExcerptData();
   scrollBottom();
 });

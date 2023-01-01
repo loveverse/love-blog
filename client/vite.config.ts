@@ -10,6 +10,11 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host: "0.0.0.0",
+    open: true,
+    post: 40001,
+  },
   plugins: [
     vue(),
     VueSetupExtend(),
@@ -21,9 +26,6 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  server: {
-    host: "0.0.0.0"
-  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),

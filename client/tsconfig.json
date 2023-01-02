@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    // esnext仅仅校验转换TypeScript类型，不进行语法编译
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "strict": true,
+    "strict": true, // 严格模式
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
@@ -19,6 +20,7 @@
     // "strictNullChecks": true, //不允许使用null
     "noImplicitThis": true //不允许往this上面挂属性
   },
+  // 配置需要校验的文件
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",

@@ -4,25 +4,40 @@ let websocket: any = null; // websocket连接
 let global_callback: any = null;
 let timeoutObj: any = null; // 心跳定时器
 let serverTimeoutObj: any = null; // 服务超时定时关闭
-let lockReconnect = false; //  是否真正建立连接
+let lockReconnect: boolean = false; //  是否真正建立连接
 let timeoutnum: any = null; // 重新连接的定时器
 const socketConfig = {
-  url: "ws://127.0.0.1:40001",
+  url: "ws://localhost:40001",
   retryTimeout: 20000, // 心跳时间
 };
 
 class WS {
   constructor() {}
-  sendWebsocket(data: any, callback: any) {
-    global_callback = callback;
-    socketOnSend(data);
+  sendWebsocket(data: any) {
+    // 开启状态
+    if (websocket.readyState === 1) {
+      socketOnSend(data);
+      // 连接中
+    } else if (websocket.readyState === 0) {
+      setTimeout(() => {
+        socketOnSend(data);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        socketOnSend(data);
+      }, 1000);
+    }
   }
-  initWebsocket(url: string = "") {
+  initWebsocket(callback: any = null, url: string = "") {
     let webUrl = url || socketConfig.url;
+
+    if (typeof WebSocket === "undefined") {
+      console.log("您的浏览器不支持WebSocket，无法获取数据");
+      return;
+    }
+    global_callback = callback;
     if (websocket === null) {
       websocket = new WebSocket(webUrl);
-      console.log(websocket);
-
       socketOnOpen();
       socketOnClose();
       socketOnError();
@@ -44,6 +59,7 @@ function socketOnSend(data: any) {
   websocket.send(data);
 }
 function socketOnOpen() {
+  console.log(111, websocket);
   websocket.onopen = () => {
     console.log("连接成功");
     start();
@@ -60,6 +76,7 @@ function socketOnError() {
     console.log("连接失败，继续重连");
   };
 }
+// 数据接收
 function socketOnMessage() {
   websocket.onmessage = (e: any) => {
     global_callback(e.data);
@@ -75,7 +92,7 @@ function start() {
     // 发送一个心跳，后端收到返回一个心跳消息
     if (websocket.readyState === 1) {
       // 连接正常，给后端发送指定消息
-      websocket.send("");
+      websocket.send("心跳包");
     } else {
       // 重连
       reconnect();

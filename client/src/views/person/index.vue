@@ -89,7 +89,7 @@ const state = reactive<IState>({
 const loading = ref(true);
 const contentRef = ref<any>(null);
 onMounted(() => {
-  Ws.initWebsocket();
+  Ws.initWebsocket(global_callback);
   getFindExcerptData();
   scrollBottom();
 });
@@ -106,6 +106,10 @@ watch(
     }
   }
 );
+//接收服务器发送的消息
+const global_callback = (msg: any) => {
+  console.log(msg);
+};
 const getFindExcerptData = async () => {
   loading.value = true;
   const result = await reqFindExcerptData();
@@ -124,21 +128,22 @@ const addExcerptData = async () => {
   if (!state.text.trim()) {
     ElMessage.warning("输入的内容不能为空！");
     state.text = "";
+    return;
+  }
+  const params = {
+    content: state.text.trim(),
+    author: state.author,
+    flag: 1,
+    date: new Date(),
+  };
+  const result = await reqAddExcerptData(params);
+  if (result.code === 200) {
+    ElMessage.success("内容发布成功！");
+    Ws.sendWebsocket(params);
+    state.text = "";
+    state.author = "";
   } else {
-    const params = {
-      content: state.text.trim(),
-      author: state.author,
-      flag: 1,
-      date: new Date(),
-    };
-    const result = await reqAddExcerptData(params);
-    if (result.code === 200) {
-      ElMessage.success("内容发布成功！");
-      state.text = "";
-      state.author = "";
-    } else {
-      ElMessage.error(result.msg);
-    }
+    ElMessage.error(result.msg);
   }
 };
 // 编辑模式

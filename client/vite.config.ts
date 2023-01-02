@@ -11,9 +11,12 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: "0.0.0.0",
+    // host: "0.0.0.0",
     open: true,
-    post: 40001,
+    // post: 40001, // 不生效，在package中配置
+    // hmr: {
+    //   clientPort: 40001,
+    // },
   },
   plugins: [
     vue(),

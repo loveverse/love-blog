@@ -10,7 +10,7 @@ const Mperson = require("./model/person");
 // 创建一个Koa对象
 const app = new Koa();
 const server = http.createServer(app.callback());
-const wss = new WebSocket.Server({ server }); // 同一端口监听不同的服务
+const wss = new WebSocket.Server({ server, path: '/ws'}); // 同一端口监听不同的服务
 
 // 解析请求体(也可以使用koa-body)
 app.use(bodyParser());

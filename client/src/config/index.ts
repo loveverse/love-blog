@@ -6,7 +6,7 @@ if (import.meta.env.DEV) {
 } else {
   // 线上环境
   domain = "https://api.loveverse.top";
-  webSocketUrl = "wss://loveverse.top";
+  webSocketUrl = "wss://api.loveverse.top/ws";
 }
 
 export { domain, webSocketUrl };

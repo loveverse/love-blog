@@ -96,19 +96,25 @@ onMounted(() => {
 onUpdated(() => {
   scrollBottom();
 });
+onBeforeUnmount(() => {
+  Ws.closeWebsocket();
+});
 watch(
   () => state.text,
   (newVal: string) => {
-    if (newVal === "loveverse") {
-      state.flag = true;
-    } else {
-      state.flag = false;
-    }
+    state.flag = newVal === "loveverse";
   }
 );
 //接收服务器发送的消息
 const global_callback = (msg: any) => {
   console.log(msg);
+  if (JSON.parse(msg).isUpdate === false) {
+    return;
+  }
+  state.findData = JSON.parse(msg).map((item: any) => {
+    item.date = formatterTime(item.date);
+    return item;
+  });
 };
 const getFindExcerptData = async () => {
   loading.value = true;
@@ -139,7 +145,7 @@ const addExcerptData = async () => {
   const result = await reqAddExcerptData(params);
   if (result.code === 200) {
     ElMessage.success("内容发布成功！");
-    Ws.sendWebsocket(params);
+    Ws.sendWebsocket(JSON.stringify({ type: "personData" }));
     state.text = "";
     state.author = "";
   } else {

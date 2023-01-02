@@ -1,5 +1,4 @@
-// const url: string = ;
-
+import { webSocketUrl } from "@/config";
 let websocket: any = null; // websocket连接
 let global_callback: any = null;
 let timeoutObj: any = null; // 心跳定时器
@@ -7,7 +6,7 @@ let serverTimeoutObj: any = null; // 服务超时定时关闭
 let lockReconnect: boolean = false; //  是否真正建立连接
 let timeoutnum: any = null; // 重新连接的定时器
 const socketConfig = {
-  url: "ws://localhost:40001",
+  url: webSocketUrl,
   retryTimeout: 20000, // 心跳时间
 };
 
@@ -48,6 +47,7 @@ class WS {
   closeWebsocket() {
     if (websocket) {
       websocket.close();
+      websocket = null;
     }
     clearTimeout(timeoutObj);
     clearTimeout(serverTimeoutObj);
@@ -59,7 +59,6 @@ function socketOnSend(data: any) {
   websocket.send(data);
 }
 function socketOnOpen() {
-  console.log(111, websocket);
   websocket.onopen = () => {
     console.log("连接成功");
     start();
@@ -92,7 +91,7 @@ function start() {
     // 发送一个心跳，后端收到返回一个心跳消息
     if (websocket.readyState === 1) {
       // 连接正常，给后端发送指定消息
-      websocket.send("心跳包");
+      websocket.send(JSON.stringify({ type: "心跳包" }));
     } else {
       // 重连
       reconnect();

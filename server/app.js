@@ -5,6 +5,7 @@ const bodyParser = require("koa-bodyparser");
 const WebSocket = require("ws");
 const { APP_PORT } = require("./config/index");
 const router = require("./router/index");
+const Mperson = require("./model/person");
 
 // 创建一个Koa对象
 const app = new Koa();
@@ -18,22 +19,34 @@ app.use(cors());
 app.use(router.routes());
 
 wss.on("connection", function (ws) {
-  try {
-    ws.on("message", async function incoming(message) {
-      console.log("[ message ] >", message.toString());
-      if (!message.toString()) {
-        return;
-      }
-      // const obj = JSON.parse(message);
-      console.log("[ obj ] >", message);
+  let messageIndex = 0;
+  ws.on("message", async function (data, isBinary) {
+    console.log(data);
+    const message = isBinary ? data : data.toString();
+    if (JSON.parse(message).type !== "personData") {
+      return;
+    }
+    const result = await Mperson.findAll();
+    wss.clients.forEach((client) => {
+      messageIndex++;
+      client.send(JSON.stringify(result));
     });
-    ws.send("服务器发送的消息：send");
-  } catch (error) {}
+  });
+  ws.onmessage = (msg) => {
+    ws.send(JSON.stringify({ isUpdate: false, message: "回复心跳包" }));
+  };
+  ws.onclose = () => {
+    console.log("服务连接关闭");
+  };
+  ws.send(JSON.stringify({ isUpdate: false, message: "首次建立连接" }));
 });
 
 // const path = require('path')
 // const staticFiles = require('koa-static')
 // app.use(staticFiles(path.join(__dirname + '/dist/')))
 
-server.listen(APP_PORT);
-console.log(`服务器地址:http://localhost:40001/findExcerpt`);
+server.listen(APP_PORT, () => {
+  const host = server.address().address;
+  const port = server.address().port;
+  console.log(`服务器地址:http://${host}:${port}/findExcerpt`);
+});

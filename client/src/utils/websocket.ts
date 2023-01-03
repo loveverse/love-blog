@@ -1,10 +1,5 @@
 import { webSocketUrl } from "@/config";
-let websocket: any = null; // websocket连接
-let global_callback: any = null;
-let timeoutObj: any = null; // 心跳定时器
-let serverTimeoutObj: any = null; // 服务超时定时关闭
-let lockReconnect: boolean = false; //  是否真正建立连接
-let timeoutnum: any = null; // 重新连接的定时器
+
 const socketConfig = {
   url: webSocketUrl,
   retryTimeout: 20000, // 心跳时间
@@ -12,18 +7,25 @@ const socketConfig = {
 
 class WS {
   constructor() {}
+  websocket: any = null; // websocket连接
+  global_callback: any = null;
+  timeoutObj: any = null; // 心跳定时器
+  serverTimeoutObj: any = null; // 服务超时定时关闭
+  lockReconnect: boolean = false; //  是否真正建立连接
+  timeoutnum: any = null; // 重新连接的定时器
+
   sendWebsocket(data: any) {
     // 开启状态
-    if (websocket.readyState === 1) {
-      socketOnSend(data);
+    if (this.websocket.readyState === 1) {
+      this.socketOnSend(data);
       // 连接中
-    } else if (websocket.readyState === 0) {
+    } else if (this.websocket.readyState === 0) {
       setTimeout(() => {
-        socketOnSend(data);
+        this.socketOnSend(data);
       }, 1000);
     } else {
       setTimeout(() => {
-        socketOnSend(data);
+        this.socketOnSend(data);
       }, 1000);
     }
   }
@@ -34,96 +36,93 @@ class WS {
       console.log("您的浏览器不支持WebSocket，无法获取数据");
       return;
     }
-    global_callback = callback;
-    if (websocket === null) {
-      websocket = new WebSocket(webUrl);
-      socketOnOpen();
-      socketOnClose();
-      socketOnError();
-      socketOnMessage();
+    this.global_callback = callback;
+    if (this.websocket === null) {
+      this.websocket = new WebSocket(webUrl);
+      this.socketOnOpen();
+      this.socketOnClose();
+      this.socketOnError();
+      this.socketOnMessage();
     }
   }
   // 关闭websocket函数
   closeWebsocket() {
-    if (websocket) {
-      websocket.close();
-      websocket = null;
+    if (this.websocket) {
+      this.websocket.close();
+      this.websocket = null;
     }
-    clearTimeout(timeoutObj);
-    clearTimeout(serverTimeoutObj);
+    clearTimeout(this.timeoutObj);
+    clearTimeout(this.serverTimeoutObj);
+  }
+  // 发送消息
+  socketOnSend(data: any) {
+    this.websocket.send(data);
+  }
+  socketOnOpen() {
+    this.websocket.onopen = () => {
+      console.log("连接成功");
+      this.start();
+    };
+  }
+  socketOnClose() {
+    this.websocket.onclose = () => {
+      console.log("连接已关闭");
+    };
+  }
+  socketOnError() {
+    this.websocket.onerror = () => {
+      this.reconnect();
+      console.log("连接失败，继续重连");
+    };
+  }
+  // 数据接收
+  socketOnMessage() {
+    this.websocket.onmessage = (e: any) => {
+      this.global_callback(e.data);
+      this.reset();
+    };
+  }
+  // 开启心跳
+  start() {
+    this.timeoutObj && clearTimeout(this.timeoutObj);
+    this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
+    this.timeoutObj = setTimeout(() => {
+      // 发送一个心跳，后端收到返回一个心跳消息
+      if (this.websocket.readyState === 1) {
+        // 连接正常，给后端发送指定消息
+        this.websocket.send(JSON.stringify({ type: "心跳包" }));
+      } else {
+        // 重连
+        this.reconnect();
+      }
+      this.serverTimeoutObj = setTimeout(() => {
+        // 超时关闭连接
+        this.websocket.close();
+      }, socketConfig.retryTimeout);
+    }, socketConfig.retryTimeout);
+  }
+  // 重连
+  reconnect() {
+    if (this.lockReconnect) {
+      return;
+    }
+    // 没有连接上向下执行
+    this.lockReconnect = true;
+    this.timeoutnum && clearTimeout(this.timeoutnum);
+    this.timeoutnum = setTimeout(() => {
+      Ws.initWebsocket();
+      this.lockReconnect = false;
+    }, 5000);
+  }
+  // 重置心跳
+  reset() {
+    // 清除时间
+    clearTimeout(this.timeoutObj);
+    clearTimeout(this.serverTimeoutObj);
+    // 重启心跳
+    this.start();
   }
 }
 const Ws = new WS();
-// 发送消息
-function socketOnSend(data: any) {
-  websocket.send(data);
-}
-function socketOnOpen() {
-  websocket.onopen = () => {
-    console.log("连接成功");
-    start();
-  };
-}
-function socketOnClose() {
-  websocket.onclose = () => {
-    console.log("连接已关闭");
-  };
-}
-function socketOnError() {
-  websocket.onerror = () => {
-    reconnect();
-    console.log("连接失败，继续重连");
-  };
-}
-// 数据接收
-function socketOnMessage() {
-  websocket.onmessage = (e: any) => {
-    global_callback(e.data);
-    reset();
-  };
-}
-
-// 开启心跳
-function start() {
-  timeoutObj && clearTimeout(timeoutObj);
-  serverTimeoutObj && clearTimeout(serverTimeoutObj);
-  timeoutObj = setTimeout(() => {
-    // 发送一个心跳，后端收到返回一个心跳消息
-    if (websocket.readyState === 1) {
-      // 连接正常，给后端发送指定消息
-      websocket.send(JSON.stringify({ type: "心跳包" }));
-    } else {
-      // 重连
-      reconnect();
-    }
-    serverTimeoutObj = setTimeout(() => {
-      // 超时关闭连接
-      websocket.close();
-    }, socketConfig.retryTimeout);
-  }, socketConfig.retryTimeout);
-}
-
-// 重连
-function reconnect() {
-  if (lockReconnect) {
-    return;
-  }
-  // 没有连接上向下执行
-  lockReconnect = true;
-  timeoutnum && clearTimeout(timeoutnum);
-  timeoutnum = setTimeout(() => {
-    Ws.initWebsocket();
-    lockReconnect = false;
-  }, 5000);
-}
-
-// 重置心跳
-function reset() {
-  // 清除时间
-  clearTimeout(timeoutObj);
-  clearTimeout(serverTimeoutObj);
-  // 重启心跳
-  start();
-}
 
 export default Ws;

@@ -10,14 +10,25 @@
             autosize
             @blur="update(item.id, item.content)"
           ></el-input>
-          <p
-            v-else
-            class="title"
-            :data-id="item.id"
-            @click="edit($event, item.content)"
-          >
-            {{ item.content }}
-          </p>
+          <template v-else>
+            <el-link
+              class="title"
+              type="primary"
+              :href="item.content"
+              v-if="item.isLink"
+              :data-id="item.id"
+              @click="edit($event, item.content)"
+              >{{ item.content }}</el-link
+            >
+            <p
+              v-else
+              class="title"
+              :data-id="item.id"
+              @click="edit($event, item.content)"
+            >
+              {{ item.content }}
+            </p>
+          </template>
           <div class="tip">
             <p class="date_now">{{ item.date }}</p>
             <p class="author" v-if="item.author">--来自“{{ item.author }}”</p>
@@ -33,9 +44,19 @@
         >
       </li>
     </ul>
-    <el-tag type="success">
-      共&emsp;{{ state.findData.length }}&emsp;篇
-    </el-tag>
+    <div class="site_info">
+      <el-tag type="success">
+        共&emsp;{{ state.findData.length }}&emsp;篇
+      </el-tag>
+      <!-- <div class="status_box"> -->
+      <el-result
+        class="status"
+        :icon="state.connectStatus === 1 ? 'success' : 'error'"
+        :title="state.connectStatus === 1 ? '已连接' : '已关闭，请刷新'"
+      >
+      </el-result>
+      <!-- </div> -->
+    </div>
     <div class="iptText">
       <el-input
         type="textarea"
@@ -54,8 +75,8 @@
       </el-input>
       <el-button type="primary" @click="addExcerptData">提交</el-button>
     </div>
-    <el-backtop :bottom="100">
-      <div class="backtop"></div>
+    <el-backtop target=".el-main" :bottom="100">
+      <el-icon><CaretTop /></el-icon>
     </el-backtop>
   </div>
 </template>
@@ -66,7 +87,7 @@ import {
   reqUpdateExcerptData,
   reqDelExcerptData,
 } from "@/api/person";
-import { formatterTime } from "@/utils/common";
+import { formatterTime, urlify } from "@/utils/common";
 import Ws from "@/utils/websocket";
 
 interface IState {
@@ -76,6 +97,7 @@ interface IState {
   aId: number;
   compare: string;
   flag: boolean;
+  connectStatus: number;
 }
 
 const state = reactive<IState>({
@@ -85,11 +107,13 @@ const state = reactive<IState>({
   aId: 0,
   compare: "",
   flag: false,
+  connectStatus: 0, // 连接状态：0:连接中;1:已连接;2:关闭中;3:已关闭
 });
 const loading = ref(true);
 const contentRef = ref<any>(null);
 onMounted(() => {
   Ws.initWebsocket(global_callback);
+
   getFindExcerptData();
   scrollBottom();
 });
@@ -108,11 +132,16 @@ watch(
 //接收服务器发送的消息
 const global_callback = (msg: any) => {
   console.log(msg);
+  // console.log(Ws.websocket.readyState);
+  if (Ws.websocket) {
+    state.connectStatus = Ws.websocket.readyState;
+  }
   if (JSON.parse(msg).isUpdate === false) {
     return;
   }
   state.findData = JSON.parse(msg).map((item: any) => {
     item.date = formatterTime(item.date);
+    item.isLink = urlify(item.content);
     return item;
   });
 };
@@ -122,6 +151,7 @@ const getFindExcerptData = async () => {
   if (result.code === 200) {
     state.findData = result.data.map((item: any) => {
       item.date = formatterTime(item.date);
+      item.isLink = urlify(item.content);
       return item;
     });
   } else {
@@ -191,75 +221,71 @@ const scrollBottom = () => {
 };
 </script>
 <style lang="scss" scoped>
-.out {
-  .card {
-    position: relative;
-    .artcle {
+.wrapper {
+  .out {
+    .card {
+      position: relative;
+      .artcle {
+        margin: 20px auto;
+        padding: 15px 20px 20px;
+        border-radius: 15px;
+        word-wrap: break-word;
+        box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.2),
+          -18px -18px 30px rgba(255, 255, 255, 1);
+        /* 过渡时间 ease-out是指先快速 后慢速 */
+        transition: all 0.2s ease-out;
+        &:hover {
+          /* inset 是内部阴影 默认是外部阴影outset */
+          box-shadow: 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 rgba(255, 255, 255, 0.8),
+            inset 18px 18px 30px rgba(0, 0, 0, 0.1),
+            inset -18px -18px 30px rgba(255, 255, 255, 1);
+        }
+        .title {
+          font-size: 20px;
+          margin-bottom: 10px;
+          line-height: 33px;
+          white-space: pre-wrap;
+        }
+        .tip {
+          display: flex;
+          justify-content: space-between;
+          .date_now {
+            color: #999;
+          }
+        }
+      }
+      .del {
+        position: absolute;
+        right: -80px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+  .outPad {
+    padding-right: 80px;
+  }
+  .site_info {
+    display: flex;
+    align-items: center;
+    // .status_box {
+    //   display: flex;
+    //   align-items: center;
+    .status {
+      padding: 0;
+      transform: scale(0.6);
+      margin: 0;
+    }
+    // }
+  }
+  .iptText {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 30px auto;
+    .el-input {
       margin: 20px auto;
-      padding: 15px 20px 20px;
-      border-radius: 15px;
-      word-wrap: break-word;
-      box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.2),
-        -18px -18px 30px rgba(255, 255, 255, 1);
-      /* 过渡时间 ease-out是指先快速 后慢速 */
-      transition: all 0.2s ease-out;
-      &:hover {
-        /* inset 是内部阴影 默认是外部阴影outset */
-        box-shadow: 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 rgba(255, 255, 255, 0.8),
-          inset 18px 18px 30px rgba(0, 0, 0, 0.1),
-          inset -18px -18px 30px rgba(255, 255, 255, 1);
-      }
-      .title {
-        font-size: 20px;
-        // margin-bottom: 10px;
-        line-height: 33px;
-        white-space: pre-wrap;
-      }
-      .tip {
-        display: flex;
-        justify-content: space-between;
-        .author {
-          margin-top: 10px;
-        }
-        .date_now {
-          margin-left: 5px;
-          color: #999;
-        }
-      }
-    }
-    .del {
-      position: absolute;
-      right: -80px;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
-}
-.outPad {
-  padding-right: 80px;
-}
-.iptText {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 30px auto;
-  .el-input {
-    margin: 20px auto;
-  }
-}
-::v-deep .el-backtop {
-  width: 0;
-  height: 0;
-  bottom: 55px !important;
-}
-.backtop {
-  border: 10px solid #9ddb95;
-  border-top-color: transparent;
-  border-left-color: transparent;
-  border-right-color: transparent;
-}
-.records {
-  margin: 0 auto;
-  text-align: center;
 }
 </style>

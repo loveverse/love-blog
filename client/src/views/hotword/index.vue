@@ -17,8 +17,8 @@
       :total="state.total"
     >
     </el-pagination>
-    <el-backtop :bottom="100">
-      <div class="backtop"></div>
+    <el-backtop target=".el-main" :bottom="100">
+      <el-icon><CaretTop /></el-icon>
     </el-backtop>
   </div>
 </template>
@@ -120,16 +120,6 @@ onMounted(() => {
         color: #656d78;
       }
     }
-  }
-  ::v-deep .el-backtop {
-    width: 0;
-    height: 0;
-  }
-  .backtop {
-    border: 10px solid #9ddb95;
-    border-top-color: transparent;
-    border-left-color: transparent;
-    border-right-color: transparent;
   }
 }
 </style>

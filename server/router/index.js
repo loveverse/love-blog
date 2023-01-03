@@ -10,7 +10,7 @@ const {
 // 上传图片的模板
 const multer = require("multer");
 // 上传文件的位置
-const static = multer({ dest: "../static/" });
+const static = multer({ dest: "./static/" });
 
 router.post("/upload/file", static.any(), upload.uploadFile);
 router.get("/wy/find", hotword.findHotword);

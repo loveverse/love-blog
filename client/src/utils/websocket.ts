@@ -15,6 +15,7 @@ class WS {
   lockReconnect: boolean = false; //  是否真正建立连接
   timeoutnum: any = null; // 重新连接的定时器
 
+  // 发送消息
   sendWebsocket(data: any) {
     // 开启状态
     if (this.websocket.readyState === 1) {
@@ -28,6 +29,7 @@ class WS {
       console.log("连接已关闭，无法及时响应");
     }
   }
+  // mounted中初始化
   initWebsocket(callback: any = null, close_fun: any = null, url: string = "") {
     let webUrl = url || socketConfig.url;
     if (typeof WebSocket === "undefined") {

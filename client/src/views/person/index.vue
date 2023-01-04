@@ -283,6 +283,9 @@ const scrollBottom = () => {
       padding: 0;
       transform: scale(0.4);
       margin: 0;
+      --el-result-extra-margin-top: 0;
+      --el-result-padding: 0;
+      --el-result-icon-font-size: 32px;
     }
     // }
   }

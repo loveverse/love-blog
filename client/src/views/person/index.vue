@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" ref="contentRef" v-loading="loading">
-    <ul class="out" :class="state.flag && 'outPad'">
+    <ul class="out" :class="state.flag && 'out_pad'">
       <li class="card" v-for="item in state.findData" :key="item.id">
         <div class="artcle">
           <el-input
@@ -48,16 +48,14 @@
       <el-tag type="success">
         共&emsp;{{ state.findData.length }}&emsp;篇
       </el-tag>
-      <!-- <div class="status_box"> -->
       <el-result
         class="status"
         :icon="state.connectStatus === 1 ? 'success' : 'error'"
         :title="state.connectStatus === 1 ? '已连接' : '已关闭，请刷新'"
       >
       </el-result>
-      <!-- </div> -->
     </div>
-    <div class="iptText">
+    <div class="ipt_text">
       <el-input
         type="textarea"
         autosize
@@ -74,8 +72,9 @@
       >
       </el-input>
       <el-button type="primary" @click="addExcerptData">提交</el-button>
+      <el-button @click="handleClose">关闭连接</el-button>
     </div>
-    <el-backtop target=".el-main" :bottom="100">
+    <el-backtop target=".el-main" :bottom="50">
       <el-icon><CaretTop /></el-icon>
     </el-backtop>
   </div>
@@ -89,7 +88,7 @@ import {
 } from "@/api/person";
 import { formatterTime, urlify } from "@/utils/common";
 import Ws from "@/utils/websocket";
-
+// 将Ws放在state中同时监视，watch不到里面的对象和属性，因为没有实例化WebSocket
 interface IState {
   findData: any[];
   text: string;
@@ -112,8 +111,7 @@ const state = reactive<IState>({
 const loading = ref(true);
 const contentRef = ref<any>(null);
 onMounted(() => {
-  Ws.initWebsocket(global_callback);
-
+  Ws.initWebsocket(global_callback, close_callback);
   getFindExcerptData();
   scrollBottom();
 });
@@ -129,14 +127,24 @@ watch(
     state.flag = newVal === "loveverse";
   }
 );
+
+const handleClose = () => {
+  Ws.websocket.close();
+  ElMessage.warning("连接断开，消息不再即时推送！");
+};
+// 连接断开通知
+const close_callback = () => {
+  if (Ws.websocket) {
+    state.connectStatus = Ws.websocket.readyState;
+  }
+};
 //接收服务器发送的消息
 const global_callback = (msg: any) => {
-  console.log(msg);
-  // console.log(Ws.websocket.readyState);
   if (Ws.websocket) {
     state.connectStatus = Ws.websocket.readyState;
   }
   if (JSON.parse(msg).isUpdate === false) {
+    console.log(msg);
     return;
   }
   state.findData = JSON.parse(msg).map((item: any) => {
@@ -262,7 +270,7 @@ const scrollBottom = () => {
       }
     }
   }
-  .outPad {
+  .out_pad {
     padding-right: 80px;
   }
   .site_info {
@@ -273,12 +281,12 @@ const scrollBottom = () => {
     //   align-items: center;
     .status {
       padding: 0;
-      transform: scale(0.6);
+      transform: scale(0.4);
       margin: 0;
     }
     // }
   }
-  .iptText {
+  .ipt_text {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

@@ -17,7 +17,7 @@
       :total="state.total"
     >
     </el-pagination>
-    <el-backtop target=".el-main" :bottom="100">
+    <el-backtop target=".el-main" :bottom="50">
       <el-icon><CaretTop /></el-icon>
     </el-backtop>
   </div>

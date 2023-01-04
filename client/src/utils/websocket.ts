@@ -9,6 +9,7 @@ class WS {
   constructor() {}
   websocket: any = null; // websocket连接
   global_callback: any = null;
+  close_callback: any = null; // 连接关闭的通知函数
   timeoutObj: any = null; // 心跳定时器
   serverTimeoutObj: any = null; // 服务超时定时关闭
   lockReconnect: boolean = false; //  是否真正建立连接
@@ -24,19 +25,17 @@ class WS {
         this.socketOnSend(data);
       }, 1000);
     } else {
-      setTimeout(() => {
-        this.socketOnSend(data);
-      }, 1000);
+      console.log("连接已关闭，无法及时响应");
     }
   }
-  initWebsocket(callback: any = null, url: string = "") {
+  initWebsocket(callback: any = null, close_fun: any = null, url: string = "") {
     let webUrl = url || socketConfig.url;
-
     if (typeof WebSocket === "undefined") {
       console.log("您的浏览器不支持WebSocket，无法获取数据");
       return;
     }
     this.global_callback = callback;
+    this.close_callback = close_fun;
     if (this.websocket === null) {
       this.websocket = new WebSocket(webUrl);
       this.socketOnOpen();
@@ -45,7 +44,7 @@ class WS {
       this.socketOnMessage();
     }
   }
-  // 关闭websocket函数
+  // 关闭websocket函数，组件卸载时销毁
   closeWebsocket() {
     if (this.websocket) {
       this.websocket.close();
@@ -66,13 +65,16 @@ class WS {
   }
   socketOnClose() {
     this.websocket.onclose = () => {
+      this.close_callback();
       console.log("连接已关闭");
+      // 连接关闭时清空定时，心跳等
+      // this.closeWebsocket();
     };
   }
   socketOnError() {
     this.websocket.onerror = () => {
-      this.reconnect();
       console.log("连接失败，继续重连");
+      this.reconnect();
     };
   }
   // 数据接收
@@ -110,7 +112,7 @@ class WS {
     this.lockReconnect = true;
     this.timeoutnum && clearTimeout(this.timeoutnum);
     this.timeoutnum = setTimeout(() => {
-      Ws.initWebsocket();
+      this.initWebsocket();
       this.lockReconnect = false;
     }, 5000);
   }

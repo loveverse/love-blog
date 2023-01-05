@@ -6,7 +6,7 @@ const {
   upload,
   user,
 } = require("../controllers/index");
-
+const { crpytPassword } = require("../middleware/index");
 // 上传图片的模板
 const multer = require("multer");
 // 上传文件的位置

@@ -1,6 +1,6 @@
 const Muser = require("../model/user");
 const response = require("../utils/resData");
-
+const bcrypt = require("bcryptjs");
 // 类定义
 class User {
   constructor() {}
@@ -12,6 +12,10 @@ class User {
         ctx.body = response.verifyMsg("用户名或密码不能为空");
         return;
       }
+      // 数据传过来开始加密
+      const salt = bcrypt.genSaltSync(10);
+      // hash保存的是 密文
+      const hash = bcrypt.hashSync(password, salt);
       // 判断用户是否存在
       const isExist = await Muser.findOne({
         where: {
@@ -19,12 +23,21 @@ class User {
         },
       });
       if (isExist) {
-        ctx.body = response.verifyMsg("用户已经存在");
-        return;
+        const res = await Muser.findOne({
+          where: {
+            user_name: user_name,
+          },
+        });
+        const isCorrect = bcrypt.compareSync(password, res.password);
+        ctx.body = response.verifyMsg(
+          isCorrect ? "登录成功" : "用户已经存在",
+          isCorrect ? 200 : 400
+        );
+      } else {
+        ctx.body = response.SUCESS_RES.getCode(
+          await Muser.create({ user_name, password: hash })
+        );
       }
-      ctx.body = response.SUCESS_RES.getCode(
-        await Muser.create({ user_name, password })
-      );
     } catch (error) {
       ctx.body = response.ERROR_RES.getCode(null);
     }

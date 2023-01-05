@@ -148,7 +148,7 @@ const handleRegister = (formEl: FormInstance | undefined) => {
       };
       const result = await reqRegisterUser(params);
       if (result.code === 200) {
-        ElMessage.success("注册成功");
+        ElMessage.success(result.msg);
         state.registerDiaVis = false;
       } else {
         ElMessage.error(result.msg);

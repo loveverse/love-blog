@@ -12,10 +12,10 @@
           ></el-input>
           <template v-else>
             <el-link
+              v-if="item.isLink"
               class="title"
               type="primary"
               :href="item.content"
-              v-if="item.isLink"
               :data-id="item.id"
               @click="edit($event, item.content)"
               >{{ item.content }}</el-link
@@ -37,7 +37,7 @@
         <el-button
           v-if="state.flag"
           type="danger"
-          size="mini"
+          size="small"
           class="del"
           @click="del(item.id)"
           >删除</el-button
@@ -110,12 +110,9 @@ const state = reactive<IState>({
 });
 const loading = ref(true);
 const contentRef = ref<any>(null);
-onMounted(() => {
+onMounted(async () => {
   Ws.initWebsocket(global_callback, close_callback);
-  getFindExcerptData();
-  scrollBottom();
-});
-onUpdated(() => {
+  await getFindExcerptData();
   scrollBottom();
 });
 onBeforeUnmount(() => {
@@ -152,6 +149,9 @@ const global_callback = (msg: any) => {
     item.isLink = urlify(item.content);
     return item;
   });
+  if (!state.flag) {
+    scrollBottom();
+  }
 };
 const getFindExcerptData = async () => {
   loading.value = true;
@@ -217,6 +217,7 @@ const del = async (id: number) => {
   const result = await reqDelExcerptData(params);
   if (result.code === 200) {
     ElMessage.success("内容删除成功！");
+    Ws.sendWebsocket(JSON.stringify({ type: "personData" }));
   } else {
     ElMessage.error(result.msg);
   }
@@ -252,7 +253,8 @@ const scrollBottom = () => {
           font-size: 20px;
           margin-bottom: 10px;
           line-height: 33px;
-          white-space: pre-wrap;
+          /* 允许在单词内换行 */
+          word-break: break-all;
         }
         .tip {
           display: flex;

@@ -67,10 +67,8 @@ class WS {
   }
   socketOnClose() {
     this.websocket.onclose = () => {
-      this.close_callback();
       console.log("连接已关闭");
-      // 连接关闭时清空定时，心跳等
-      // this.closeWebsocket();
+      this.close_callback();
     };
   }
   socketOnError() {

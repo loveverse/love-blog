@@ -1,5 +1,5 @@
 const Mhotword = require("../model/hotword");
-const { SUCESS_RES, ERROR_RES } = require("../utils/resData");
+const response = require("../utils/resData");
 
 // 网易热评的接口----------------------------------------------------------------
 
@@ -8,9 +8,9 @@ class Hotword {
   constructor() {}
   async findHotword(ctx, next) {
     try {
-      ctx.body = SUCESS_RES.getCode(await Mhotword.findAll());
+      ctx.body = response.SUCCESS("common", await Mhotword.findAll());
     } catch (error) {
-      ctx.body = ERROR_RES.getCode(null);
+      ctx.body = response.SERVER_ERROR();
     }
   }
   // 分页查询
@@ -40,10 +40,10 @@ class Hotword {
       // })
       // console.log(list.count,111);
 
-      ctx.body = SUCESS_RES.getCode({ total: total.count, list });
+      ctx.body = response.SUCCESS("common", { total: total.count, list });
     } catch (error) {
       console.log(error);
-      ctx.body = ERROR_RES.getCode(null);
+      ctx.body = response.SERVER_ERROR();
     }
   }
 }

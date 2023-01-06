@@ -1,6 +1,6 @@
 // 上线时只需要需改pathBase即可
 const pathBase = "env";
-let APP_PORT, APP_HOST, DATA_BASE, USERNAME, PASSWORD,BASE_PATH;
+let APP_PORT, APP_HOST, DATA_BASE, USERNAME, PASSWORD, BASE_PATH, JWT_SECRET;
 if (pathBase === "env") {
   APP_PORT = 40001;
   APP_HOST = "1.15.42.9";
@@ -8,6 +8,7 @@ if (pathBase === "env") {
   USERNAME = "verse";
   PASSWORD = "123456";
   BASE_PATH = "/";
+  JWT_SECRET = "LOVE-TOKEN";
 } else {
   APP_PORT = 40001; // 服务监听端口
   APP_HOST = "1.15.42.9"; // 数据库ip地址
@@ -15,6 +16,7 @@ if (pathBase === "env") {
   USERNAME = "verse"; // 用户名
   PASSWORD = "123456"; // 密码
   BASE_PATH = "/socket";
+  JWT_SECRET = "LOVE-TOKEN";
 }
 
 module.exports = {
@@ -24,4 +26,5 @@ module.exports = {
   USERNAME,
   PASSWORD,
   BASE_PATH,
+  JWT_SECRET,
 };

@@ -1,21 +1,19 @@
 const Muser = require("../model/user");
 const response = require("../utils/resData");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/index");
 // 类定义
 class User {
   constructor() {}
   // 注册用户
   async register(ctx, next) {
     try {
-      const { userName: user_name, password } = ctx.request.body;
-      if (!user_name || !password) {
-        ctx.body = response.verifyMsg("用户名或密码不能为空");
+      const { userName: user_name, password: pass_word } = ctx.request.body;
+      if (!user_name || !pass_word) {
+        ctx.body = response.ERROR("userNotNull");
         return;
       }
-      // 数据传过来开始加密
-      const salt = bcrypt.genSaltSync(10);
-      // hash保存的是 密文
-      const hash = bcrypt.hashSync(password, salt);
       // 判断用户是否存在
       const isExist = await Muser.findOne({
         where: {
@@ -28,18 +26,32 @@ class User {
             user_name: user_name,
           },
         });
-        const isCorrect = bcrypt.compareSync(password, res.password);
-        ctx.body = response.verifyMsg(
-          isCorrect ? "登录成功" : "用户已经存在",
-          isCorrect ? 200 : 400
-        );
+        // 密码是否正确
+        if (bcrypt.compareSync(pass_word, res.dataValues.password)) {
+          // 登录成功
+          const { password, ...data } = res.dataValues;
+          ctx.body = response.SUCCESS("userLogin", {
+            token: jwt.sign(data, JWT_SECRET, { expiresIn: "1d" }),
+            userInfo: res.dataValues,
+          });
+        } else {
+          ctx.body = response.ERROR("userAlreadyExist");
+        }
       } else {
-        ctx.body = response.SUCESS_RES.getCode(
-          await Muser.create({ user_name, password: hash })
-        );
+        // 加密
+        const salt = bcrypt.genSaltSync(10);
+        // hash保存的是 密文
+        const hash = bcrypt.hashSync(pass_word, salt);
+        const userInfo = await Muser.create({ user_name, password: hash });
+        const { password, ...data } = userInfo.dataValues;
+        ctx.body = response.SUCCESS("userRegister", {
+          token: jwt.sign(data, JWT_SECRET, { expiresIn: "1d" }),
+          userInfo,
+        });
       }
     } catch (error) {
-      ctx.body = response.ERROR_RES.getCode(null);
+      console.log(error);
+      ctx.body = response.SERVER_ERROR();
     }
   }
   // // 分页查询

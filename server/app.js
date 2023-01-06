@@ -33,7 +33,7 @@ wss.on("connection", function (ws) {
     });
   });
   ws.onmessage = (msg) => {
-    ws.send(JSON.stringify({ isUpdate: false, message: "回复心跳包" }));
+    ws.send(JSON.stringify({ isUpdate: false, message: "pong" }));
   };
   ws.onclose = () => {
     console.log("服务连接关闭");

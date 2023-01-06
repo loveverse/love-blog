@@ -147,9 +147,11 @@ const handleRegister = (formEl: FormInstance | undefined) => {
         ...state.regForm,
       };
       const result = await reqRegisterUser(params);
+
       if (result.code === 200) {
         ElMessage.success(result.msg);
         state.registerDiaVis = false;
+        localStorage.setItem("token", result.data.token);
       } else {
         ElMessage.error(result.msg);
       }

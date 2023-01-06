@@ -92,7 +92,7 @@ class WS {
       // 发送一个心跳，后端收到返回一个心跳消息
       if (this.websocket.readyState === 1) {
         // 连接正常，给后端发送指定消息
-        this.websocket.send(JSON.stringify({ type: "心跳包" }));
+        this.websocket.send(JSON.stringify({ type: "ping" }));
       } else {
         // 重连
         this.reconnect();

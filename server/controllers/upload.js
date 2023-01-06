@@ -1,13 +1,13 @@
 const os = require("os");
 const fs = require("fs");
-const { SUCESS_RES, ERROR_UPLOAD } = require("../utils/resData");
+const response = require("../utils/resData");
 
 function uploadFile(req, res) {
   try {
     console.log(req, res, 111);
     // fs.readFile(req.file.path, (err, data) => {
     if (err) {
-      res.send(ERROR_UPLOAD.getCode(null));
+      res.send(response.ERROR("uploadFileNotNull"));
       return;
     }
     // let oldName = req.files.path; // 上传后默认的文件名 : 15daede910f2695c1352dccbb5c3e897
@@ -19,7 +19,7 @@ function uploadFile(req, res) {
     //   url: "",
     //   id: new Date(),
     // };
-    res.send(SUCESS_RES.getCode({}));
+    res.send(response.SUCCESS("common", {}));
     // });
   } catch (error) {}
 }

@@ -6,7 +6,7 @@ const {
   upload,
   user,
 } = require("../controllers/index");
-const { crpytPassword } = require("../middleware/index");
+const { auth } = require("../middleware/index");
 // 上传图片的模板
 const multer = require("multer");
 // 上传文件的位置
@@ -15,11 +15,11 @@ const static = multer({ dest: "./static/" });
 router.post("/upload/file", static.any(), upload.uploadFile);
 router.get("/wy/find", hotword.findHotword);
 router.get("/wy/pageQuery", hotword.findPageHotword);
-
+// 登录才能发表评论
 router.get("/findExcerpt", person.findExcerpt);
-router.get("/addExcerpt", person.addExcerpt);
-router.get("/updateExcerpt", person.updateExcerpt);
-router.get("/delExcerpt", person.delExcerpt);
+router.get("/addExcerpt", auth, person.addExcerpt);
+router.get("/updateExcerpt", auth, person.updateExcerpt);
+router.get("/delExcerpt", auth, person.delExcerpt);
 
 router.post("/findIssue", issue.findIssue);
 router.post("/addIssue", issue.addIssue);

@@ -1,23 +1,33 @@
-const bcrypt = require("bcryptjs");
-const crpytPassword = async (ctx, next) => {
-  const { password } = ctx.request.body;
+const jwt = require("jsonwebtoken");
 
-  const salt = bcrypt.genSaltSync(10);
-  // hash保存的是 密文
-  const hash = bcrypt.hashSync(password, salt);
+const { JWT_SECRET } = require("../config/index");
+const response = require("../utils/resData");
 
-  ctx.request.body.password = hash;
+const auth = async (ctx, next) => {
+  // 会返回小写secret
+  const token = ctx.request.header["love-token"];
 
+  console.log(token);
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    // 在已经颁发token接口上面添加user对象，便于使用
+    ctx.state.user = user;
+  } catch (err) {
+    console.log(err.name);
+    switch (err.name) {
+      case "TokenExpiredError":
+        ctx.body = response.ERROR("tokenExpired");
+        return;
+      case "JsonWebTokenError":
+        ctx.body = response.ERROR("tokenInvaild");
+        return;
+      default:
+        return;
+    }
+  }
   await next();
 };
-const verifyLogin = async (ctx, next) => {
-  const { userName: user_name, password } = ctx.request.body;
-  try {
-    
-  } catch (error) {
-    
-  }
-};
+
 module.exports = {
-  crpytPassword,
+  auth,
 };

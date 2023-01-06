@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-
 const { JWT_SECRET } = require("../config/index");
 const response = require("../utils/resData");
 
@@ -22,6 +21,7 @@ const auth = async (ctx, next) => {
         ctx.body = response.ERROR("tokenInvaild");
         return;
       default:
+        ctx.body = response.ERROR("unknownError");
         return;
     }
   }

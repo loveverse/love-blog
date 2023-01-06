@@ -14,6 +14,7 @@ const err = {
   tokenExpired: "token已过期，请登录",
   tokenInvaild: "token无效，请登录",
   powerLacking: "抱歉，权限不足",
+  unknownError: "未知错误，请联系管理员",
 };
 const success = {
   userLogin: "登录成功",

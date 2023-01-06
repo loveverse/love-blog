@@ -12,9 +12,33 @@
     </template>
     <div class="flex-grow" />
     <div class="btn_login">
-      <el-button type="primary" @click="state.registerDiaVis = true"
+      <el-button
+        v-if="!userInfo"
+        type="primary"
+        @click="state.registerDiaVis = true"
         >登录</el-button
       >
+      <el-dropdown v-else>
+        <span class="user_info">
+          <span class="name">{{ userInfo.user_name }}</span>
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>
+              <el-link
+                type="primary"
+                target="_blank"
+                href="https://github.com/loveverse/love-blog/tree/dev"
+                >项目地址</el-link
+              >
+            </el-dropdown-item>
+            <el-dropdown-item @click="loginOut">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </el-menu>
   <el-dialog
@@ -71,6 +95,9 @@ interface IState {
   };
   regFormRules: object;
   registerDiaVis: Boolean;
+  // userInfo: {
+  //   [key in string]: any;
+  // };
 }
 const state = reactive<IState>({
   // 没写children，自动隐藏
@@ -139,6 +166,9 @@ const state = reactive<IState>({
 });
 const registerRef = ref<FormInstance>();
 
+const userInfo = computed(() => {
+  return JSON.parse(localStorage.getItem("userInfo") || "null");
+});
 const handleRegister = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
@@ -152,6 +182,8 @@ const handleRegister = (formEl: FormInstance | undefined) => {
         ElMessage.success(result.msg);
         state.registerDiaVis = false;
         localStorage.setItem("token", result.data.token);
+        localStorage.setItem("userInfo", JSON.stringify(result.data.userInfo));
+        window.location.reload();
       } else {
         ElMessage.error(result.msg);
       }
@@ -160,9 +192,12 @@ const handleRegister = (formEl: FormInstance | undefined) => {
     }
   });
 };
-onMounted(() => {
-  // console.log("[ state.menuList ] >", state.menuList);
-});
+const loginOut = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userInfo");
+  ElMessage.success("退出成功");
+  window.location.reload();
+};
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };
@@ -174,5 +209,15 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .btn_login {
   display: flex;
   align-items: center;
+  .user_info {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .name {
+      margin-right: 5px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
 }
 </style>

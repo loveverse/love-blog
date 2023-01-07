@@ -44,7 +44,7 @@
   <el-dialog
     v-model="state.registerDiaVis"
     title="注册/登录"
-    width="30%"
+    width="300px"
     center
   >
     <el-form

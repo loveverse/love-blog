@@ -17,14 +17,19 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/person/index.vue"),
       },
       {
-        path: "/home/hotword",
+        path: "/home/issue",
+        name: "issue",
+        component: () => import("@/views/issue/index.vue"),
+      },
+      {
+        path: "/classify/hotword",
         name: "hotword",
         component: () => import("@/views/hotword/index.vue"),
       },
       {
-        path: "/home/issue",
-        name: "issue",
-        component: () => import("@/views/issue/index.vue"),
+        path: "/classify/wallpaper",
+        name: "wallpaper",
+        component: () => import("@/views/wallpaper/index.vue"),
       },
     ],
   },

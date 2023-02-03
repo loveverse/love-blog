@@ -23,7 +23,6 @@ const routes: RouteRecordRaw[] = [
             name: "issue",
             component: () => import("@/views/home/issue.vue"),
           },
-          
         ],
       },
       {
@@ -59,6 +58,10 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  // scrollBehavior(to, from, savedPosition) {
+  //   // 始终滚动到顶部
+  //   return { top: 0 };
+  // },
 });
 
 export default router;

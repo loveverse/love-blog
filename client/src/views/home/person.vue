@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper" ref="contentRef" v-loading="loading">
-    <ul class="out" :class="state.flag && 'out_pad'">
+  <div class="wrapper" ref="contentRef">
+    <ul class="out" :class="state.flag && 'out_pad'" v-loading="loading">
       <li class="card" v-for="item in state.findData" :key="item.id">
         <div class="artcle">
           <el-input

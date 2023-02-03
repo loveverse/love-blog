@@ -5,7 +5,6 @@
     mode="horizontal"
     :ellipsis="false"
     router
-    @select="handleSelect"
   >
     <template v-for="item in state.menuList">
       <ComItem :menuItem="item"></ComItem>
@@ -31,7 +30,7 @@
               <el-link
                 type="primary"
                 target="_blank"
-                href="https://github.com/loveverse/love-blog/tree/dev"
+                href="https://github.com/loveverse/love-blog"
                 >项目地址</el-link
               >
             </el-dropdown-item>
@@ -190,9 +189,6 @@ const loginOut = () => {
   localStorage.removeItem("userInfo");
   ElMessage.success("退出成功");
   window.location.reload();
-};
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
 };
 </script>
 <style lang="scss" scoped>

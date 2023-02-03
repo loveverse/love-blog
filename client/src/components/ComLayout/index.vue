@@ -7,3 +7,6 @@
 </template>
 
 <script setup name="ComLayout"></script>
+<style lang="scss" scoped>
+@include tranition;
+</style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="hotword" v-loading="loading">
-    <ul class="out" v-if="state.findData">
+  <div class="hotword">
+    <ul class="out" v-if="state.findData" v-loading="loading">
       <li class="card" v-for="item in state.findData" :key="item.id">
         <p class="title">{{ item.content }}</p>
         <a :href="item.url"> --来自网易云音乐《{{ item.name }}》 </a>

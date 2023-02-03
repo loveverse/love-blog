@@ -109,7 +109,6 @@ const state = reactive<IState>({
       permiss: "1",
       children: [],
     },
-
     {
       icon: "",
       path: "/home/issue",
@@ -117,12 +116,20 @@ const state = reactive<IState>({
       permiss: "2",
       children: [],
     },
+
     {
       icon: "",
       path: "/classify",
       title: "分类",
-      permiss: "3",
+      permiss: "4",
       children: [
+        {
+          icon: "",
+          path: "/classify/plan",
+          title: "考试计划",
+          permiss: "3",
+          children: [],
+        },
         {
           icon: "",
           path: "/classify/wallpaper",

@@ -12,7 +12,7 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 export default ({ command, mode }: ConfigEnv): UserConfig => {
   return {
     server: {
-      // host: "0.0.0.0",
+      host: command === "serve" ? "0.0.0.0" : "localhost",
       open: true,
       port: 40001,
       // hmr: {

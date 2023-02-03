@@ -1,35 +1,53 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
+const ComLayout = () => import("@/components/ComLayout/index.vue");
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/home",
-  },
-  {
-    path: "/home",
-    name: "/home",
     component: () => import("@/views/index.vue"),
     redirect: "/home/person",
     children: [
       {
-        path: "/home/person",
-        name: "person",
-        component: () => import("@/views/person/index.vue"),
+        path: "/home",
+        name: "home",
+        component: ComLayout,
+        redirect: "/404",
+        children: [
+          {
+            path: "/home/person",
+            name: "person",
+            component: () => import("@/views/home/person.vue"),
+          },
+          {
+            path: "/home/issue",
+            name: "issue",
+            component: () => import("@/views/home/issue.vue"),
+          },
+          
+        ],
       },
       {
-        path: "/home/issue",
-        name: "issue",
-        component: () => import("@/views/issue/index.vue"),
-      },
-      {
-        path: "/classify/hotword",
-        name: "hotword",
-        component: () => import("@/views/hotword/index.vue"),
-      },
-      {
-        path: "/classify/wallpaper",
-        name: "wallpaper",
-        component: () => import("@/views/wallpaper/index.vue"),
+        path: "/classify",
+        name: "classify",
+        component: ComLayout,
+        redirect: "/404",
+        children: [
+          {
+            path: "/classify/plan",
+            name: "plan",
+            component: () => import("@/views/classify/plan/index.vue"),
+          },
+          {
+            path: "/classify/hotword",
+            name: "hotword",
+            component: () => import("@/views/classify/hotword.vue"),
+          },
+          {
+            path: "/classify/wallpaper",
+            name: "wallpaper",
+            component: () => import("@/views/classify/wallpaper.vue"),
+          },
+        ],
       },
     ],
   },

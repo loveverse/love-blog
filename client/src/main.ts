@@ -1,4 +1,4 @@
-import { createApp, getCurrentInstance } from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
 import "@/assets/css/index.scss";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";

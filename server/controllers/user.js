@@ -31,7 +31,7 @@ class User {
           // 登录成功
           const { password, ...data } = res.dataValues;
           ctx.body = response.SUCCESS("userLogin", {
-            token: jwt.sign(data, JWT_SECRET, { expiresIn: "1d" }),
+            token: jwt.sign(data, JWT_SECRET, { expiresIn: "30d" }),
             userInfo: res.dataValues,
           });
         } else {
@@ -45,7 +45,7 @@ class User {
         const userInfo = await Muser.create({ user_name, password: hash });
         const { password, ...data } = userInfo.dataValues;
         ctx.body = response.SUCCESS("userRegister", {
-          token: jwt.sign(data, JWT_SECRET, { expiresIn: "1d" }),
+          token: jwt.sign(data, JWT_SECRET, { expiresIn: "30d" }),
           userInfo,
         });
       }

@@ -79,10 +79,11 @@ const getImgList = async (page = 1) => {
     justify-content: space-between;
     flex-wrap: wrap;
     ::v-deep .box-card {
-      width: 300px;
+      // width: 300px;
       width: calc((100% - 48px) / 4);
       // margin-right: 10px;
       margin-bottom: 10px;
+
       .el-card__body {
         height: 100%;
         padding: 10px;

@@ -4,7 +4,7 @@
       <ComHeader></ComHeader>
     </el-header>
     <!-- 直接使用router-view不显示,不需要padding的在meta定义inter为true -->
-    <el-main :class="$route.meta.inter && 'interval'">
+    <el-main :class="$route.meta.inter && 'interval'" id="main">
       <router-view v-slot="{ Component }">
         <transition name="move" mode="out-in">
           <component :is="Component"></component>

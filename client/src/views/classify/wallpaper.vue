@@ -18,17 +18,26 @@
           <template #error>
             <div class="image-slot">加载失败</div>
           </template>
+          <template #placeholder>
+            <el-skeleton style="height: 100%" animated :throttle="500">
+              <template #template>
+                <el-skeleton-item style="height: 100%" variant="image" />
+              </template>
+            </el-skeleton>
+          </template>
         </el-image>
       </el-card>
     </div>
     <el-pagination
+      class="paging"
       small
-      @current-change="getImgList"
       background
+      hide-on-single-page
+      @current-change="getImgList"
       :current-page="state.page"
       :page-size="20"
       :pager-count="5"
-      layout="->,prev, pager, next, total"
+      layout="prev, pager, next, total"
       :total="state.total"
     >
     </el-pagination>
@@ -50,9 +59,10 @@ const state = reactive<IState>({
   page: 1,
   total: 0,
 });
-const loading = ref(true);
+const loading = ref<boolean>(true);
 onMounted(() => {
   getImgList();
+  scrollBottom();
 });
 const getImgList = async (page = 1) => {
   state.page = page;
@@ -63,6 +73,7 @@ const getImgList = async (page = 1) => {
   loading.value = true;
   const result = await reqImgList(params);
   if (result.code === 200) {
+    scrollBottom();
     state.imgList = result.data.list;
     state.srcList = result.data.list.map((k: any) => k.url);
     state.total = result.data.total;
@@ -71,21 +82,26 @@ const getImgList = async (page = 1) => {
   }
   loading.value = false;
 };
+const scrollBottom = () => {
+  // nextTick(() => {
+  // 滚动到底部
+  let h: any = document.getElementById("main");
+  h.scrollTo(0, 0);
+  // });
+};
 </script>
 <style lang="scss" scoped>
 .wrapper {
   .out {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, 300px);
+    grid-gap: 20px;
     ::v-deep .box-card {
-      // width: 300px;
-      width: calc((100% - 48px) / 4);
-      // margin-right: 10px;
-      margin-bottom: 10px;
-
+      width: 100%;
       .el-card__body {
         height: 100%;
+        height: 180px;
         padding: 10px;
         box-sizing: border-box;
         text-align: center;
@@ -104,6 +120,10 @@ const getImgList = async (page = 1) => {
         }
       }
     }
+  }
+  .paging {
+    margin-top: 20px;
+    justify-content: center;
   }
 }
 </style>

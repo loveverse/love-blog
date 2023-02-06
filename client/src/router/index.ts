@@ -58,10 +58,13 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-  // scrollBehavior(to, from, savedPosition) {
-  //   // 始终滚动到顶部
-  //   return { top: 0 };
-  // },
+  scrollBehavior(to, from, savedPosition) {
+    // 始终滚动到顶部
+    return {
+      el: "#main",
+      top: 0,
+    };
+  },
 });
 
 export default router;

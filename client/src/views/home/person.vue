@@ -223,9 +223,12 @@ const del = async (id: number) => {
   }
 };
 const scrollBottom = () => {
+  // 添加内容需实时计算
   nextTick(() => {
     // 滚动到底部
-    contentRef.value.scrollIntoView(false);
+    let h: any = document.getElementById("main");
+    h.scrollTo(0, h?.scrollHeight);
+    // contentRef.value.scrollIntoView(false);
   });
 };
 </script>

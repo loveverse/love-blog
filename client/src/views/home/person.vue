@@ -238,7 +238,7 @@ const scrollBottom = () => {
     .card {
       position: relative;
       .artcle {
-        margin: 20px auto;
+        margin-bottom: 20px;
         padding: 15px 20px 20px;
         border-radius: 15px;
         word-wrap: break-word;
@@ -298,7 +298,7 @@ const scrollBottom = () => {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 30px auto;
+    margin: 20px auto;
     .el-input {
       margin: 20px auto;
     }

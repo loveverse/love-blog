@@ -3,16 +3,15 @@ const {
   hotword,
   person,
   issue,
-  upload,
+  common,
   user,
   wallpaper,
 } = require("../controllers/index");
 const { auth } = require("../middleware/index");
-// 上传图片的模板
-const multer = require("multer");
-// 上传文件的位置
-const static = multer({ dest: "./static/" });
 
+router.get("/", async (ctx) => {
+  ctx.body = "欢迎访问该接口";
+});
 router.get("/wy/find", hotword.findHotword);
 router.get("/wy/pageQuery", hotword.findPageHotword);
 
@@ -26,6 +25,8 @@ router.post("/findIssue", issue.findIssue);
 router.post("/addIssue", issue.addIssue);
 
 router.post("/register/user", user.register);
-router.post("/upload/file", static.any(), upload.uploadFile);
+router.post("/upload/file", common.uploadFile);
+// router.get("/download/file/:name", common.downloadFile);
 router.post("/wallpaper/findList", wallpaper.findPageWallpaper);
+
 module.exports = router;

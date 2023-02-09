@@ -1,7 +1,7 @@
 const Koa = require("koa");
 const http = require("http");
 const cors = require("koa2-cors");
-const bodyParser = require("koa-bodyparser");
+const { koaBody } = require("koa-body");
 const WebSocket = require("ws");
 const { APP_PORT, BASE_PATH } = require("./config/index");
 const router = require("./router/index");
@@ -13,7 +13,7 @@ const server = http.createServer(app.callback());
 // 同时需要在nginx配置/ws
 const wss = new WebSocket.Server({ server, path: BASE_PATH }); // 同一端口监听不同的服务
 // 解析请求体(也可以使用koa-body)
-app.use(bodyParser());
+app.use(koaBody({ multipart: true }));
 // 处理跨域
 app.use(cors());
 app.use(router.routes());

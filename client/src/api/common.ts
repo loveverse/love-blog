@@ -5,3 +5,5 @@ export const reqUpload = (params: any) =>
     headers: { "Content-Type": "multipart/form-data" },
     responseType: "blob",
   });
+
+export const reqDownLoad = (params: any) => post("/download/file", params);

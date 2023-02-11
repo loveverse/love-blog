@@ -29,6 +29,7 @@ http.interceptors.response.use(
     return response;
   },
   (error) => {
+    
     // 错误响应信息
     if (error && error.response) {
       return Promise.reject(showMessage(error.response.status));
@@ -89,6 +90,7 @@ export function post<T = any>(
       })
       // 处理网络问题失败的请求，且不会继续向下执行
       .catch((error) => {
+        
         // 错误会从上面传递下来
         ElMessage.error(error);
       });

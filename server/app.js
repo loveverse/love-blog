@@ -6,16 +6,29 @@ const WebSocket = require("ws");
 const { APP_PORT, BASE_PATH } = require("./config/index");
 const router = require("./router/index");
 const Mperson = require("./model/person");
+const path = require("path");
 
 // 创建一个Koa对象
 const app = new Koa();
 const server = http.createServer(app.callback());
 // 同时需要在nginx配置/ws
 const wss = new WebSocket.Server({ server, path: BASE_PATH }); // 同一端口监听不同的服务
-// 解析请求体(也可以使用koa-body)
-app.use(koaBody({ multipart: true }));
+
 // 处理跨域
 app.use(cors());
+// 解析请求体(也可以使用koa-body)
+app.use(
+  koaBody({
+    multipart: true,
+    // rename:
+    // encoding: "gzip",    // 前端报415
+    formidable: {
+      uploadDir: path.join(__dirname, "./static/"), // 设置文件上传目录
+      keepExtensions: true, // 保持文件的后缀
+      maxFieldsSize: 1024 * 1024 * 1024, // 文件上传大小
+    },
+  })
+);
 app.use(router.routes());
 
 wss.on("connection", function (ws) {

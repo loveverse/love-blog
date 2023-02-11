@@ -30,7 +30,6 @@ class Common {
       // const filepath = path.resolve(__dirname, url);
       // console.log(filepath);
       // ctx.attachment(url);
-      
       // ctx.s
       // ctx.body = fs.createReadStream(filepath);
     } catch (error) {
@@ -40,24 +39,26 @@ class Common {
   }
   async uploadFile(ctx, next) {
     try {
-      console.log(req, res, 111);
-      // fs.readFile(req.file.path, (err, data) => {
-      if (err) {
-        res.send(response.ERROR("uploadFileNotNull"));
-        return;
-      }
-      // let oldName = req.files.path; // 上传后默认的文件名 : 15daede910f2695c1352dccbb5c3e897
-      // let newName = "upload/" + req.files.originalname; // 指定文件路径和文件名
-      // // 3. 将上传后的文件重命名
-      // fs.renameSync(oldName, newName);
-      // const obj = {
-      //   name: oldName,
-      //   url: "",
-      //   id: new Date(),
-      // };
-      res.send(response.SUCCESS("common", {}));
-      // });
-    } catch (error) {}
+      const { file } = ctx.request.files;
+      console.log(file);
+      // // 创建可读流
+      const reader = fs.createReadStream(file.filepath);
+      let filePath =
+        path.join(__dirname, "../static") + `/${file.originalFilename}`;
+      // // 创建可写流
+      const upStream = fs.createWriteStream(filePath);
+      // // 可读流通过管道写入可写流
+      reader.pipe(upStream);
+      const fileInfo = {
+        id: 0,
+        url: file.filepath,
+        name: file.originalFilename,
+      };
+      ctx.body = response.SUCCESS("common", fileInfo);
+    } catch (error) {
+      console.log(error);
+      ctx.body = response.SERVER_ERROR();
+    }
   }
 }
 

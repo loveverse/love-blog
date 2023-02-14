@@ -88,18 +88,19 @@ const getImgList = async (page = 1) => {
   loading.value = false;
 };
 // const saveImg = async (info: any) => {
-//   // window.open(
-//   //   `http://localhost:40001/download/file/000ff11be21eacc4d4809842805b59c33d3f911a.jpg`,
-//   //   "self"
-//   // );
-//   // const params = { url: info.url };
-//   // const result = await reqDownLoad(params);
+//   window.open(
+//     `http://localhost:40001/download/file/000ff11be21eacc4d4809842805b59c33d3f911a.jpg`,
+//     "self"
+//   );
+//   const params = { url: info.url };
+//   const result = await reqDownLoad(params);
 // };
 const scrollBottom = () => {
   // nextTick(() => {
   // 滚动到底部
-  let h: any = document.getElementById("main");
-  h.scrollTo(0, 0);
+  let h: HTMLElement | null = document.getElementById("main");
+  h?.scrollTo(0, 0);
+
   // });
 };
 </script>

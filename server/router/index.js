@@ -27,6 +27,6 @@ router.post("/addIssue", issue.addIssue);
 router.post("/register/user", user.register);
 router.post("/upload/file", common.uploadFile);
 // router.get("/download/file/:name", common.downloadFile);
-router.post("/wallpaper/findList", wallpaper.findPageWallpaper);
+router.get("/wallpaper/findList", wallpaper.findPageWallpaper);
 
 module.exports = router;

@@ -16,7 +16,7 @@ class Wallpaper {
   // 分页查询
   async findPageWallpaper(ctx, next) {
     try {
-      const { limit, page } = ctx.request.body;
+      const { limit, page } = ctx.request.query;
       // console.log(limit, page);
       /*
       第一页：0，10（0，10）
@@ -40,6 +40,17 @@ class Wallpaper {
       // })
       // console.log(list.count,111);
 
+      /* 
+        设置强缓存，过期时间为20秒,从磁盘读取
+        max-age=xxx：过期时间单位秒；
+        no-cache：不进行强缓存；
+        no-store：不强缓存，也不协商缓存）
+        expires,cache-control(优先级高)
+        get请求会被浏览器缓存下来，而post请求并不会（可以在响应头设置，但不推荐！）
+      */
+      // const time = new Date(Date.now() + 30000).toUTCString();
+      // ctx.set("Expires", time);
+      ctx.set("Cache-Control", "max-age=3600");
       ctx.body = response.SUCCESS("common", { total: total.count, list });
     } catch (error) {
       console.log(error);

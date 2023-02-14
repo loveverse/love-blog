@@ -21,7 +21,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }
 // 全局引入
-app.config.globalProperties.$message = ElMessage;
+// app.config.globalProperties.$message = ElMessage;
 
 app.use(router);
 app.use(ElementPlus, {

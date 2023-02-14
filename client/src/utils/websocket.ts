@@ -31,7 +31,7 @@ class WS {
   }
   // mounted中初始化
   initWebsocket(callback: any = null, close_fun: any = null, url: string = "") {
-    let webUrl = url || socketConfig.url;
+    const webUrl = url || socketConfig.url;
     if (typeof WebSocket === "undefined") {
       console.log("您的浏览器不支持WebSocket，无法获取数据");
       return;

@@ -49,7 +49,7 @@
 <script setup lang="ts" name="issue">
 import { reqIssueList, reqAddIssue } from "@/api/issue";
 import { reqUpload } from "@/api/common";
-import type { UploadUserFile, UploadProps } from "element-plus";
+import { UploadUserFile, UploadProps, ElMessage } from "element-plus";
 interface IState {
   issueList: object[];
 }
@@ -102,6 +102,7 @@ const handleUpload = async (file: any) => {
     ElMessage.success("上传成功");
   } else {
     ElMessage.error(result.msg);
+    
   }
 };
 onMounted(() => {

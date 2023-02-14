@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const Mperson = require("../model/person");
 const response = require("../utils/resData");
 
@@ -11,15 +11,26 @@ Person.prototype.findExcerpt = async function (ctx, next) {
     // 不进行强缓存
     ctx.set("Cache-Control", "no-cache");
     const fileBuffer = await Mperson.findAll();
-    // const str = JSON.stringify(fileBuffer.slice(-2));
+    const str = JSON.stringify(fileBuffer.slice(-2));
     // const ifNoneMatch = ctx.request.header["if-none-match"];
-    // const hash = bcrypt.hashSync(str, bcrypt.genSaltSync(10));
-    // if (bcrypt.compareSync(str, 1)) {
+    const hash = crypto.createHash("md5");
+    hash.update(str);
+    const etag = `${hash.digest("hex")}`;
+    // if (ifNoneMatch) {
+    // if (bcrypt.compareSync(str, ifNoneMatch)) {
+    //   console.log(111);
     //   ctx.status = 304;
     // } else {
-      ctx.set("etag", hash);
-      ctx.body = response.SUCCESS("common", fileBuffer);
+    //   ctx.set("Etag", hash);
+    //   ctx.body = response.SUCCESS("common", fileBuffer);
     // }
+    console.log(ctx.fresh);
+    ctx.set("ETag", etag);
+    if (ctx.fresh) {
+      ctx.status = 304;
+      return;
+    }
+    ctx.body = response.SUCCESS("common", fileBuffer);
   } catch (error) {
     console.log(error);
     ctx.body = response.SERVER_ERROR();

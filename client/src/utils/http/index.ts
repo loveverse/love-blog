@@ -18,7 +18,6 @@ const http: AxiosInstance = axios.create({
 });
 
 http.interceptors.request.use((config: RequestConfig) => {
-  // 暂时没保存token
   if (localStorage.getItem("token")) {
     config.headers["LOVE-TOKEN"] = localStorage.getItem("token");
   }

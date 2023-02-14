@@ -14,6 +14,5 @@ seq
   });
 
 seq.sync();
-// 强制同步数据库,会先删除表，然后创建
-// seq.sync({ force: true });
+// 强制同步数据库,会先删除表，然后创建 seq.sync({ force: true });
 module.exports = seq;

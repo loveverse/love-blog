@@ -1,7 +1,7 @@
-// 上线时只需要需改pathBase即可
-const pathBase = "env";
+// 上线时只需要需运行npm run pro
 let APP_PORT, APP_HOST, DATA_BASE, USERNAME, PASSWORD, BASE_PATH, JWT_SECRET;
-if (pathBase === "env") {
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === "env") {
   APP_PORT = 40001;
   APP_HOST = "1.15.42.9";
   DATA_BASE = "verse";

@@ -4,6 +4,8 @@ const response = require("../utils/resData");
 // 问题接口
 async function findIssue(ctx, next) {
   try {
+    const time = new Date(Date.now() + 60 * 60 * 1000).toUTCString();
+    ctx.set("Expires", time);
     ctx.body = response.SUCCESS("common", await Missue.findAll());
   } catch (error) {
     console.log(error);

@@ -10,27 +10,39 @@ Person.prototype.findExcerpt = async function (ctx, next) {
   try {
     // 不进行强缓存
     ctx.set("Cache-Control", "no-cache");
+    // http1.0的产物
+    ctx.set("Pragma", "no-cache");
     const fileBuffer = await Mperson.findAll();
     const str = JSON.stringify(fileBuffer.slice(-2));
-    // const ifNoneMatch = ctx.request.header["if-none-match"];
+    const ifNoneMatch = ctx.request.header["if-none-match"];
     const hash = crypto.createHash("md5");
     hash.update(str);
-    const etag = `${hash.digest("hex")}`;
-    // if (ifNoneMatch) {
-    // if (bcrypt.compareSync(str, ifNoneMatch)) {
+    const etag = `W/"${hash.digest("hex")}"`;
+    // const ifModifiedSince = ctx.request.header["if-modified-since"];
+    // const time = fileBuffer[fileBuffer.length - 1].updatedAt.toUTCString();
+    // if (ifModifiedSince === time) {
     //   console.log(111);
     //   ctx.status = 304;
     // } else {
-    //   ctx.set("Etag", hash);
+    //   console.log(222);
+    //   ctx.set("Last-Modified", time);
     //   ctx.body = response.SUCCESS("common", fileBuffer);
     // }
-    console.log(ctx.fresh);
-    ctx.set("ETag", etag);
-    if (ctx.fresh) {
+    /* 
+      强 ETag 值，不论实体发生多么细微的变化都会改变其值。
+      ETag: "usagi-1234"
+      弱 ETag 值只用于提示资源是否相同。只有资源发生了根本改变，产生差异时才会改变 ETag 值。
+      ETag: W/"usagi-1234"
+    */
+    // console.log(ctx.request.fresh);
+    if (ifNoneMatch === etag) {
+      console.log(111);
       ctx.status = 304;
-      return;
+    } else {
+      ctx.set("ETag", etag);
+      console.log(222);
+      ctx.body = response.SUCCESS("common", fileBuffer);
     }
-    ctx.body = response.SUCCESS("common", fileBuffer);
   } catch (error) {
     console.log(error);
     ctx.body = response.SERVER_ERROR();

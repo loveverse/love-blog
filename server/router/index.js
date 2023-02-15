@@ -21,7 +21,7 @@ router.get("/addExcerpt", auth, person.addExcerpt);
 router.get("/updateExcerpt", auth, person.updateExcerpt);
 router.get("/delExcerpt", auth, person.delExcerpt);
 
-router.post("/findIssue", issue.findIssue);
+router.get("/findIssue", issue.findIssue);
 router.post("/addIssue", issue.addIssue);
 
 router.post("/register/user", user.register);

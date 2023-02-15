@@ -19,6 +19,7 @@
 * [ ] 熟悉强缓存和协商缓存，并使用`Cache-Control`,`expires`(强缓存);`Etag`,`Last-Modified`实践
 * [ ] 增加访问数量，访问ip显示
 * [ ] 适配移动端
+* [ ] 语言，主题切换
 
 使用koa-body替换koa-bodyparser
 演示链接：(https://loveverse.top)

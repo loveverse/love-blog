@@ -1,4 +1,4 @@
-import { post } from "@/utils/http/index";
+import { get, post } from "@/utils/http/index";
 
 interface IAddIssue {
   title: string | number;
@@ -6,5 +6,5 @@ interface IAddIssue {
   status: number;
   file?: object;
 }
-export const reqIssueList = () => post("/findIssue");
+export const reqIssueList = () => get("/findIssue");
 export const reqAddIssue = (params: IAddIssue) => post("/addIssue", params);

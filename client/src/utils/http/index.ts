@@ -25,9 +25,11 @@ http.interceptors.request.use((config: RequestConfig) => {
 });
 http.interceptors.response.use(
   (response: AxiosResponse) => {
+    console.log("[ response ] >", response);
     return response;
   },
   (error) => {
+    console.log("[ error ] >", error);
     // 错误响应信息
     if (error && error.response) {
       return Promise.reject(showMessage(error.response.status));

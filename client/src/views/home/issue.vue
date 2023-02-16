@@ -23,7 +23,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog v-model="state.issueDialog" :title="state.issueTitle">
+    <el-dialog
+      v-model="state.issueDialog"
+      :title="state.issueTitle"
+      width="60%"
+    >
       <el-form
         :model="state.issueInfo"
         :rules="state.issueInfoRules"
@@ -43,13 +47,17 @@
         </el-form-item>
         <el-form-item label="图片">
           <el-upload
-            v-model:file-list="state.issueInfo.fileList"
+            :file-list="state.issueInfo.fileList"
             class="upload-demo"
             action="#"
+            accept="image/*"
             :auto-upload="false"
+            list-type="picture-card"
             :on-change="handleChange"
+            :on-remove="handleRemove"
+            :on-preview="handlePictureCardPreview"
           >
-            <el-button type="primary">上传</el-button>
+            <el-icon><Plus /></el-icon>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -62,22 +70,32 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog v-model="state.imgPreviewDia">
+      <img style="width: 100%" :src="state.imgUrl" alt="Preview Image" />
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts" name="issue">
 import { reqIssueList, reqAddIssue } from "@/api/issue";
 import { reqUpload } from "@/api/common";
-import { UploadUserFile, UploadProps, FormInstance } from "element-plus";
+import { UploadProps, FormInstance } from "element-plus";
 
 const state = reactive({
   issueList: [] as object[],
   issueDialog: false,
-  issueInfo: {} as any,
+  issueInfo: {
+    title: "",
+    link: "",
+    status: 0,
+    fileList: [] as any,
+  },
   issueInfoRules: {
     title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
     link: [{ required: true, message: "链接不能为空", trigger: "blur" }],
   },
   issueTitle: "新增问题",
+  imgUrl: "",
+  imgPreviewDia: false,
 });
 
 const loading = ref(true);
@@ -104,23 +122,30 @@ const handleSaveIssue = async (formEl: FormInstance | undefined) => {
         ElMessage.error(result.msg);
       }
     } else {
-      console.log("error submit!", fields);
     }
   });
 };
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
-  console.log("[ uploadFile ] >", uploadFile);
   handleUpload(uploadFile.raw);
+};
+const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
+  state.issueInfo.fileList = state.issueInfo.fileList.filter(
+    (k: any) => k.name !== uploadFile.name
+  );
+};
+
+const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  state.imgUrl = uploadFile.url!;
+  state.imgPreviewDia = true;
 };
 const handleUpload = async (file: any) => {
   const params = new FormData();
   params.append("file", file);
   const result = await reqUpload(params);
-
   if (result.code === 200) {
     ElMessage.success("上传成功");
+    state.issueInfo.fileList.push(result.data);
   } else {
-    console.log("[ 111 ] >", 111);
     ElMessage.error(result.msg);
   }
 };

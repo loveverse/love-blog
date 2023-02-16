@@ -23,24 +23,30 @@ const Missue = seq.define(
       defaultValue: 0,
       comment: "编辑状态, 0:不在编辑;1: 在编辑中",
     },
-    file_id: {
-      type: DataTypes.CHAR(255),
+    file_list: {
+      type: DataTypes.JSON,
       allowNull: true,
       unique: false,
-      comment: "文件id",
+      comment: "文件列表"
     },
-    file_name: {
-      type: DataTypes.CHAR(255),
-      allowNull: true,
-      unique: false,
-      comment: "文件名",
-    },
-    file_url: {
-      type: DataTypes.CHAR(255),
-      allowNull: true,
-      unique: false,
-      comment: "文件路径",
-    },
+    // file_id: {
+    //   type: DataTypes.CHAR(255),
+    //   allowNull: true,
+    //   unique: false,
+    //   comment: "文件id",
+    // },
+    // file_name: {
+    //   type: DataTypes.CHAR(255),
+    //   allowNull: true,
+    //   unique: false,
+    //   comment: "文件名",
+    // },
+    // file_url: {
+    //   type: DataTypes.CHAR(255),
+    //   allowNull: true,
+    //   unique: false,
+    //   comment: "文件路径",
+    // },
   },
   {
     tableName: "issue",
@@ -48,7 +54,8 @@ const Missue = seq.define(
   }
 );
 // seq.sync();
-// 强制同步数据库
-// seq.sync({ force: true });
+// Missue.sync()
+
+
 
 module.exports = Missue;

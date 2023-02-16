@@ -61,7 +61,6 @@ class Common {
         url: NETWORK_PATH + filePath,
         name: file.originalFilename,
       };
-      console.log(fileInfo);
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
       console.log(error);

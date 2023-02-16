@@ -43,3 +43,4 @@ module.exports = {
   FILE_PATH,
   NETWORK_PATH,
 };
+// 使用vue中的过渡组件，当过渡组件在根标签下时，同时在多级路由后，过渡动画不生效问题

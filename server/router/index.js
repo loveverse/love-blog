@@ -15,18 +15,21 @@ router.get("/", async (ctx) => {
 router.get("/wy/find", hotword.findHotword);
 router.get("/wy/pageQuery", hotword.findPageHotword);
 
-// 登录才能发表评论
+// 登录才能发表评论(协商缓存)
 router.get("/findExcerpt", person.findExcerpt);
 router.get("/addExcerpt", auth, person.addExcerpt);
 router.get("/updateExcerpt", auth, person.updateExcerpt);
 router.get("/delExcerpt", auth, person.delExcerpt);
 
-router.get("/findIssue", issue.findIssue);
+// 不走缓存
+router.post("/findIssue", issue.findIssue);
 router.post("/addIssue", issue.addIssue);
+router.post("/delIssue", issue.delIssue);
 
 router.post("/register/user", user.register);
 router.post("/upload/file", common.uploadFile);
 // router.get("/download/file/:name", common.downloadFile);
+// 强缓存
 router.get("/wallpaper/findList", wallpaper.findPageWallpaper);
 
 module.exports = router;

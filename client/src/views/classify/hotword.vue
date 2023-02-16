@@ -11,7 +11,7 @@
       @current-change="handlerPage"
       background
       :current-page="state.currentPage"
-      :page-size="10"
+      :page-size="state.limit"
       :pager-count="5"
       layout="->,prev, pager, next, total"
       :total="state.total"
@@ -86,7 +86,7 @@ onMounted(() => {
       margin: 20px auto;
       padding: 15px 20px 20px;
       // height: 100px;
-      border-radius: 15px;
+      border-radius: 4px;
       box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.2),
         -18px -18px 30px rgba(255, 255, 255, 1);
       /* 过渡时间 ease-out是指先快速 后慢速 */

@@ -39,7 +39,7 @@
       hide-on-single-page
       @current-change="getImgList"
       :current-page="state.page"
-      :page-size="20"
+      :page-size="state.limit"
       :pager-count="5"
       layout="prev, pager, next, total"
       :total="state.total"

@@ -6,7 +6,6 @@ const auth = async (ctx, next) => {
   // 会返回小写secret
   const token = ctx.request.header["love-token"];
 
-  console.log(token);
   try {
     const user = jwt.verify(token, JWT_SECRET);
     // 在已经颁发token接口上面添加user对象，便于使用

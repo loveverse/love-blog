@@ -231,7 +231,7 @@ const scrollBottom = () => {
       .artcle {
         margin-bottom: 20px;
         padding: 15px 20px 20px;
-        border-radius: 15px;
+        border-radius: 4px;
         word-wrap: break-word;
         box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.2),
           -18px -18px 30px rgba(255, 255, 255, 1);

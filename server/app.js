@@ -23,7 +23,7 @@ app.use(
     // rename:
     // encoding: "gzip",    // 前端报415
     formidable: {
-      uploadDir: path.join(__dirname, "./static/"), // 设置文件上传目录
+      // uploadDir: path.join(__dirname, "./static/"), // 设置文件上传目录
       keepExtensions: true, // 保持文件的后缀
       maxFieldsSize: 1024 * 1024 * 1024, // 文件上传大小
     },

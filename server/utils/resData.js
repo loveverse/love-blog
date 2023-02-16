@@ -15,10 +15,12 @@ const err = {
   tokenInvaild: "token无效，请登录",
   powerLacking: "抱歉，权限不足",
   unknownError: "未知错误，请联系管理员",
+  upload: "上传失败",
 };
 const success = {
   userLogin: "登录成功",
   userRegister: "注册成功",
+  upload: "上传成功",
   common: "成功",
 };
 const ERROR = (str, data = null) => {

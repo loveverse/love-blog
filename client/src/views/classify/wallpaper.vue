@@ -50,15 +50,9 @@
 <script setup lang="ts" name="wallpaper">
 import { reqImgList } from "@/api/wallpaper";
 // import { reqDownLoad } from "@/api/common";
-interface IState {
-  imgList: any[];
-  srcList: string[];
-  limit: number;
-  page: number;
-  total: number;
-}
-const state = reactive<IState>({
-  imgList: [],
+
+const state = reactive({
+  imgList: [] as any,
   srcList: [],
   limit: 24,
   page: 1,

@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const send = require("koa-send");
 const response = require("../utils/resData");
+const { NETWORK_PATH, FILE_PATH } = require("../config/index");
 
 class Common {
   constructor() {}
@@ -40,24 +41,31 @@ class Common {
   async uploadFile(ctx, next) {
     try {
       const { file } = ctx.request.files;
-      console.log(file);
       // // 创建可读流
       const reader = fs.createReadStream(file.filepath);
-      let filePath =
-        path.join(__dirname, "../static") + `/${file.originalFilename}`;
+      // 检查文件夹是否存在，不存在则创建文件夹
+      if (!fs.existsSync(FILE_PATH)) {
+        FILE_PATH && fs.mkdirSync(FILE_PATH);
+      }
+      // 上传的文件具体地址
+      let filePath = path.join(
+        FILE_PATH || __dirname,
+        `${FILE_PATH ? "./" : "../static/"}${file.originalFilename}`
+      );
       // // 创建可写流
       const upStream = fs.createWriteStream(filePath);
       // // 可读流通过管道写入可写流
       reader.pipe(upStream);
       const fileInfo = {
-        id: 0,
-        url: file.filepath,
+        id: Date.now(),
+        url: NETWORK_PATH + filePath,
         name: file.originalFilename,
       };
+      console.log(fileInfo);
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
       console.log(error);
-      ctx.body = response.SERVER_ERROR();
+      ctx.body = response.ERROR("upload");
     }
   }
 }

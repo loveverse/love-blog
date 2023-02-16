@@ -25,16 +25,8 @@
 <script setup lang="ts" name="hotword">
 import { reqPageFindData } from "@/api/hotword";
 
-interface IState {
-  findData: any[];
-  total: number;
-  oneDay: number;
-  limit: number;
-  currentPage: number;
-}
-
-const state = reactive<IState>({
-  findData: [],
+const state = reactive({
+  findData: [] as any,
   limit: 10, // 每页显示数
   currentPage: Number(sessionStorage.getItem("page")) || 1, // 当前页
   total: 0,

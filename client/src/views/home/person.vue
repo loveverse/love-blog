@@ -89,18 +89,9 @@ import {
 import { formatterTime, urlify } from "@/utils/common";
 import Ws from "@/utils/websocket";
 // 将Ws放在state中同时监视，watch不到里面的对象和属性，因为没有实例化WebSocket
-interface IState {
-  findData: any[];
-  text: string;
-  author: string;
-  aId: number;
-  compare: string;
-  flag: boolean;
-  connectStatus: number;
-}
 
-const state = reactive<IState>({
-  findData: [],
+const state = reactive({
+  findData: [] as any,
   text: "",
   author: "",
   aId: 0,

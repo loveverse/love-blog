@@ -25,7 +25,6 @@ http.interceptors.request.use((config: RequestConfig) => {
 });
 http.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log("[ response ] >", response);
     return response;
   },
   (error) => {

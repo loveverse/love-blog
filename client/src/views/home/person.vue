@@ -15,6 +15,7 @@
               v-if="item.isLink"
               class="title"
               type="primary"
+              target="_blank"
               :href="item.content"
               :data-id="item.id"
               @click="edit($event, item.content)"

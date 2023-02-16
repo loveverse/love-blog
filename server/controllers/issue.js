@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const Missue = require("../model/issue");
 const response = require("../utils/resData");
 
@@ -8,10 +7,12 @@ async function findIssue(ctx, next) {
     // const time = new Date(Date.now() + 60 * 60 * 1000).toUTCString();
     // ctx.set("Expires", time);
     // ctx.set("Cache-Control", "no-cache");
-    ctx.body = response.SUCCESS(
-      "common",
-      await Missue.findAll({ where: { status: 1 } })
-    );
+    let data = await Missue.findAll({ where: { status: 1 } });
+    const list = data.map((k) => {
+      k.dataValues.fileList = JSON.parse(k.dataValues.file_list);
+      return k;
+    });
+    ctx.body = response.SUCCESS("common", list);
   } catch (error) {
     console.log(error);
     ctx.body = response.SERVER_ERROR();
@@ -20,13 +21,14 @@ async function findIssue(ctx, next) {
 async function addIssue(ctx, next) {
   try {
     const { title, link, status, fileList } = ctx.request.body;
+    console.log(fileList);
     ctx.body = response.SUCCESS(
       "common",
       await Missue.create({
         title,
         link,
         status,
-        file_list: JSON.stringify(fileList),
+        file_list: fileList,
       })
     );
   } catch (error) {
@@ -37,10 +39,6 @@ async function addIssue(ctx, next) {
 // 删数据是不可能删除的
 async function delIssue(ctx, next) {
   try {
-    if (!ctx.state.user.is_admin) {
-      ctx.body = response.ERROR("powerLacking");
-      return;
-    }
     const { id } = ctx.request.body;
     ctx.body = response.SUCCESS(
       "common",

@@ -10,11 +10,27 @@
     >
       <el-table-column type="index" label="序号" width="80" align="center" />
       <el-table-column prop="title" label="问题标题"> </el-table-column>
-      <el-table-column prop="link" label="链接" width="auto"> </el-table-column>
+      <el-table-column prop="link" label="链接" width="auto">
+        <template v-slot="{ row }">
+          <el-tag type="success">
+            {{ row.link }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="content" label="问题图片" width="auto">
+        <!-- <template v-slot="">
+          <el-image
+      style="width: 100px; height: 100px"
+      :src="url"
+      :zoom-rate="1.2"
+      :preview-src-list="srcList"
+      :initial-index="4"
+      fit="cover"
+    />
+        </template> -->
       </el-table-column>
 
-      <el-table-column label="操作" width="200" align="center">
+      <el-table-column label="操作" width="120" align="center">
         <template v-slot="{ row }">
           <div class="operation">
             <span>编辑</span>

@@ -4,11 +4,11 @@ const response = require("../utils/resData");
 // 问题接口
 async function findIssue(ctx, next) {
   try {
-    
     let data = await Missue.findAll({ where: { status: 1 } });
     const list = data.map((k) => {
       k.dataValues.fileList = JSON.parse(k.file_list);
       delete k.dataValues.file_list;
+      delete k.dataValues.status;
       return k;
     });
     ctx.body = response.SUCCESS("common", list);
@@ -19,15 +19,15 @@ async function findIssue(ctx, next) {
 }
 async function addIssue(ctx, next) {
   try {
-    const { title, link, status, fileList } = ctx.request.body;
-    console.log(fileList);
+    const { title, link, fileList } = ctx.request.body;
+
     ctx.body = response.SUCCESS(
       "common",
       await Missue.create({
         title,
         link,
-        status,
-        file_list: fileList || [],
+        status: 1, // 逻辑位
+        file_list: fileList,
       })
     );
   } catch (error) {
@@ -56,8 +56,33 @@ async function delIssue(ctx, next) {
   }
 }
 
+async function editIssue(ctx, next) {
+  try {
+    const { id, title, link, fileList } = ctx.request.body;
+    ctx.body = response.SUCCESS(
+      "common",
+      await Missue.update(
+        {
+          title,
+          link,
+          status: 1, // 逻辑位
+          file_list: fileList,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      )
+    );
+  } catch (error) {
+    console.log(error);
+    ctx.body = response.SERVER_ERROR();
+  }
+}
 module.exports = {
   findIssue,
   addIssue,
   delIssue,
+  editIssue,
 };

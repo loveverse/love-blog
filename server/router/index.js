@@ -25,6 +25,7 @@ router.get("/delExcerpt", auth, person.delExcerpt);
 router.post("/findIssue", issue.findIssue);
 router.post("/addIssue", issue.addIssue);
 router.post("/delIssue", issue.delIssue);
+router.post("/editIssue", issue.editIssue);
 
 router.post("/register/user", user.register);
 router.post("/upload/file", common.uploadFile);

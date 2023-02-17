@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" v-loading="loading">
-    <el-button type="primary" @click="state.issueDialog = true"
+    <el-button type="primary" @click="handleIssueBeforeOpen('add')"
       >新建问题</el-button
     >
     <el-table
@@ -12,12 +12,12 @@
       <el-table-column prop="title" label="问题标题"> </el-table-column>
       <el-table-column prop="link" label="链接" width="auto">
         <template v-slot="{ row }">
-          <el-tag type="success">
-            {{ row.link }}
-          </el-tag>
+          <el-link type="primary" :href="row.link" target="_blank">{{
+            row.link
+          }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="问题图片" width="auto">
+      <el-table-column label="问题图片" width="auto">
         <template v-slot="{ row }">
           <el-image
             v-for="(item, index) in row.fileList"
@@ -26,15 +26,25 @@
             :preview-src-list="row.fileList.map((k:any) => k.url)"
             :initial-index="index"
             :src="item.url"
+            lazy
             fit="cover"
-          />
+            :preview-teleported="true"
+          >
+            <template #placeholder>
+              <el-skeleton style="height: 100%" animated :throttle="500">
+                <template #template>
+                  <el-skeleton-item style="height: 100%" variant="image" />
+                </template>
+              </el-skeleton>
+            </template>
+          </el-image>
         </template>
       </el-table-column>
 
       <el-table-column label="操作" width="120" align="center">
         <template v-slot="{ row }">
           <div class="operation">
-            <span>编辑</span>
+            <span @click="handleIssueBeforeOpen('edit', row)">编辑</span>
             <el-popconfirm title="是否删除该问题？" @confirm="delIssue(row.id)">
               <template #reference>
                 <span>删除</span>
@@ -98,19 +108,26 @@
   </div>
 </template>
 <script setup lang="ts" name="issue">
-import { reqIssueList, reqAddIssue, reqDelIssue } from "@/api/issue";
+import {
+  reqIssueList,
+  reqAddIssue,
+  reqDelIssue,
+  reqEditIssue,
+} from "@/api/issue";
 import { reqUpload } from "@/api/common";
 import { UploadProps, FormInstance } from "element-plus";
-
+import cloneDeep from "lodash/cloneDeep";
+// 避免产生引用问题
+class IssueInfo {
+  id = "";
+  title = "";
+  link = "";
+  fileList = [] as any;
+}
 const state = reactive({
   issueList: [] as object[],
   issueDialog: false,
-  issueInfo: {
-    title: "",
-    link: "",
-    status: 1,
-    fileList: [] as any,
-  },
+  issueInfo: new IssueInfo(),
   issueInfoRules: {
     title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
     link: [{ required: true, message: "链接不能为空", trigger: "blur" }],
@@ -123,6 +140,19 @@ const state = reactive({
 const loading = ref(true);
 const issueRef = ref<FormInstance>();
 
+const handleIssueBeforeOpen = (type: string, info: any = null) => {
+  issueRef.value?.clearValidate();
+  state.issueTitle = type === "add" ? "新建问题" : "编辑问题";
+  state.issueInfo = type === "add" ? new IssueInfo() : cloneDeep(info);
+  // if (type === "add") {
+  //   state.issueTitle = "新建问题";
+  //   state.issueInfo = new IssueInfo();
+  // } else {
+  //   state.issueTitle = "编辑问题";
+  //   state.issueInfo = cloneDeep(info);
+  // }
+  state.issueDialog = true;
+};
 const getIssueList = async () => {
   loading.value = true;
   const result = await reqIssueList();
@@ -146,9 +176,10 @@ const delIssue = async (id: number) => {
 const handleSaveIssue = async (formEl: FormInstance | undefined) => {
   await formEl?.validate(async (valid, fields) => {
     if (valid) {
-      const result = await reqAddIssue(state.issueInfo);
+      const commonFn = state.issueInfo.id ? reqEditIssue : reqAddIssue;
+      const result = await commonFn(state.issueInfo);
       if (result.code === 200) {
-        ElMessage.success("保存成功");
+        ElMessage.success(state.issueInfo.id ? "编辑成功" : "保存成功");
         state.issueDialog = false;
         getIssueList();
       } else {
@@ -159,12 +190,9 @@ const handleSaveIssue = async (formEl: FormInstance | undefined) => {
   });
 };
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles);
-
   handleUpload(uploadFile.raw);
 };
 const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles);
   // state.issueInfo.fileList = state.issueInfo.fileList.filter(
   //   (k: any) => k.name !== uploadFile.name
   // );

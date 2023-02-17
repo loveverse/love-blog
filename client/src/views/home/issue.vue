@@ -23,6 +23,8 @@
             v-for="(item, index) in row.fileList"
             :key="index"
             style="width: 100px; height: 100px"
+            :preview-src-list="row.fileList.map((k:any) => k.url)"
+            :initial-index="index"
             :src="item.url"
             fit="cover"
           />

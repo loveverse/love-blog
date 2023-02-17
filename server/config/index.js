@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "development ") {
   BASE_PATH = "/";
   JWT_SECRET = "LOVE-TOKEN";
   FILE_PATH = "";
-  NETWORK_PATH = "";
+  NETWORK_PATH = "blob:http://192.168.10.50:40001/";
 } else {
   APP_PORT = 40001; // 服务监听端口
   APP_HOST = "1.15.42.9"; // 数据库ip地址
@@ -28,8 +28,8 @@ if (process.env.NODE_ENV === "development ") {
   PASSWORD = "123456"; // 密码
   BASE_PATH = "/socket";
   JWT_SECRET = "LOVE-TOKEN";
-  FILE_PATH = "/www/wwwroot/note.loveverse.top/static";
-  NETWORK_PATH = "https://note.loveverse.top/static/";
+  FILE_PATH = "/www/wwwroot/note.loveverse.top/static"; // 保存文件的绝对路径
+  NETWORK_PATH = "https://note.loveverse.top/static/"; // 网络url地址
 }
 
 module.exports = {
@@ -43,4 +43,3 @@ module.exports = {
   FILE_PATH,
   NETWORK_PATH,
 };
-// 使用vue中的过渡组件，当过渡组件在根标签下时，同时在多级路由后，过渡动画不生效问题

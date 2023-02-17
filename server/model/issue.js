@@ -25,9 +25,9 @@ const Missue = seq.define(
     },
     file_list: {
       type: DataTypes.JSON,
-      allowNull: true,
+      allowNull: false,
       unique: false,
-      comment: "文件列表"
+      comment: "文件列表",
     },
     // file_id: {
     //   type: DataTypes.CHAR(255),
@@ -55,7 +55,5 @@ const Missue = seq.define(
 );
 // seq.sync();
 // Missue.sync()
-
-
 
 module.exports = Missue;

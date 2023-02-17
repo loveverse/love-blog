@@ -56,11 +56,13 @@ class Common {
       const upStream = fs.createWriteStream(filePath);
       // // 可读流通过管道写入可写流
       reader.pipe(upStream);
+
       const fileInfo = {
         id: Date.now(),
-        url: NETWORK_PATH + filePath,
+        url: NETWORK_PATH + file.originalFilename,
         name: file.originalFilename,
       };
+
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
       console.log(error);

@@ -4,12 +4,11 @@ const response = require("../utils/resData");
 // 问题接口
 async function findIssue(ctx, next) {
   try {
-    // const time = new Date(Date.now() + 60 * 60 * 1000).toUTCString();
-    // ctx.set("Expires", time);
-    // ctx.set("Cache-Control", "no-cache");
+    
     let data = await Missue.findAll({ where: { status: 1 } });
     const list = data.map((k) => {
-      k.dataValues.fileList = JSON.parse(k.dataValues.file_list);
+      k.dataValues.fileList = JSON.parse(k.file_list);
+      delete k.dataValues.file_list;
       return k;
     });
     ctx.body = response.SUCCESS("common", list);
@@ -28,7 +27,7 @@ async function addIssue(ctx, next) {
         title,
         link,
         status,
-        file_list: fileList,
+        file_list: fileList || [],
       })
     );
   } catch (error) {

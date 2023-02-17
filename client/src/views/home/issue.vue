@@ -18,16 +18,15 @@
         </template>
       </el-table-column>
       <el-table-column prop="content" label="问题图片" width="auto">
-        <!-- <template v-slot="">
+        <template v-slot="{ row }">
           <el-image
-      style="width: 100px; height: 100px"
-      :src="url"
-      :zoom-rate="1.2"
-      :preview-src-list="srcList"
-      :initial-index="4"
-      fit="cover"
-    />
-        </template> -->
+            v-for="(item, index) in row.fileList"
+            :key="index"
+            style="width: 100px; height: 100px"
+            :src="item.url"
+            fit="cover"
+          />
+        </template>
       </el-table-column>
 
       <el-table-column label="操作" width="120" align="center">

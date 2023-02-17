@@ -6,9 +6,12 @@
         <ComItem :menuItem="item"></ComItem>
       </template>
     </el-sub-menu>
-    <el-menu-item :index="menuItem.path" v-else>{{
-      menuItem.title
-    }}</el-menu-item>
+    <el-menu-item
+      :index="menuItem.path"
+      :disabled="menuItem.permiss === '3' && !isAdmin"
+      v-else
+      >{{ menuItem.title }}</el-menu-item
+    >
   </template>
 </template>
 <script setup lang="ts" name="ComItem">
@@ -18,6 +21,8 @@ interface IProps {
     [key in string]: any;
   };
 }
+// 类型推断排除null、undefined
+const isAdmin = JSON.parse(localStorage.getItem("userInfo")!)?.is_admin;
 const props = defineProps<IProps>();
 onMounted(() => {
   // console.log("[ props.item ] >", props.menuItem);

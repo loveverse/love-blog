@@ -27,4 +27,27 @@ app.use(router);
 app.use(ElementPlus, {
   locale: zhCn,
 });
+
+app.directive("focus", {
+  mounted: function (el: any) {
+    console.log("[ el ] >", el.tagName);
+    if (el.tagName == "INPUT") {
+      el.focus();
+    } else if (el.tagName === "TEXTEA") {
+    } else {
+      el.querySelector("input") && el.querySelector("input").focus();
+    }
+  },
+  updated: function (el: any, binding: any, vnode: any) {
+    console.log("[ el1 ] >", el);
+    if (el.tagName == "INPUT") {
+      el.focus();
+    } else {
+      // // inserted是插入到dom时才会触发，上面使用v-show只是隐藏，不会触发指令中的函数
+      // vnode.context.nextTick(() => {
+      el.querySelector("input") && el.querySelector("input").focus();
+      // });
+    }
+  },
+});
 app.mount("#app");

@@ -5,6 +5,7 @@
         <div class="artcle">
           <el-input
             v-if="item.id === state.aId"
+            v-focus
             v-model="item.content"
             type="textarea"
             autosize
@@ -36,7 +37,7 @@
           </div>
         </div>
         <el-button
-          v-if="state.flag"
+          v-show="state.flag"
           type="danger"
           size="small"
           class="del"
@@ -89,6 +90,7 @@ import {
 } from "@/api/person";
 import { formatterTime, urlify } from "@/utils/common";
 import Ws from "@/utils/websocket";
+import debounce from "lodash/debounce";
 // 将Ws放在state中同时监视，watch不到里面的对象和属性，因为没有实例化WebSocket
 
 const state = reactive({
@@ -112,10 +114,26 @@ onBeforeUnmount(() => {
 });
 watch(
   () => state.text,
-  (newVal: string) => {
+  debounce((newVal: string) => {
     state.flag = newVal === "loveverse";
-  }
+  }, 500)
 );
+const vFocus = {
+  mounted: function (el: any) {
+    if (el.tagName == "TEXTAREA") {
+      el.focus();
+    } else {
+      el.querySelector("textarea") && el.querySelector("textarea").focus();
+    }
+  },
+  updated: function (el: any, binding: any, vnode: any) {
+    if (el.tagName == "TEXTAREA") {
+      el.focus();
+    } else {
+      el.querySelector("textarea") && el.querySelector("textarea").focus();
+    }
+  },
+};
 
 const handleClose = () => {
   Ws.websocket.close();

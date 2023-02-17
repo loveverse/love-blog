@@ -4,7 +4,10 @@ const response = require("../utils/resData");
 // 问题接口
 async function findIssue(ctx, next) {
   try {
-    let data = await Missue.findAll({ where: { status: 1 } });
+    let data = await Missue.findAll({
+      where: { status: 1 },
+      order: [["id", "DESC"]],
+    });
     const list = data.map((k) => {
       k.dataValues.fileList = JSON.parse(k.file_list);
       delete k.dataValues.file_list;

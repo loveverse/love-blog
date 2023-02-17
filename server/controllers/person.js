@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const Mperson = require("../model/person");
 const response = require("../utils/resData");
+const { getClientIP } = require("../utils/common");
 
 // 书摘的接口----------------------------------------------------------------
 // 构造函数写法
@@ -36,11 +37,11 @@ Person.prototype.findExcerpt = async function (ctx, next) {
     */
     // console.log(ctx.request.fresh);
     if (ifNoneMatch === etag) {
-      console.log(111);
       ctx.status = 304;
     } else {
       ctx.set("ETag", etag);
-      console.log(222);
+      // console.log(getClientIP(ctx));
+      // fileBuffer.ip = getClientIP(ctx);
       ctx.body = response.SUCCESS("common", fileBuffer);
     }
   } catch (error) {
@@ -62,6 +63,10 @@ Person.prototype.addExcerpt = async function (ctx, next) {
 };
 Person.prototype.updateExcerpt = async function (ctx, next) {
   try {
+    if (!ctx.state.user.is_admin) {
+      ctx.body = response.ERROR("powerLacking");
+      return;
+    }
     const { id, content } = ctx.request.query;
     ctx.body = response.SUCCESS(
       "common",

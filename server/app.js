@@ -20,7 +20,6 @@ app.use(cors());
 app.use(
   koaBody({
     multipart: true,
-    // rename:
     // encoding: "gzip",    // 前端报415
     formidable: {
       // uploadDir: path.join(__dirname, "./static/"), // 设置文件上传目录

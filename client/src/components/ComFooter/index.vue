@@ -1,14 +1,24 @@
 <template>
   <div class="records">
-    <a href="https://beian.miit.gov.cn">备案号：鄂ICP备2021020610号</a>
+    &copy; 2021&nbsp;
+    <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2021020610号</a>
   </div>
 </template>
 <script setup lang="ts" name="ComFooter"></script>
 <style lang="scss" scoped>
 .records {
   width: 100%;
-  height: 60px;
+  height: 100%;
   text-align: center;
-  line-height: 60px;
+  line-height: 40px;
+  color: #fff;
+  a {
+    color: #fff;
+    text-decoration: none;
+    &:hover {
+      color: #ff404b;
+      text-decoration: underline;
+    }
+  }
 }
 </style>

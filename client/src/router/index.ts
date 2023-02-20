@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: () => import("@/views/index.vue"),
-    redirect: "/home/person",
+    redirect: "/home/fileLib",
     children: [
       {
         path: "/home",
@@ -13,6 +13,11 @@ const routes: RouteRecordRaw[] = [
         component: ComLayout,
         redirect: "/404",
         children: [
+          {
+            path: "/home/fileLib",
+            name: "fileLib",
+            component: () => import("@/views/home/fileLib.vue"),
+          },
           {
             path: "/home/person",
             name: "person",

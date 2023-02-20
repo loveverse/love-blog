@@ -4,11 +4,20 @@
     class="el-menu-demo"
     mode="horizontal"
     :ellipsis="false"
-    router
+    :router="state.flag"
   >
-    <template v-for="item in state.menuList">
-      <ComItem :menuItem="item"></ComItem>
+    <template v-if="state.flag">
+      <template v-for="item in state.menuList">
+        <ComItem :menuItem="item"></ComItem>
+      </template>
     </template>
+    <el-menu-item v-else @click="() => (state.showAside = true)" class="unfold">
+      <template #title>
+        <el-icon><Expand /></el-icon>
+        <span>展开</span>
+      </template>
+    </el-menu-item>
+
     <div class="flex-grow" />
     <div class="btn_login">
       <el-button
@@ -40,6 +49,25 @@
       </el-dropdown>
     </div>
   </el-menu>
+  <el-drawer
+    v-model="state.showAside"
+    direction="ltr"
+    :with-header="false"
+    :before-close="() => (state.showAside = false)"
+    :size="200"
+  >
+    <el-menu
+      :default-active="$route.path"
+      mode="vertical"
+      :ellipsis="false"
+      router
+    >
+      <template v-for="item in state.menuList">
+        <ComItem :menuItem="item"></ComItem>
+      </template>
+    </el-menu>
+  </el-drawer>
+
   <el-dialog
     v-model="state.registerDiaVis"
     title="注册/登录"
@@ -84,27 +112,36 @@
 </template>
 
 <script lang="ts" setup name="ComHeader">
-import { reqRegisterUser } from "@/api/login";
 import type { FormInstance } from "element-plus";
-interface IState {
-  menuList: object[];
-  regForm: {
-    userName: string;
-    password: string;
-  };
-  regFormRules: object;
-  registerDiaVis: Boolean;
-  // userInfo: {
-  //   [key in string]: any;
-  // };
-}
-const state = reactive<IState>({
+import { Expand } from "@element-plus/icons-vue";
+import debounce from "lodash/debounce";
+import { reqRegisterUser } from "@/api/login";
+// interface IState {
+//   menuList: object[];
+//   regForm: {
+//     userName: string;
+//     password: string;
+//   };
+//   regFormRules: object;
+//   registerDiaVis: Boolean;
+//   // userInfo: {
+//   //   [key in string]: any;
+//   // };
+// }
+const state = reactive({
   // 没写children，自动隐藏
   menuList: [
     {
       icon: "",
+      path: "/home/fileLib",
+      title: "文件库",
+      permiss: "0",
+      children: [],
+    },
+    {
+      icon: "",
       path: "/home/person",
-      title: "首页",
+      title: "聊天室",
       permiss: "1",
       children: [],
     },
@@ -154,12 +191,14 @@ const state = reactive<IState>({
     userName: [{ required: true, message: "用户名不能为空", trigger: "blur" }],
     password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
   },
-  registerDiaVis: false,
+  registerDiaVis: false, // 登录注册弹窗
+  flag: true, // 小屏适配
+  showAside: false, // 显示抽屉
 });
 const registerRef = ref<FormInstance>();
 
 const userInfo = computed(() => {
-  return JSON.parse(localStorage.getItem("userInfo") || "null");
+  return JSON.parse(localStorage.getItem("userInfo")!);
 });
 const handleRegister = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -190,23 +229,44 @@ const loginOut = () => {
   ElMessage.success("退出成功");
   window.location.reload();
 };
+
+onMounted(() => {
+  let w = window.outerWidth;
+  state.flag = w > 768;
+  window.onresize = debounce(() => {
+    let w = window.outerWidth;
+    state.flag = w > 768;
+  }, 300);
+});
 </script>
 <style lang="scss" scoped>
-.flex-grow {
-  flex-grow: 1;
-}
-.btn_login {
-  display: flex;
-  align-items: center;
-  .user_info {
+.el-menu-demo {
+  transition: all 0.3s;
+  .flex-grow {
+    flex-grow: 1;
+  }
+  .btn_login {
     display: flex;
     align-items: center;
-    cursor: pointer;
-    .name {
-      margin-right: 5px;
-      font-size: 20px;
-      font-weight: bold;
+    .user_info {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      .name {
+        margin-right: 5px;
+        font-size: 20px;
+        font-weight: bold;
+      }
     }
   }
+  .unfold {
+    padding: 0;
+  }
+}
+</style>
+<!-- 使用scoped无法生效 -->
+<style lang="scss">
+.el-drawer__body {
+  padding: 0;
 }
 </style>

@@ -3,10 +3,9 @@ const http = require("http");
 const cors = require("koa2-cors");
 const { koaBody } = require("koa-body");
 const WebSocket = require("ws");
-const { APP_PORT, BASE_PATH } = require("./config/index");
-const router = require("./router/index");
-const Mperson = require("./model/person");
-const path = require("path");
+const { APP_PORT, BASE_PATH } = require("./src/config/index");
+const router = require("./src/router/index");
+const Mperson = require("./src/model/person");
 
 // 创建一个Koa对象
 const app = new Koa();

@@ -61,7 +61,6 @@ const state = reactive({
 const loading = ref<boolean>(true);
 onMounted(() => {
   getImgList();
-  scrollBottom();
 });
 const getImgList = async (page = 1) => {
   state.page = page;
@@ -72,10 +71,10 @@ const getImgList = async (page = 1) => {
   loading.value = true;
   const result = await reqImgList(params);
   if (result.code === 200) {
-    scrollBottom();
     state.imgList = result.data.list;
     state.srcList = result.data.list.map((k: any) => k.url);
     state.total = result.data.total;
+    scrollBottom();
   } else {
     ElMessage.error(result.msg);
   }

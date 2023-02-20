@@ -26,7 +26,7 @@
 import { reqPageFindData } from "@/api/hotword";
 
 const state = reactive({
-  findData: [] as any,
+  findData: [] as any[],
   limit: 10, // 每页显示数
   currentPage: Number(sessionStorage.getItem("page")) || 1, // 当前页
   total: 0,
@@ -34,15 +34,15 @@ const state = reactive({
 });
 const loading = ref(true);
 // 回到顶部动画效果
-const backTop = (): void => {
-  let top = document.body.scrollTop || document.documentElement.scrollTop;
-  let timeId = setInterval(() => {
-    document.body.scrollTop = document.documentElement.scrollTop = top -= 50;
-    if (top <= 0) {
-      clearInterval(timeId);
-    }
-  }, 10);
-};
+// const backTop = (): void => {
+//   let top = document.body.scrollTop || document.documentElement.scrollTop;
+//   let timeId = setInterval(() => {
+//     document.body.scrollTop = document.documentElement.scrollTop = top -= 50;
+//     if (top <= 0) {
+//       clearInterval(timeId);
+//     }
+//   }, 10);
+// };
 // 改变当前页触发的事件
 const handlerPage = async (page = 1) => {
   state.currentPage = page;
@@ -56,13 +56,20 @@ const handlerPage = async (page = 1) => {
   if (result.code === 200) {
     state.findData = result.data.list;
     state.total = result.data.total;
-    backTop();
+    scrollBottom();
   } else {
     ElMessage.error(result.msg);
   }
   loading.value = false;
 };
+const scrollBottom = () => {
+  // nextTick(() => {
+  // 滚动到底部
+  let h: HTMLElement | null = document.getElementById("main");
+  h?.scrollTo(0, 0);
 
+  // });
+};
 onMounted(() => {
   const page = Number(sessionStorage.getItem("page")) || 1;
   // 有page就传，没有就传默认值1
@@ -83,7 +90,7 @@ onMounted(() => {
   .out {
     // background: #efeeee;;
     .card {
-      margin: 20px auto;
+      margin-bottom: 20px;
       padding: 15px 20px 20px;
       // height: 100px;
       border-radius: 4px;

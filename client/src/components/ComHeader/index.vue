@@ -7,7 +7,7 @@
     :router="state.flag"
   >
     <template v-if="state.flag">
-      <template v-for="item in state.menuList">
+      <template v-for="item in ROUTER_LIST">
         <ComItem :menuItem="item"></ComItem>
       </template>
     </template>
@@ -55,6 +55,7 @@
     :with-header="false"
     :before-close="() => (state.showAside = false)"
     :size="200"
+    class="aside-drawer"
   >
     <el-menu
       :default-active="$route.path"
@@ -62,12 +63,11 @@
       :ellipsis="false"
       router
     >
-      <template v-for="item in state.menuList">
+      <template v-for="item in ROUTER_LIST">
         <ComItem :menuItem="item"></ComItem>
       </template>
     </el-menu>
   </el-drawer>
-
   <el-dialog
     v-model="state.registerDiaVis"
     title="注册/登录"
@@ -116,6 +116,7 @@ import type { FormInstance } from "element-plus";
 import { Expand } from "@element-plus/icons-vue";
 import debounce from "lodash/debounce";
 import { reqRegisterUser } from "@/api/login";
+import ROUTER_LIST from "./list";
 // interface IState {
 //   menuList: object[];
 //   regForm: {
@@ -129,60 +130,61 @@ import { reqRegisterUser } from "@/api/login";
 //   // };
 // }
 const state = reactive({
-  // 没写children，自动隐藏
-  menuList: [
-    {
-      icon: "",
-      path: "/home/fileLib",
-      title: "文件库",
-      permiss: "0",
-      children: [],
-    },
-    {
-      icon: "",
-      path: "/home/person",
-      title: "聊天室",
-      permiss: "1",
-      children: [],
-    },
-    {
-      icon: "",
-      path: "/home/issue",
-      title: "学习问题",
-      permiss: "2",
-      children: [],
-    },
+  //#region
+  // menuList: [
+  //   {
+  //     icon: "",
+  //     path: "/home/fileLib",
+  //     title: "文件库",
+  //     permiss: "0",
+  //     children: [],
+  //   },
+  //   {
+  //     icon: "",
+  //     path: "/home/person",
+  //     title: "聊天室",
+  //     permiss: "1",
+  //     children: [],
+  //   },
+  //   {
+  //     icon: "",
+  //     path: "/home/issue",
+  //     title: "学习问题",
+  //     permiss: "2",
+  //     children: [],
+  //   },
 
-    {
-      icon: "",
-      path: "/classify",
-      title: "分类",
-      permiss: "4",
-      children: [
-        {
-          icon: "",
-          path: "/classify/plan",
-          title: "考试计划",
-          permiss: "3",
-          children: [],
-        },
-        {
-          icon: "",
-          path: "/classify/wallpaper",
-          title: "壁纸",
-          permiss: "5",
-          children: [],
-        },
-        {
-          icon: "",
-          path: "/classify/hotword",
-          title: "网易热评",
-          permiss: "4",
-          children: [],
-        },
-      ],
-    },
-  ],
+  //   {
+  //     icon: "",
+  //     path: "/classify",
+  //     title: "分类",
+  //     permiss: "4",
+  //     children: [
+  //       {
+  //         icon: "",
+  //         path: "/classify/plan",
+  //         title: "考试计划",
+  //         permiss: "3",
+  //         children: [],
+  //       },
+  //       {
+  //         icon: "",
+  //         path: "/classify/wallpaper",
+  //         title: "壁纸",
+  //         permiss: "5",
+  //         children: [],
+  //       },
+  //       {
+  //         icon: "",
+  //         path: "/classify/hotword",
+  //         title: "网易热评",
+  //         permiss: "4",
+  //         children: [],
+  //       },
+  //     ],
+  //   },
+  // ],
+  //#endregion
   regForm: {
     userName: "",
     password: "",
@@ -260,13 +262,16 @@ onMounted(() => {
     }
   }
   .unfold {
-    padding: 0;
+    padding: 0 5px 0 0;
   }
 }
 </style>
 <!-- 使用scoped无法生效 -->
 <style lang="scss">
-.el-drawer__body {
-  padding: 0;
+// 这里样式会在全局生效
+.aside-drawer {
+  .el-drawer__body {
+    padding: 0;
+  }
 }
 </style>

@@ -7,9 +7,9 @@
       </template>
     </el-sub-menu>
     <el-menu-item
+      v-else
       :index="menuItem.path"
       :disabled="menuItem.permiss === '3' && !isAdmin"
-      v-else
       >{{ menuItem.title }}</el-menu-item
     >
   </template>

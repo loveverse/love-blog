@@ -5,7 +5,7 @@
       <h3>专业名称：计算机科学与技术</h3>
       <h3>考试时间：4.15/10.28</h3>
     </div>
-    <el-table :data="list" style="width: 100%">
+    <el-table :data="SUBJECT_LIST" style="width: 100%">
       <el-table-column type="index" label="序号" align="center" width="80px" />
       <el-table-column prop="number" label="类型序号" align="center" />
       <el-table-column prop="code" label="课程代码" align="center" />
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts" name="plan">
-import list from "./list";
+import SUBJECT_LIST from "./list";
 import src4 from "@/assets/imgs/4.png";
 import src10 from "@/assets/imgs/10.png";
 const srcList = [src4, src10];

@@ -9,6 +9,11 @@
       :header-cell-style="{ background: '#eee' }"
     >
       <el-table-column type="index" label="序号" width="80" align="center" />
+      <el-table-column label="时间" align="center">
+        <template v-slot="{ row }">
+          <span>{{ formatterTime(row.createdAt) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="title" label="问题标题"> </el-table-column>
       <el-table-column prop="link" label="链接" width="auto">
         <template v-slot="{ row }">
@@ -108,6 +113,8 @@
   </div>
 </template>
 <script setup lang="ts" name="issue">
+import { UploadProps, FormInstance } from "element-plus";
+import cloneDeep from "lodash/cloneDeep";
 import {
   reqIssueList,
   reqAddIssue,
@@ -115,8 +122,7 @@ import {
   reqEditIssue,
 } from "@/api/issue";
 import { reqUpload } from "@/api/common";
-import { UploadProps, FormInstance } from "element-plus";
-import cloneDeep from "lodash/cloneDeep";
+import { formatterTime } from "@/utils/common";
 // 避免产生引用问题
 class IssueInfo {
   id = "";

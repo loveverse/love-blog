@@ -14,7 +14,8 @@
           <span>{{ formatterTime(row.createdAt) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="title" label="问题标题"> </el-table-column>
+      <el-table-column prop="title" label="问题标题" class-name="issue_title">
+      </el-table-column>
       <el-table-column prop="link" label="链接" width="auto">
         <template v-slot="{ row }">
           <el-link type="primary" :href="row.link" target="_blank">{{
@@ -63,7 +64,7 @@
     <el-dialog
       v-model="state.issueDialog"
       :title="state.issueTitle"
-      width="70%"
+      width="60%"
     >
       <el-form
         :model="state.issueInfo"
@@ -224,17 +225,29 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
-.operation {
-  span {
-    cursor: pointer;
-    &:first-child {
-      color: #430ef0;
+.wrapper {
+  :deep(.el-table__body-wrapper) {
+    .issue_title {
+      .cell {
+        color: #0c64eb;
+        &:hover {
+          color: #db2e2e;
+        }
+      }
     }
-    &:last-child {
-      color: #dd3434;
-    }
-    & + span {
-      margin-left: 20px;
+  }
+  .operation {
+    span {
+      cursor: pointer;
+      &:first-child {
+        color: #430ef0;
+      }
+      &:last-child {
+        color: #dd3434;
+      }
+      & + span {
+        margin-left: 20px;
+      }
     }
   }
 }

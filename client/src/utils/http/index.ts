@@ -33,7 +33,7 @@ http.interceptors.response.use(
     if (error && error.response) {
       return Promise.reject(showMessage(error.response.status));
     }
-    return Promise.reject(showMessage(""));
+    return Promise.reject(showMessage());
   }
 );
 
@@ -43,8 +43,6 @@ export function post<T = any>(
   config: AxiosRequestConfig = {},
   type: string = "POST"
 ): Promise<T> {
-  //是否进入我教的课班级详情
-
   //判断类型是否要转
   // switch (headers) {
   //   case "urlencoded":

@@ -104,7 +104,7 @@ const scrollBottom = () => {
     justify-content: center;
     grid-template-columns: repeat(auto-fill, 300px);
     grid-gap: 20px;
-    ::v-deep .box-card {
+    :deep(.box-card) {
       width: 100%;
       .el-card__body {
         position: relative;

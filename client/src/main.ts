@@ -1,9 +1,9 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import "@/assets/css/index.scss";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
-import "@/assets/css/index.scss";
 import router from "@/router";
 import { check } from "@/utils/common";
 

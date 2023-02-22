@@ -116,6 +116,9 @@ watch(
   () => state.text,
   debounce((newVal: string) => {
     state.flag = newVal === "loveverse";
+    if (newVal === "loveverse") {
+      scrollBottom();
+    }
   }, 500)
 );
 const vFocus = {

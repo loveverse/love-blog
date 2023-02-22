@@ -63,7 +63,7 @@
     <el-dialog
       v-model="state.issueDialog"
       :title="state.issueTitle"
-      width="60%"
+      width="70%"
     >
       <el-form
         :model="state.issueInfo"

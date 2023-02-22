@@ -41,9 +41,25 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         // 引入全局scss
         scss: {
           // 这里分号必须保留
-          additionalData: "@import '@/assets/css/base.scss';",
+          // additionalData:
+          //   "@use '@/assets/css/variables.scss' as *; @import '@/assets/css/base.scss';",
+          // 全局引入后，不需要在其他文件引入
+          additionalData: "@use '@/assets/css/base.scss' as *;",
         },
       },
     },
+    // build: {
+    //   // 打包时移除console.log、debugger和注释
+    //   terserOptions: {
+    //     compress: {
+    //       drop_console: false,
+    //       drop_debugger: true,
+    //       pure_funcs: ["console.log"],
+    //     },
+    //     format: {
+    //       comments: false, // 删除注释
+    //     },
+    //   },
+    // },
   };
 };

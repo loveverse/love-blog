@@ -14,7 +14,6 @@ const Missue = seq.define(
     link: {
       type: DataTypes.CHAR(255),
       allowNull: false,
-      unique: false,
       comment: "链接",
     },
     status: {

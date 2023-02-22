@@ -26,7 +26,7 @@
       :before-close="() => (state.showUpload = false)"
     >
       <el-card class="box-card">
-        <ul>
+        <ul >
           <!-- <el-space wrap :size="20"> -->
           <li>上传文件最大为1G，不过接口超时时间为50秒(不推荐大文件)。</li>
           <li>登录用户可以创建文件夹，非本账号无法查看，删除文件。</li>
@@ -50,6 +50,7 @@ const state = reactive({
   color: #606266;
   ul {
     list-style: initial;
+    padding-left: 15px;
     li {
       font-size: 14px;
       & + li {

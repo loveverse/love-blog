@@ -9,9 +9,9 @@ const {
 } = require("../controllers/index");
 const { auth } = require("../middleware/index");
 
-router.get("/", async (ctx) => {
-  ctx.body = "欢迎访问该接口";
-});
+// router.get("/", async (ctx) => {
+//   ctx.body = "欢迎访问该接口";
+// });
 router.get("/wy/find", hotword.findHotword);
 router.get("/wy/pageQuery", hotword.findPageHotword);
 

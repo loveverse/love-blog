@@ -36,3 +36,16 @@
     border-radius: 2em;
   }
 }
+
+// el-upload
+.el-upload-list--picture-card{
+  --el-upload-list-picture-card-size: 100px;
+}
+.el-upload--picture-card{
+  --el-upload-picture-card-size: 100px;
+}
+// 层级不够
+// :root{
+//   --el-upload-picture-card-size: 100px;
+//   --el-upload-list-picture-card-size: 100px;  
+// }

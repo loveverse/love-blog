@@ -51,4 +51,11 @@ export default [
       },
     ],
   },
+  {
+    icon: "",
+    path: "/about",
+    title: "关于",
+    permiss: "6",
+    children: [],
+  },
 ];

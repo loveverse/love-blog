@@ -11,7 +11,7 @@
         <ComItem :menuItem="item"></ComItem>
       </template>
     </template>
-    <el-menu-item v-else @click="() => (state.showAside = true)" class="unfold">
+    <el-menu-item v-else index="0" @click="() => (state.showAside = true)" class="unfold">
       <template #title>
         <el-icon><Expand /></el-icon>
         <span>展开</span>

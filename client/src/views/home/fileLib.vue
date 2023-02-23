@@ -26,13 +26,27 @@
       :before-close="() => (state.showUpload = false)"
     >
       <el-card class="box-card">
-        <ul >
+        <ul>
           <!-- <el-space wrap :size="20"> -->
-          <li>上传文件最大为1G，不过接口超时时间为50秒(不推荐大文件)。</li>
+          <li>上传文件最大为1G，接口超时时间为50秒(不推荐大文件)。</li>
           <li>登录用户可以创建文件夹，非本账号无法查看，删除文件。</li>
           <!-- </el-space> -->
         </ul>
       </el-card>
+      <el-upload
+        :file-list="state.fileList"
+        class="upload-demo"
+        action="#"
+        accept="image/*"
+        :auto-upload="false"
+        drag
+        :on-change="handleChange"
+        :on-remove="handleRemove"
+        :on-preview="handlePictureCardPreview"
+      >
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text">选择文件 或 粘贴截图</div>
+      </el-upload>
     </el-drawer>
   </div>
 </template>
@@ -42,12 +56,16 @@ const state = reactive({
   fileList: [] as any[],
   showUpload: false,
 });
+const handleChange = () => {};
+const handleRemove = () => {};
+const handlePictureCardPreview = () => {};
 </script>
 <style lang="scss" scoped>
 .box-card {
   border-left: 5px solid #409eff;
   background-color: #f2f2f2;
   color: #606266;
+  margin-bottom: 20px;
   ul {
     list-style: initial;
     padding-left: 15px;

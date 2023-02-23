@@ -4,6 +4,7 @@ const person = require("./person");
 const user = require("./user");
 const common = require("./common");
 const wallpaper = require("./wallpaper");
+const fileList = require("./fileList");
 module.exports = {
   hotword,
   issue,
@@ -11,4 +12,5 @@ module.exports = {
   user,
   common,
   wallpaper,
+  fileList,
 };

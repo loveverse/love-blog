@@ -1,5 +1,4 @@
-// 上线时只需要需运行npm run pro
-
+// 上线时只需要需运行`sh start.sh`
 let APP_PORT,
   APP_HOST,
   DATA_BASE,
@@ -9,8 +8,8 @@ let APP_PORT,
   JWT_SECRET,
   FILE_PATH,
   NETWORK_PATH;
-// 使用set NODE_ENV会多一个空格
-if (process.env.NODE_ENV === "development " || !process.env.NODE_ENV) {
+// 使用set NODE_ENV会多一个空格（F5调试时需要加上 `|| true`）
+if (process.env.NODE_ENV === "development ") {
   APP_PORT = 40001;
   APP_HOST = "1.15.42.9";
   DATA_BASE = "verse";

@@ -1,3 +1,20 @@
+// @forward必须在所有规则之前
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: 
+  (
+    'info': (
+      'base': #909399,
+    ),
+  ),
+);
+// 覆盖element-plus默认样式
+// el-upload
+.el-upload-list--picture-card{
+  --el-upload-list-picture-card-size: 100px;
+}
+.el-upload--picture-card{
+  --el-upload-picture-card-size: 100px;
+}
 
 // 过渡
 @mixin tranition {
@@ -38,12 +55,13 @@
 }
 
 // el-upload
-.el-upload-list--picture-card{
-  --el-upload-list-picture-card-size: 100px;
-}
-.el-upload--picture-card{
-  --el-upload-picture-card-size: 100px;
-}
+// .el-upload-list--picture-card{
+//   --el-upload-list-picture-card-size: 100px;
+// }
+// .el-upload--picture-card{
+//   --el-upload-picture-card-size: 100px;
+// }
+
 // 层级不够
 // :root{
 //   --el-upload-picture-card-size: 100px;

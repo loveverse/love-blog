@@ -27,7 +27,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         imports: ["vue"],
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
+        // 必须加上importStyle，不然样式覆盖失效
+        resolvers: [ElementPlusResolver({importStyle: "sass"})],
       }),
     ],
     resolve: {
@@ -44,7 +45,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           // additionalData:
           //   "@use '@/assets/css/variables.scss' as *; @import '@/assets/css/base.scss';",
           // 全局引入后，不需要在其他文件引入
-          additionalData: "@use '@/assets/css/base.scss' as *;",
+          additionalData: `@use '@/assets/css/base.scss' as *;`,
         },
       },
     },

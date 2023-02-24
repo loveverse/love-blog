@@ -1,11 +1,11 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import "@/assets/css/index.scss";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import router from "@/router";
 import { check } from "@/utils/common";
+import "@/assets/css/index.scss";
 
 // 弹窗不显示，需要手动引入样式,参考：https://github.com/element-plus/element-plus/issues/5108（官方文档也有说明）
 import "element-plus/es/components/message/style/css";
@@ -30,7 +30,6 @@ app.use(ElementPlus, {
 
 app.directive("focus", {
   mounted: function (el: any) {
-    console.log("[ el ] >", el.tagName);
     if (el.tagName == "INPUT") {
       el.focus();
     } else if (el.tagName === "TEXTEA") {
@@ -39,7 +38,6 @@ app.directive("focus", {
     }
   },
   updated: function (el: any, binding: any, vnode: any) {
-    console.log("[ el1 ] >", el);
     if (el.tagName == "INPUT") {
       el.focus();
     } else {

@@ -1,8 +1,8 @@
 const Koa = require("koa");
 const http = require("http");
 const cors = require("koa2-cors");
-const { koaBody } = require("koa-body");
 const WebSocket = require("ws");
+const { koaBody } = require("koa-body");
 const { APP_PORT, BASE_PATH } = require("./src/config/index");
 const router = require("./src/router/index");
 const Mperson = require("./src/model/person");

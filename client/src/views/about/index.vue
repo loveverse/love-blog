@@ -7,7 +7,7 @@
         <span>前端</span>
         <el-space wrap>
           <el-tag size="large" v-for="item in clientList" :key="item.name">
-            <a :href="item.url" target="_blank" >{{ item.name }}</a>
+            <a :href="item.url" target="_blank">{{ item.name }}</a>
           </el-tag>
         </el-space>
       </li>
@@ -39,16 +39,28 @@
     <h3>时间节点</h3>
     <el-timeline class="time_line">
       <el-timeline-item timestamp="2023/2" placement="top">
-        <el-card>
-          <h4 class="title">创建模块完成节点</h4>
-          <p class="time">2023/2/21 10:37</p>
-        </el-card>
+        <el-space direction="vertical" alignment="normal">
+          <el-card v-for="(item, index) in timeList" :key="index">
+            <h4 class="title">{{ item.title }}</h4>
+            <p class="time">{{ item.startTime }}</p>
+          </el-card>
+        </el-space>
       </el-timeline-item>
     </el-timeline>
   </div>
 </template>
 <script lang="ts" setup name="about">
 import { clientList, serverList } from "./list";
+const timeList: any[] = [
+  {
+    title: "创建模块完成节点",
+    startTime: "2023/2/21 10:37",
+  },
+  {
+    title: "学习问题增加粘贴上传(1mb以内)",
+    startTime: "2023/2/24 15:06",
+  },
+];
 </script>
 <style lang="scss" scoped>
 // @keyframes shining {
@@ -119,20 +131,24 @@ import { clientList, serverList } from "./list";
     }
   }
   .time_line {
-    .title {
-      margin-bottom: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      background-image: linear-gradient(
-        to right,
-        #00c6ff,
-        #124057
-      ); /* 线性渐变背景，方向向右 */
-      -webkit-background-clip: text; /* 背景被裁剪成文字的前景色 */
-      -webkit-text-fill-color: transparent; /* 文字填充颜色变透明 */
-    }
-    .time {
-      color: rgb(136, 124, 121);
+    width: 100%;
+    .el-space {
+      width: 100%;
+      .title {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        background-image: linear-gradient(
+          to right,
+          #00c6ff,
+          #124057
+        ); /* 线性渐变背景，方向向右 */
+        -webkit-background-clip: text; /* 背景被裁剪成文字的前景色 */
+        -webkit-text-fill-color: transparent; /* 文字填充颜色变透明 */
+      }
+      .time {
+        color: rgb(136, 124, 121);
+      }
     }
   }
 }

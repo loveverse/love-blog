@@ -19,6 +19,8 @@ app.use(cors());
 app.use(
   koaBody({
     multipart: true,
+    // textLimit: "1mb",  // 限制text body的大小，默认56kb
+    formLimit: "1mb", // 限制表单请求体的大小，默认56kb,前端报错413
     // encoding: "gzip",    // 前端报415
     formidable: {
       // uploadDir: path.join(__dirname, "./static/"), // 设置文件上传目录
@@ -59,5 +61,7 @@ wss.on("connection", function (ws) {
 server.listen(APP_PORT, () => {
   const host = server.address().address;
   const port = server.address().port;
-  console.log(`服务器地址:http://${host}:${port}/findExcerpt`);
+  console.log(
+    `环境:${process.env.NODE_ENV},服务器地址:http://${host}:${port}/findExcerpt`
+  );
 });

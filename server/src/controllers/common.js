@@ -1,7 +1,6 @@
-const os = require("os");
 const fs = require("fs");
 const path = require("path");
-const send = require("koa-send");
+const crypto = require("crypto");
 const response = require("../utils/resData");
 const { NETWORK_PATH, FILE_PATH } = require("../config/index");
 
@@ -56,13 +55,41 @@ class Common {
       const upStream = fs.createWriteStream(filePath);
       // // 可读流通过管道写入可写流
       reader.pipe(upStream);
-
       const fileInfo = {
         id: Date.now(),
         url: NETWORK_PATH + file.originalFilename,
         name: file.originalFilename,
       };
 
+      ctx.body = response.SUCCESS("common", fileInfo);
+    } catch (error) {
+      console.log(error);
+      ctx.body = response.ERROR("upload");
+    }
+  }
+  async pasteUploadFile(ctx, next) {
+    try {
+      const { file } = ctx.request.body;
+      const dataBuffer = Buffer.from(file, "base64");
+      // 生成随机40个字符的hash
+      const hash = crypto.randomBytes(20).toString("hex");
+      // 文件名
+      const filename = hash + ".png"
+      let filePath = path.join(
+        FILE_PATH || __dirname,
+        `${FILE_PATH ? "./" : "../static/"}${filename}`
+      );
+      // 以写入模式打开文件，文件不存在则创建
+      const fd = fs.openSync(filePath, "w");
+      // 写入
+      fs.writeSync(fd, dataBuffer);
+      // 关闭
+      fs.closeSync(fd);
+      const fileInfo = {
+        id: Date.now(),
+        url: NETWORK_PATH + filename,
+        name: filename,
+      };
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
       console.log(error);

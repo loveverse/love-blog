@@ -10,7 +10,7 @@ let APP_PORT,
   FILE_PATH,
   NETWORK_PATH;
 // 使用set NODE_ENV会多一个空格
-if (process.env.NODE_ENV === "development ") {
+if (process.env.NODE_ENV === "development " || !process.env.NODE_ENV) {
   APP_PORT = 40001;
   APP_HOST = "1.15.42.9";
   DATA_BASE = "verse";

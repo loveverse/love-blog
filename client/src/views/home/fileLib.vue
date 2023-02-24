@@ -33,6 +33,7 @@
           <!-- </el-space> -->
         </ul>
       </el-card>
+      
       <el-upload
         :file-list="state.fileList"
         class="upload-demo"

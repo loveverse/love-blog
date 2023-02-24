@@ -29,6 +29,7 @@ router.post("/editIssue", issue.editIssue);
 
 router.post("/register/user", user.register);
 router.post("/upload/file", common.uploadFile);
+router.post("/paste/upload/file", common.pasteUploadFile);
 // router.get("/download/file/:name", common.downloadFile);
 // 强缓存
 router.get("/wallpaper/findList", wallpaper.findPageWallpaper);

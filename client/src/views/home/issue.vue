@@ -65,6 +65,7 @@
       v-model="state.issueDialog"
       :title="state.issueTitle"
       width="60%"
+      @close="colseIssueDia"
     >
       <el-form
         :model="state.issueInfo"
@@ -84,7 +85,9 @@
           <el-input v-model="state.issueInfo.link" placeholder="请输入链接" />
         </el-form-item>
         <el-form-item label="图片">
+          <div id="editable" contenteditable="true"></div>
           <el-upload
+            :ref="uploadRef"
             :file-list="state.issueInfo.fileList"
             class="upload-demo"
             action="#"
@@ -122,7 +125,7 @@ import {
   reqDelIssue,
   reqEditIssue,
 } from "@/api/issue";
-import { reqUpload } from "@/api/common";
+import { reqUpload, reqPasteUpload } from "@/api/common";
 import { formatterTime } from "@/utils/common";
 // 避免产生引用问题
 class IssueInfo {
@@ -146,18 +149,16 @@ const state = reactive({
 
 const loading = ref(true);
 const issueRef = ref<FormInstance>();
-
+const uploadRef = ref(null);
+// 关闭时移除监听的粘贴上传
+const colseIssueDia = () => {
+  document.removeEventListener("paste", handlePaste);
+};
 const handleIssueBeforeOpen = (type: string, info: any = null) => {
+  document.addEventListener("paste", handlePaste);
   issueRef.value?.clearValidate();
   state.issueTitle = type === "add" ? "新建问题" : "编辑问题";
   state.issueInfo = type === "add" ? new IssueInfo() : cloneDeep(info);
-  // if (type === "add") {
-  //   state.issueTitle = "新建问题";
-  //   state.issueInfo = new IssueInfo();
-  // } else {
-  //   state.issueTitle = "编辑问题";
-  //   state.issueInfo = cloneDeep(info);
-  // }
   state.issueDialog = true;
 };
 const getIssueList = async () => {
@@ -216,6 +217,45 @@ const handleUpload = async (file: any) => {
   if (result.code === 200) {
     ElMessage.success("上传成功");
     state.issueInfo.fileList.push(result.data);
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
+
+const handlePaste = (event: any) => {
+  const items = (event.clipboardData || event.originalEvent.clipboardData)
+    .items;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+
+    if (item.type.indexOf("image") !== -1) {
+      const blob = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        console.log(dataUrl);
+        // 使用Snipaste上传文件报413
+        uploadImage(dataUrl);
+      };
+      reader.readAsDataURL(blob);
+    }
+  }
+};
+const uploadImage = async (dataUrl: any) => {
+  const params = new URLSearchParams();
+  params.append(
+    "file",
+    dataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
+  );
+  params.append("address", dataUrl);
+  const result = await reqPasteUpload(params);
+  if (result.code === 200) {
+    ElMessage.success("上传成功");
+    let data = import.meta.env.DEV
+      ? { ...result.data, url: dataUrl }
+      : result.data;
+    state.issueInfo.fileList.push(data);
   } else {
     ElMessage.error(result.msg);
   }

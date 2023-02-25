@@ -16,7 +16,11 @@
         align="center"
       ></el-table-column>
       <el-table-column label="文件名" prop="file_name"></el-table-column>
-      <el-table-column label="大小" prop="file_size" align="center"></el-table-column>
+      <el-table-column
+        label="大小"
+        prop="file_size"
+        align="center"
+      ></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
           <el-space :size="20">
@@ -29,7 +33,7 @@
     <el-drawer
       v-model="state.showUpload"
       title="上传须知"
-      :size="500"
+      class="right_drawer"
       :before-close="() => (state.showUpload = false)"
     >
       <el-card class="box-card">
@@ -115,19 +119,32 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
-.box-card {
-  border-left: 5px solid #409eff;
-  background-color: #f2f2f2;
-  color: #606266;
-  margin-bottom: 20px;
-  ul {
-    list-style: initial;
-    padding-left: 15px;
-    li {
-      font-size: 14px;
-      & + li {
-        margin-top: 20px;
+
+.wrapper {
+  :deep(.right_drawer) {
+    width: 500px !important;
+  }
+  .box-card {
+    border-left: 5px solid #409eff;
+    background-color: #f2f2f2;
+    color: #606266;
+    margin-bottom: 20px;
+    ul {
+      list-style: initial;
+      padding-left: 15px;
+      li {
+        font-size: 14px;
+        & + li {
+          margin-top: 20px;
+        }
       }
+    }
+  }
+}
+@media only screen and (max-width: 768px) {
+  .wrapper {
+    :deep(.right_drawer) {
+      width: 80% !important;
     }
   }
 }

@@ -49,21 +49,8 @@
     background-color: #9093994d;
     /* background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.4) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.4) 50%,rgba(255,255,255,.4) 75%,transparent 75%,transparent); */
     -webkit-border-radius: 2em;
-    -moz-border-radius: 2em;
+    -moz-border-radius: 2em;  
     border-radius: 2em;
   }
 }
 
-// el-upload
-// .el-upload-list--picture-card{
-//   --el-upload-list-picture-card-size: 100px;
-// }
-// .el-upload--picture-card{
-//   --el-upload-picture-card-size: 100px;
-// }
-
-// 层级不够
-// :root{
-//   --el-upload-picture-card-size: 100px;
-//   --el-upload-list-picture-card-size: 100px;  
-// }

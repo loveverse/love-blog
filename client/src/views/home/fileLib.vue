@@ -5,7 +5,7 @@
     >
     <el-button type="primary"> 新建文件夹 </el-button>
     <el-table
-      :data="state.fileList"
+      :data="state.allFileList"
       style="width: 100%; margin-top: 20px"
       :header-cell-style="{ background: '#eee' }"
     >
@@ -15,9 +15,16 @@
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column label="链接"></el-table-column>
-      <el-table-column label="过期时间"></el-table-column>
-      <el-table-column label="操作"></el-table-column>
+      <el-table-column label="文件名" prop="file_name"></el-table-column>
+      <el-table-column label="大小" prop="file_size" align="center"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template #default="{ row }">
+          <el-space :size="20">
+            <span>删除</span>
+          </el-space>
+          <a :href="row.file_url" class="save">下载</a>
+        </template>
+      </el-table-column>
     </el-table>
     <el-drawer
       v-model="state.showUpload"
@@ -52,19 +59,52 @@
   </div>
 </template>
 <script lang="ts" setup name="fileLib">
+import { UploadProps, FormInstance } from "element-plus";
 import { Upload } from "@element-plus/icons-vue";
-import { reqFileList } from "@/api/fileList";
+import { reqFileList, reqSaveFile } from "@/api/fileList";
+import { reqUpload, reqPasteUpload } from "@/api/common";
 const state = reactive({
+  allFileList: [] as any[],
   fileList: [] as any[],
   showUpload: false,
 });
-const handleChange = () => {};
-const handleRemove = () => {};
-const handlePictureCardPreview = () => {};
+
+const handleUpload = async (file: any) => {
+  const params = new FormData();
+  params.append("file", file);
+  const result = await reqUpload(params);
+  if (result.code === 200) {
+    ElMessage.success("上传成功");
+    state.fileList.push(result.data);
+    await handleSaveFile(result.data);
+    await getFileList();
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
+const handleSaveFile = async (info: any) => {
+  const result = await reqSaveFile(info);
+  if (result.code === 200) {
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
+const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
+  handleUpload(uploadFile.raw);
+};
+const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
+  // state.issueInfo.fileList = state.issueInfo.fileList.filter(
+  //   (k: any) => k.name !== uploadFile.name
+  // );
+};
+const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  // state.imgUrl = uploadFile.url!;
+  // state.imgPreviewDia = true;
+};
 const getFileList = async () => {
   const result = await reqFileList();
   if (result.code === 200) {
-    state.fileList = result.data;
+    state.allFileList = result.data;
     // ElMessage.success(result.message);
   } else {
     ElMessage.error(result.msg);

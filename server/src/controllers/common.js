@@ -59,6 +59,8 @@ class Common {
         id: Date.now(),
         url: NETWORK_PATH + file.originalFilename,
         name: file.originalFilename,
+        size: file.size,
+        type: file.mimetype,
       };
 
       ctx.body = response.SUCCESS("common", fileInfo);
@@ -74,7 +76,7 @@ class Common {
       // 生成随机40个字符的hash
       const hash = crypto.randomBytes(20).toString("hex");
       // 文件名
-      const filename = hash + ".png"
+      const filename = hash + ".png";
       let filePath = path.join(
         FILE_PATH || __dirname,
         `${FILE_PATH ? "./" : "../static/"}${filename}`

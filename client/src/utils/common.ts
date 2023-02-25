@@ -24,3 +24,4 @@ export function check() {
     doCheck(0);
   } catch (err) {}
 }
+

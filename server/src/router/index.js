@@ -37,5 +37,6 @@ router.get("/wallpaper/findList", wallpaper.findPageWallpaper);
 
 // 文件列表
 router.post("/file/list",isUser,fileList.findFileLsit)
+router.post("/save/list",isUser,fileList.saveFileInfo)
 
 module.exports = router;

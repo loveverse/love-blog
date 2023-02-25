@@ -6,8 +6,9 @@ const {
   common,
   user,
   wallpaper,
+  fileList
 } = require("../controllers/index");
-const { auth } = require("../middleware/index");
+const { auth,isUser } = require("../middleware/index");
 
 // router.get("/", async (ctx) => {
 //   ctx.body = "欢迎访问该接口";
@@ -33,5 +34,8 @@ router.post("/paste/upload/file", common.pasteUploadFile);
 // router.get("/download/file/:name", common.downloadFile);
 // 强缓存
 router.get("/wallpaper/findList", wallpaper.findPageWallpaper);
+
+// 文件列表
+router.post("/file/list",isUser,fileList.findFileLsit)
 
 module.exports = router;

@@ -228,14 +228,13 @@ const handlePaste = (event: any) => {
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-
+    // 只有是文件为图片类型时才上传
     if (item.type.indexOf("image") !== -1) {
+      // 获取文件流
       const blob = item.getAsFile();
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result;
-        console.log(dataUrl);
-        // 使用Snipaste上传文件报413
         uploadImage(dataUrl);
       };
       reader.readAsDataURL(blob);

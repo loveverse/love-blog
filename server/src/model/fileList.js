@@ -24,6 +24,10 @@ const MfileList = seq.define(
       allowNull: false,
       comment: "文件类型",
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      comment: "文件对应的用户id"
+    }
   },
   {
     // 不需要自动将表名变成复数

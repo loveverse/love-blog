@@ -33,14 +33,14 @@
           <!-- </el-space> -->
         </ul>
       </el-card>
-      
+
       <el-upload
         :file-list="state.fileList"
         class="upload-demo"
         action="#"
-        accept="image/*"
         :auto-upload="false"
         drag
+        list-type="picture"
         :on-change="handleChange"
         :on-remove="handleRemove"
         :on-preview="handlePictureCardPreview"
@@ -53,6 +53,7 @@
 </template>
 <script lang="ts" setup name="fileLib">
 import { Upload } from "@element-plus/icons-vue";
+import { reqFileList } from "@/api/fileList";
 const state = reactive({
   fileList: [] as any[],
   showUpload: false,
@@ -60,6 +61,18 @@ const state = reactive({
 const handleChange = () => {};
 const handleRemove = () => {};
 const handlePictureCardPreview = () => {};
+const getFileList = async () => {
+  const result = await reqFileList();
+  if (result.code === 200) {
+    state.fileList = result.data;
+    // ElMessage.success(result.message);
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
+onMounted(() => {
+  getFileList();
+});
 </script>
 <style lang="scss" scoped>
 .box-card {

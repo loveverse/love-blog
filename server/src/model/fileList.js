@@ -20,7 +20,7 @@ const MfileList = seq.define(
       comment: "文件大小",
     },
     file_type: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.CHAR(10),
       allowNull: false,
       comment: "文件类型",
     },

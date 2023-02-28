@@ -15,7 +15,12 @@
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column label="文件名" prop="file_name"></el-table-column>
+      <el-table-column label="文件名" class-name="file_info">
+        <template v-slot="{ row }">
+          <img :src="imgSrc(row.file_type)" alt="" />
+          <span>{{ row.file_name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="大小"
         prop="file_size"
@@ -23,10 +28,10 @@
       ></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <el-space :size="20">
+          <div class="operation">
+            <span><a :href="row.file_url" class="save">下载</a></span>
             <span>删除</span>
-          </el-space>
-          <a :href="row.file_url" class="save">下载</a>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -39,7 +44,7 @@
       <el-card class="box-card">
         <ul>
           <!-- <el-space wrap :size="20"> -->
-          <li>上传文件最大为1G，接口超时时间为50秒(不推荐大文件)。</li>
+          <li>上传文件最大为512MB，接口超时时间为50秒(不推荐大文件)。</li>
           <li>登录用户可以创建文件夹，非本账号无法查看，删除文件。</li>
           <!-- </el-space> -->
         </ul>
@@ -67,12 +72,16 @@ import { UploadProps, FormInstance } from "element-plus";
 import { Upload } from "@element-plus/icons-vue";
 import { reqFileList, reqSaveFile } from "@/api/fileList";
 import { reqUpload, reqPasteUpload } from "@/api/common";
+import { FILE_TYPE } from "@/utils/constant";
 const state = reactive({
   allFileList: [] as any[],
   fileList: [] as any[],
   showUpload: false,
 });
-
+const imgSrc = (type: string) => {
+  const name = FILE_TYPE.includes(type) ? type : "file";
+  return new URL(`../../assets/imgs/icon/${name}.png`, import.meta.url).href;
+};
 const handleUpload = async (file: any) => {
   const params = new FormData();
   params.append("file", file);
@@ -119,10 +128,34 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
-
 .wrapper {
   :deep(.right_drawer) {
     width: 500px !important;
+  }
+  .operation {
+    white-space: nowrap;
+    span {
+      cursor: pointer;
+      &:first-child a {
+        color: #0c64eb;
+        text-decoration: none;
+      }
+    }
+    span + span {
+      margin-left: 10px;
+      color: #dd3434;
+    }
+  }
+  :deep(.file_info) {
+    .cell {
+      display: flex;
+      align-items: center;
+      img {
+        width: 22px;
+        height: 22px;
+        margin-right: 5px;
+      }
+    }
   }
   .box-card {
     border-left: 5px solid #409eff;

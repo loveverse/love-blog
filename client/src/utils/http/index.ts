@@ -13,7 +13,7 @@ interface IResponse<T = any> {
 }
 const http: AxiosInstance = axios.create({
   baseURL: domain,
-  timeout: 50000, // 超时时间
+  // timeout: 50000, // 超时时间
   withCredentials: false, // 表示跨域请求时是否需要使用凭证
 });
 

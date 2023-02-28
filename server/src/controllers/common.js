@@ -60,7 +60,7 @@ class Common {
         url: NETWORK_PATH + file.originalFilename,
         name: file.originalFilename,
         size: file.size,
-        type: file.mimetype,
+        type: file.originalFilename.match(/[^.]+$/)[0],
       };
 
       ctx.body = response.SUCCESS("common", fileInfo);

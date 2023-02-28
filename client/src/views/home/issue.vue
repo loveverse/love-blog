@@ -6,7 +6,7 @@
     <el-table
       :data="state.issueList"
       style="width: 100%; margin-top: 20px"
-      :header-cell-style="{ background: '#eee' }"
+      
     >
       <el-table-column type="index" label="序号" width="80" align="center" />
       <el-table-column label="时间" align="center">

@@ -7,7 +7,7 @@
     <el-table
       :data="state.allFileList"
       style="width: 100%; margin-top: 20px"
-      :header-cell-style="{ background: '#eee' }"
+      
     >
       <el-table-column
         type="index"

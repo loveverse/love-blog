@@ -11,7 +11,12 @@
         <ComItem :menuItem="item"></ComItem>
       </template>
     </template>
-    <el-menu-item v-else index="0" @click="() => (state.showAside = true)" class="unfold">
+    <el-menu-item
+      v-else
+      index="0"
+      @click="() => (state.showAside = true)"
+      class="unfold"
+    >
       <template #title>
         <el-icon><Expand /></el-icon>
         <span>展开</span>
@@ -19,7 +24,15 @@
     </el-menu-item>
 
     <div class="flex-grow" />
+
     <div class="btn_login">
+      <el-switch
+        v-model="state.isDark"
+        inline-prompt
+        active-icon="Moon"
+        inactive-icon="Sunny"
+        class="theme_toggle"
+      />
       <el-button
         v-if="!userInfo"
         type="primary"
@@ -114,6 +127,7 @@
 <script lang="ts" setup name="ComHeader">
 import type { FormInstance } from "element-plus";
 import { Expand } from "@element-plus/icons-vue";
+import { useDark } from "@vueuse/core";
 import debounce from "lodash/debounce";
 import { reqRegisterUser } from "@/api/login";
 import ROUTER_LIST from "./list";
@@ -129,6 +143,9 @@ import ROUTER_LIST from "./list";
 //   //   [key in string]: any;
 //   // };
 // }
+
+const isDark = useDark();
+
 const state = reactive({
   //#region
   // menuList: [
@@ -196,6 +213,7 @@ const state = reactive({
   registerDiaVis: false, // 登录注册弹窗
   flag: true, // 小屏适配
   showAside: false, // 显示抽屉
+  isDark,
 });
 const registerRef = ref<FormInstance>();
 
@@ -250,6 +268,9 @@ onMounted(() => {
   .btn_login {
     display: flex;
     align-items: center;
+    .theme_toggle {
+      margin-right: 20px;
+    }
     .user_info {
       display: flex;
       align-items: center;

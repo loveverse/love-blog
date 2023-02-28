@@ -6,6 +6,8 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 import router from "@/router";
 import { check } from "@/utils/common";
 import "@/assets/css/index.scss";
+// 暗黑主题
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
 // 弹窗不显示，需要手动引入样式,参考：https://github.com/element-plus/element-plus/issues/5108（官方文档也有说明）
 import "element-plus/es/components/message/style/css";

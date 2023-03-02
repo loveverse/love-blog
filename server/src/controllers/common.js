@@ -90,6 +90,8 @@ class Common {
         id: Date.now(),
         url: NETWORK_PATH + filename,
         name: filename,
+        size: file.size || "",
+        type: 'png',
       };
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {

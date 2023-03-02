@@ -144,6 +144,8 @@ const uploadImage = async (dataUrl: any) => {
       ? { ...result.data, url: dataUrl }
       : result.data;
     state.fileList.push(data);
+    await handleSaveFile(result.data);
+    await getFileList();
   } else {
     ElMessage.error(result.msg);
   }

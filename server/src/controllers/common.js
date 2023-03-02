@@ -40,8 +40,6 @@ class Common {
   async uploadFile(ctx, next) {
     try {
       const { file } = ctx.request.files;
-      // // 创建可读流
-      const reader = fs.createReadStream(file.filepath);
       // 检查文件夹是否存在，不存在则创建文件夹
       if (!fs.existsSync(FILE_PATH)) {
         FILE_PATH && fs.mkdirSync(FILE_PATH);
@@ -51,9 +49,11 @@ class Common {
         FILE_PATH || __dirname,
         `${FILE_PATH ? "./" : "../static/"}${file.originalFilename}`
       );
-      // // 创建可写流
+      // 创建可读流（默认一次读64kb）
+      const reader = fs.createReadStream(file.filepath);
+      // 创建可写流
       const upStream = fs.createWriteStream(filePath);
-      // // 可读流通过管道写入可写流
+      // 可读流通过管道写入可写流
       reader.pipe(upStream);
       const fileInfo = {
         id: Date.now(),
@@ -62,7 +62,6 @@ class Common {
         size: file.size,
         type: file.originalFilename.match(/[^.]+$/)[0],
       };
-
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
       console.log(error);

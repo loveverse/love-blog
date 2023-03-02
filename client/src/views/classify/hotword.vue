@@ -32,7 +32,7 @@ const state = reactive({
   total: 0,
   oneDay: 1000 * 60 * 60 * 24, // 一天时间
 });
-const loading = ref(true);
+const loading = ref(false);
 // 回到顶部动画效果
 // const backTop = (): void => {
 //   let top = document.body.scrollTop || document.documentElement.scrollTop;

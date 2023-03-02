@@ -16,9 +16,9 @@ const { auth,isUser } = require("../middleware/index");
 router.get("/wy/find", hotword.findHotword);
 router.get("/wy/pageQuery", hotword.findPageHotword);
 
-// 登录才能发表评论(协商缓存)
+// 登录才能删除，修改评论（协商缓存）
 router.get("/findExcerpt", person.findExcerpt);
-router.get("/addExcerpt", auth, person.addExcerpt);
+router.get("/addExcerpt", person.addExcerpt);
 router.get("/updateExcerpt", auth, person.updateExcerpt);
 router.get("/delExcerpt", auth, person.delExcerpt);
 

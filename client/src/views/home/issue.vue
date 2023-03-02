@@ -1,12 +1,12 @@
 <template>
-  <div class="wrapper" v-loading="loading">
+  <div class="wrapper">
     <el-button type="primary" @click="handleIssueBeforeOpen('add')"
       >新建问题</el-button
     >
     <el-table
       :data="state.issueList"
       style="width: 100%; margin-top: 20px"
-      
+      v-loading="loading"
     >
       <el-table-column type="index" label="序号" width="80" align="center" />
       <el-table-column label="时间" align="center">
@@ -85,7 +85,6 @@
           <el-input v-model="state.issueInfo.link" placeholder="请输入链接" />
         </el-form-item>
         <el-form-item label="图片">
-          <div id="editable" contenteditable="true"></div>
           <el-upload
             :ref="uploadRef"
             :file-list="state.issueInfo.fileList"
@@ -147,7 +146,7 @@ const state = reactive({
   imgPreviewDia: false,
 });
 
-const loading = ref(true);
+const loading = ref(false);
 const issueRef = ref<FormInstance>();
 const uploadRef = ref(null);
 // 关闭时移除监听的粘贴上传
@@ -225,7 +224,6 @@ const handleUpload = async (file: any) => {
 const handlePaste = (event: any) => {
   const items = (event.clipboardData || event.originalEvent.clipboardData)
     .items;
-
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     // 只有是文件为图片类型时才上传

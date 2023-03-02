@@ -102,7 +102,7 @@ const state = reactive({
   flag: false,
   connectStatus: 0, // 连接状态：0:连接中;1:已连接;2:关闭中;3:已关闭
 });
-const loading = ref(true);
+const loading = ref(false);
 const contentRef = ref<any>(null);
 onMounted(async () => {
   Ws.initWebsocket(global_callback, close_callback);

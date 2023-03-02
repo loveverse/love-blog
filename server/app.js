@@ -25,7 +25,8 @@ app.use(
     formidable: {
       // uploadDir: path.join(__dirname, "./static/"), // 设置文件上传目录
       keepExtensions: true, // 保持文件的后缀
-      maxFieldsSize: 1024 * 1024 * 1024, // 文件上传大小
+      // 最大文件上传大小为512MB（如果使用反向代理nginx，需要设置client_max_body_size）
+      maxFieldsSize: 512 * 1024 * 1024, 
     },
   })
 );

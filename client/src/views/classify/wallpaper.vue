@@ -58,7 +58,7 @@ const state = reactive({
   page: 1,
   total: 0,
 });
-const loading = ref<boolean>(true);
+const loading = ref<boolean>(false);
 onMounted(() => {
   getImgList();
 });

@@ -46,6 +46,7 @@
           <li>上传文件最大为512MB(不推荐大文件)。</li>
           <li>登录用户可以创建文件夹，非本账号无法查看，删除文件。</li>
           <li>上传大文件时，等待时间略长！</li>
+          <li>粘贴上传文件大小请勿超过1MB！</li>
         </ul>
       </el-card>
 
@@ -58,21 +59,26 @@
         list-type="picture"
         :on-change="handleChange"
         :on-remove="handleRemove"
-        :on-preview="handlePictureCardPreview"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">选择文件 或 粘贴截图</div>
         <template #file="{ file }">
-          <el-image
-            :src="file.url"
-            class="file_img"
-            :preview-src-list="[file.url]"
-          >
-            <template #error>
-              <el-icon><DocumentRemove /></el-icon>
-            </template>
-          </el-image>
-          <span class="file_name">{{ file.name }}</span>
+          <div class="img_info">
+            <el-image
+              :src="file.url"
+              class="file_img"
+              :preview-src-list="[file.url]"
+            >
+              <template #error>
+                <el-icon><DocumentRemove /></el-icon>
+              </template>
+            </el-image>
+            <span class="file_name">{{ file.name }}</span>
+          </div>
+          <el-progress
+            v-show="file.showProgress"
+            :percentage="file.percentage"
+          />
         </template>
       </el-upload>
       <el-progress
@@ -83,6 +89,7 @@
   </div>
 </template>
 <script lang="ts" setup name="fileLib">
+import throttle from "lodash/throttle";
 import { UploadProps, FormInstance } from "element-plus";
 import { Upload } from "@element-plus/icons-vue";
 import { reqFileList, reqSaveFile } from "@/api/fileList";
@@ -103,11 +110,12 @@ const state = reactive<IState>({
   loadProgress: 0,
   showProgress: false,
 });
-// 粘贴上传
+
+// 粘贴上传(防止一直粘贴)
 const handleCommonDrawer = (flag: boolean) => {
   state.showUpload = flag;
   state.showUpload
-    ? document.addEventListener("paste", handlePaste)
+    ? document.addEventListener("paste", throttle(handlePaste, 500))
     : document.removeEventListener("paste", handlePaste);
 };
 const handlePaste = (event: any) => {
@@ -150,7 +158,6 @@ const uploadImage = async (dataUrl: any) => {
     ElMessage.error(result.msg);
   }
 };
-
 // 类型推断排除null、undefined
 const user = JSON.parse(localStorage.getItem("userInfo")!);
 
@@ -159,23 +166,35 @@ const imgSrc = (type: string) => {
   const name = FILE_TYPE.includes(type) ? type : "file";
   return new URL(`../../assets/imgs/icon/${name}.png`, import.meta.url).href;
 };
-
 // 上传进度条
-const handleUploadProgress = (event: any) => {
-  state.showProgress = true;
-  state.loadProgress = Math.floor((event.loaded / event.total) * 100);
-  if (state.loadProgress >= 99) {
-    state.loadProgress = 99;
+const handleUploadProgress = (event: any, reactiveFile: any) => {
+  if (reactiveFile) {
+    reactiveFile.showProgress = true;
+    // loaded: 已上传大小；total：总大小；progress： 实时进度
+    reactiveFile.percentage = Math.floor(event.progress * 100);
+    if (reactiveFile.percentage >= 99) {
+      reactiveFile.percentage = 99;
+    }
+  } else {
+    state.showProgress = true;
+    state.loadProgress = Math.floor(event.progress * 100);
+    if (state.loadProgress >= 99) {
+      state.loadProgress = 99;
+    }
   }
 };
+
 const handleUpload = async (file: any) => {
+  // 不能直接修改file.percentage，不是响应式
+  const reactiveFile = reactive(file);
   const params = new FormData();
-  params.append("file", file);
-  const result = await reqUpload(params, handleUploadProgress);
+  params.append("file", reactiveFile.raw);
+  const result = await reqUpload(params, (event: any) => {
+    handleUploadProgress(event, reactiveFile);
+  });
   if (result.code === 200) {
     ElMessage.success("上传成功");
-    state.loadProgress = 100;
-    state.showProgress = false;
+    reactiveFile.showProgress = false;
     state.fileList.push(result.data);
     await handleSaveFile(result.data);
     await getFileList();
@@ -192,17 +211,14 @@ const handleSaveFile = async (info: any) => {
 };
 // onChange监听是否选择完成，这里可以处理为按钮手动上传
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
-  handleUpload(uploadFile.raw);
+  handleUpload(uploadFile);
 };
 const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
   // state.issueInfo.fileList = state.issueInfo.fileList.filter(
   //   (k: any) => k.name !== uploadFile.name
   // );
 };
-const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
-  // state.imgUrl = uploadFile.url!;
-  // state.imgPreviewDia = true;
-};
+
 const getFileList = async () => {
   loading.value = true;
   const result = await reqFileList();
@@ -263,27 +279,40 @@ onMounted(() => {
       }
     }
   }
-  .upload-demo {
-    .file_img {
-      width: 60px;
-      height: 60px;
-      margin-right: 10px;
-      :deep(.el-image__wrapper) {
-        text-align: center;
-        line-height: 60px;
-        font-size: 40px;
+  :deep(.upload-demo) {
+    .el-upload-list__item {
+      display: block;
+      .img_info {
+        display: flex;
+        align-items: center;
+        .file_img {
+          width: 60px;
+          height: 60px;
+          margin-right: 10px;
+          .el-image__wrapper {
+            text-align: center;
+            line-height: 60px;
+            font-size: 40px;
+          }
+        }
+        .file_name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
-    }
-    .file_name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      .el-progress__text {
+        position: inherit;
+        top: 0;
+        text-align: right;
+      }
     }
   }
   :deep(.el-progress__text) {
     text-align: right;
   }
 }
+
 @media only screen and (max-width: 768px) {
   .wrapper {
     :deep(.right_drawer) {

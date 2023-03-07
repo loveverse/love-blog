@@ -13,7 +13,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   return {
     server: {
       host: command === "serve" ? "0.0.0.0" : "localhost",
-      open: command === "build",
       port: 40001,
       // hmr: {
       //   clientPort: 40001,

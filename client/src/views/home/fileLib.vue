@@ -15,10 +15,12 @@
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column label="文件名" class-name="file_info">
+      <el-table-column label="文件名">
         <template v-slot="{ row }">
-          <img :src="imgSrc(row.file_type)" alt="" />
-          <span>{{ row.file_name }}</span>
+          <div @click="handleOpenFile(row)" class="file_info">
+            <img :src="imgSrc(row.file_type)" alt="" />
+            <span>{{ row.file_name }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -86,6 +88,11 @@
         :percentage="state.loadProgress"
       />
     </el-drawer>
+    <ComPreview
+      :fileInfo="state.previewFileInfo"
+      v-model:visible="state.previewVisible"
+      @handlePerviewClose="handlePerviewClose"
+    />
   </div>
 </template>
 <script lang="ts" setup name="fileLib">
@@ -101,6 +108,10 @@ interface IState {
   showUpload: boolean;
   loadProgress: number;
   showProgress: boolean;
+  previewFileInfo: {
+    [key in string]: any;
+  }; // 预览文件信息
+  previewVisible: boolean;
 }
 const loading = ref(false);
 const state = reactive<IState>({
@@ -109,8 +120,20 @@ const state = reactive<IState>({
   showUpload: false,
   loadProgress: 0,
   showProgress: false,
+  previewFileInfo: {}, // 预览文件信息
+  previewVisible: false,
 });
 
+const handlePerviewClose = () => {
+  state.previewFileInfo = {};
+};
+const handleOpenFile = (item: any) => {
+  state.previewFileInfo = {
+    name: item.file_name,
+    url: item.file_url,
+  };
+  state.previewVisible = true;
+};
 // 粘贴上传(防止一直粘贴)
 const handleCommonDrawer = (flag: boolean) => {
   state.showUpload = flag;
@@ -270,14 +293,12 @@ onMounted(() => {
     }
   }
   :deep(.file_info) {
-    .cell {
-      display: flex;
-      align-items: center;
-      img {
-        width: 22px;
-        height: 22px;
-        margin-right: 5px;
-      }
+    display: flex;
+    align-items: center;
+    img {
+      width: 22px;
+      height: 22px;
+      margin-right: 5px;
     }
   }
   .box-card {

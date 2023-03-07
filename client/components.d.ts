@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     ComHeader: typeof import('./src/components/ComHeader/index.vue')['default']
     ComItem: typeof import('./src/components/ComHeader/ComItem.vue')['default']
     ComLayout: typeof import('./src/components/ComLayout/index.vue')['default']
+    ComPreview: typeof import('./src/components/ComPreview/index.vue')['default']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']

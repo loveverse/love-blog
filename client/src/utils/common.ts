@@ -1,4 +1,6 @@
 import moment from "moment";
+import { Base64 } from "js-base64";
+import { previewUrl } from "@/config/index";
 
 export function formatterTime(timestamp: Date) {
   return moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
@@ -8,6 +10,11 @@ export function urlify(text: string) {
   const urlRegex =
     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
   return urlRegex.test(text);
+}
+// 预览服务
+export function createPreviewUrl(url: string) {
+  url = decodeURI(url);
+  return `${previewUrl}?url=${encodeURIComponent(Base64.encode(url))}`;
 }
 
 // 防止页面被debugger
@@ -24,4 +31,3 @@ export function check() {
     doCheck(0);
   } catch (err) {}
 }
-

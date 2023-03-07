@@ -3,7 +3,7 @@
     <el-button type="primary" :icon="Upload" @click="handleCommonDrawer(true)"
       >上传文件</el-button
     >
-    <el-button type="primary"> 新建文件夹 </el-button>
+    <!-- <el-button type="primary"> 新建文件夹 </el-button> -->
     <el-table
       :data="state.allFileList"
       style="width: 100%; margin-top: 20px"
@@ -30,7 +30,7 @@
         <template #default="{ row }">
           <div class="operation">
             <span><a :href="row.file_url" class="save">下载</a></span>
-            <span v-if="user">删除</span>
+            <span v-if="user" @click="handleBeforeDel(row.id)">删除</span>
           </div>
         </template>
       </el-table-column>
@@ -43,10 +43,11 @@
     >
       <el-card class="box-card">
         <ul>
-          <li>上传文件最大为512MB(不推荐大文件)。</li>
-          <li>登录用户可以创建文件夹，非本账号无法查看，删除文件。</li>
+          <li>
+            登录用户可以创建属于自己的单独空间，非本账号无法查看，删除文件。
+          </li>
+          <li>上传文件最大为512MB(不推荐大文件)；粘贴上传文件请勿超过1MB！</li>
           <li>上传大文件时，等待时间略长！</li>
-          <li>粘贴上传文件大小请勿超过1MB！</li>
         </ul>
       </el-card>
 
@@ -58,7 +59,6 @@
         drag
         list-type="picture"
         :on-change="handleChange"
-        :on-remove="handleRemove"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">选择文件 或 粘贴截图</div>
@@ -92,7 +92,7 @@
 import throttle from "lodash/throttle";
 import { UploadProps, FormInstance } from "element-plus";
 import { Upload } from "@element-plus/icons-vue";
-import { reqFileList, reqSaveFile } from "@/api/fileList";
+import { reqFileList, reqSaveFile, reqDelFile } from "@/api/fileList";
 import { reqUpload, reqPasteUpload } from "@/api/common";
 import { FILE_TYPE } from "@/utils/constant";
 interface IState {
@@ -213,10 +213,27 @@ const handleSaveFile = async (info: any) => {
 const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
   handleUpload(uploadFile);
 };
-const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
-  // state.issueInfo.fileList = state.issueInfo.fileList.filter(
-  //   (k: any) => k.name !== uploadFile.name
-  // );
+const handleBeforeDel = (id: number) => {
+  ElMessageBox.confirm("确定删除文件该文件吗?", "删除文件", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "error",
+    center: true,
+  })
+    .then(() => {
+      handleDelFile(id);
+    })
+    .catch(() => {});
+};
+const handleDelFile = async (id: number) => {
+  const params = { id };
+  const result = await reqDelFile(params);
+  if (result.code === 200) {
+    ElMessage.success("删除文件成功");
+    getFileList();
+  } else {
+    ElMessage.error(result.message);
+  }
 };
 
 const getFileList = async () => {

@@ -27,28 +27,6 @@ class FileList {
         });
         ctx.body = response.SUCCESS("common", list);
       }
-      // jwt.verify(token, JWT_SECRET, async (error, decoded) => {
-      //   // token解析失败
-      //   if (error) {
-      //     if (error.name === "TokenExpiredError") {
-      //       ctx.body = response.ERROR("tokenExpired");
-      //     } else if (error.name === "JsonWebTokenError") {
-      //       ctx.body = response.ERROR("tokenInvaild");
-      //     } else {
-      //       ctx.body = response.ERROR("unknownError");
-      //     }
-      //     return;
-      //   }
-      //   const data = await MfileList.findAll({
-      //     where: { user_id: decoded.id },
-      //     order: [["id", "DESC"]],
-      //   });
-      //   // token解析成功
-      //   ctx.body = response.SUCCESS("common", data);
-      // });
-      // } else {
-      //   ctx.body = response.SUCCESS("common", await MfileList.findAll());
-      // }
     } catch (error) {
       console.log(error);
       ctx.body = response.SERVER_ERROR();
@@ -68,6 +46,22 @@ class FileList {
       }
       const data = await MfileList.create(params);
       ctx.body = response.SUCCESS("common", data);
+    } catch (error) {
+      console.log(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
+
+  async delFile(ctx, next) {
+    try {
+      const { id } = ctx.request.body;
+      // 只有上传用户自己或者管理员才能删除
+      if (ctx.state.user) {
+        const data = await MfileList.destroy({ where: { id } });
+        ctx.body = response.SUCCESS("common", data);
+      } else {
+        ctx.body = response.ERROR("powerLacking");
+      }
     } catch (error) {
       console.log(error);
       ctx.body = response.SERVER_ERROR();

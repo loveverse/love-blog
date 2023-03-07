@@ -6,9 +6,9 @@ const {
   common,
   user,
   wallpaper,
-  fileList
+  fileList,
 } = require("../controllers/index");
-const { auth,isUser } = require("../middleware/index");
+const { auth } = require("../middleware/index");
 
 // router.get("/", async (ctx) => {
 //   ctx.body = "欢迎访问该接口";
@@ -36,7 +36,8 @@ router.post("/paste/upload/file", common.pasteUploadFile);
 router.get("/wallpaper/findList", wallpaper.findPageWallpaper);
 
 // 文件列表
-router.post("/file/list",isUser,fileList.findFileLsit)
-router.post("/save/list",isUser,fileList.saveFileInfo)
+router.post("/file/list", auth, fileList.findFileLsit);
+router.post("/save/list", auth, fileList.saveFileInfo);
+router.post("/delete/file", auth, fileList.delFile);
 
 module.exports = router;

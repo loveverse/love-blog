@@ -4,17 +4,17 @@ const response = require("../utils/resData");
 // 问题接口
 async function findIssue(ctx, next) {
   try {
-    let data = await Missue.findAll({
+    let list = await Missue.findAll({
       where: { status: 1 },
       order: [["id", "DESC"]],
     });
-    const list = data.map((k) => {
+    const data = list.map((k) => {
       k.dataValues.fileList = JSON.parse(k.file_list);
       delete k.dataValues.file_list;
       delete k.dataValues.status;
       return k;
     });
-    ctx.body = response.SUCCESS("common", list);
+    ctx.body = response.SUCCESS("common", data);
   } catch (error) {
     console.log(error);
     ctx.body = response.SERVER_ERROR();
@@ -23,16 +23,13 @@ async function findIssue(ctx, next) {
 async function addIssue(ctx, next) {
   try {
     const { title, link, fileList } = ctx.request.body;
-
-    ctx.body = response.SUCCESS(
-      "common",
-      await Missue.create({
-        title,
-        link,
-        status: 1, // 逻辑位
-        file_list: fileList,
-      })
-    );
+    const data = await Missue.create({
+      title,
+      link,
+      status: 1, // 逻辑位
+      file_list: fileList,
+    });
+    ctx.body = response.SUCCESS("common", data);
   } catch (error) {
     console.log(error);
     ctx.body = response.SERVER_ERROR();
@@ -42,17 +39,8 @@ async function addIssue(ctx, next) {
 async function delIssue(ctx, next) {
   try {
     const { id } = ctx.request.body;
-    ctx.body = response.SUCCESS(
-      "common",
-      await Missue.update(
-        { status: 0 },
-        {
-          where: {
-            id: id,
-          },
-        }
-      )
-    );
+    const data = await Missue.update({ status: 0 }, { where: { id } });
+    ctx.body = response.SUCCESS("common", data);
   } catch (error) {
     console.log(error);
     ctx.body = response.SERVER_ERROR();

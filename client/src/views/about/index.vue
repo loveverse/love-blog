@@ -38,11 +38,16 @@
     </ul>
     <h3>时间节点</h3>
     <el-timeline class="time_line">
-      <el-timeline-item timestamp="2023/2" placement="top">
+      <el-timeline-item
+        v-for="(item, index) in timeList"
+        :key="index"
+        :timestamp="item.timestamp"
+        placement="top"
+      >
         <el-space direction="vertical" alignment="normal">
-          <el-card v-for="(item, index) in timeList" :key="index">
-            <h4 class="title">{{ item.title }}</h4>
-            <p class="time">{{ item.startTime }}</p>
+          <el-card v-for="(subItem, subIndex) in item.list" :key="subIndex">
+            <h4 class="title">{{ subItem.title }}</h4>
+            <p class="time">{{ subItem.startTime }}</p>
           </el-card>
         </el-space>
       </el-timeline-item>
@@ -53,12 +58,26 @@
 import { clientList, serverList } from "./list";
 const timeList: any[] = [
   {
-    title: "学习问题增加粘贴上传(1mb以内)",
-    startTime: "2023/2/24 15:06",
+    timestamp: "2023/3",
+    list: [
+      {
+        title: "完善文件上传，优化壁纸加载速度",
+        startTime: "2023/3/7 11:48",
+      },
+    ],
   },
   {
-    title: "创建模块完成节点",
-    startTime: "2023/2/21 10:37",
+    timestamp: "2023/2",
+    list: [
+      {
+        title: "学习问题增加粘贴上传(1mb以内)",
+        startTime: "2023/2/24 15:06",
+      },
+      {
+        title: "创建模块完成节点",
+        startTime: "2023/2/21 10:37",
+      },
+    ],
   },
 ];
 </script>

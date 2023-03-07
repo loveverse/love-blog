@@ -295,6 +295,7 @@ onMounted(() => {
   :deep(.file_info) {
     display: flex;
     align-items: center;
+    cursor: pointer;
     img {
       width: 22px;
       height: 22px;

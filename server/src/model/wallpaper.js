@@ -18,6 +18,11 @@ const Mwallpaper = seq.define(
       defaultValue: 1,
       comment: "1:上架(默认);2:下架",
     },
+    url_small: {
+      type: DataTypes.STRING(),
+      allowNull: false,
+      comment: "小图",
+    },
   },
   {
     // 不需要自动将表名变成复数

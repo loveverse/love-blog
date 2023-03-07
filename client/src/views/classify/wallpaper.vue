@@ -9,7 +9,7 @@
       >
         <el-image
           class="box-img"
-          :src="item.url"
+          :src="item.url_small"
           :initial-index="index"
           :preview-src-list="state.srcList"
           fit="cover"
@@ -109,8 +109,8 @@ const scrollBottom = () => {
       .el-card__body {
         position: relative;
         height: 100%;
-        height: 180px;
-        padding: 5px;
+        height: 169px;
+        padding: 0;
         box-sizing: border-box;
         text-align: center;
         &:hover {

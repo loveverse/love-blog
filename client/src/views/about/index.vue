@@ -26,6 +26,7 @@
     </ul>
     <h3>技术点</h3>
     <ul class="point">
+      <li>文件库：使用kkFileView预览服务，docker + nginx搭建。</li>
       <li>
         聊天室：使用websocket，心跳检测，断线重连等；使用jsonwebtoken，颁发token，设置操作权限等；使用ETag（协商缓存）。
       </li>
@@ -60,6 +61,10 @@ const timeList: any[] = [
   {
     timestamp: "2023/3",
     list: [
+      {
+        title: "增加文件预览服务",
+        startTime: "2023/3/9 18:13"
+      },
       {
         title: "完善文件上传，优化壁纸加载速度",
         startTime: "2023/3/7 11:48",

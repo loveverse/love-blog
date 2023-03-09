@@ -4,12 +4,11 @@
     class="preview_dialog"
     :close-on-click-modal="false"
     v-model="openPreviewDialog"
-    width="1000px"
     :fullscreen="state.isFullScreen"
     @close="exit"
   >
     <div
-      v-show="visible"
+      v-if="fileInfo.url"
       class="perview_content"
       :class="state.isFullScreen && 'dialog_full'"
       element-loading-text="正在解码中"
@@ -26,7 +25,6 @@
     </div>
     <template #footer>
       <div class="footer_btn">
-        <div></div>
         <div>
           <span
             class="full_screen"
@@ -68,6 +66,7 @@ const state = reactive({
 });
 
 const exit = () => {
+  refIframe.value = null;
   state.isFullScreen = false;
   emits("handlePerviewClose");
 };
@@ -95,6 +94,7 @@ watch(
 
 <style lang="scss">
 .preview_dialog {
+  width: 1000px;
   .el-dialog__body {
     padding: 0;
     height: calc(100% - 114px);
@@ -114,7 +114,7 @@ watch(
     .footer_btn {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       .full_screen {
         display: inline-block;
         width: 100px;
@@ -136,6 +136,16 @@ watch(
         text-align: center;
         border-radius: 4px;
         background-color: #ffa31f;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 768px) {
+  .preview_dialog {
+    width: 320px;
+    .el-dialog__footer {
+      .footer_btn {
+        justify-content: center;
       }
     }
   }

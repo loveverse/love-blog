@@ -13,7 +13,7 @@ export function urlify(text: string) {
 }
 // 预览服务
 export function createPreviewUrl(url: string) {
-  url = decodeURI(url);
+  // url = decodeURI(url);
   return `${previewUrl}?url=${encodeURIComponent(Base64.encode(url))}`;
 }
 

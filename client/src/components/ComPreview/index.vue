@@ -5,12 +5,12 @@
     :close-on-click-modal="false"
     v-model="openPreviewDialog"
     :fullscreen="state.isFullScreen"
+    :class="state.isFullScreen && 'dialog_full'"
     @close="exit"
   >
     <div
       v-if="fileInfo.url"
       class="perview_content"
-      :class="state.isFullScreen && 'dialog_full'"
       element-loading-text="正在解码中"
       v-loading="loading"
     >
@@ -97,16 +97,13 @@ watch(
   width: 1000px;
   .el-dialog__body {
     padding: 0;
-    height: calc(100% - 114px);
+    height: calc(100% - 126px);
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     .perview_content {
       height: 414px;
       padding: 20px;
       box-sizing: border-box;
-    }
-    .dialog_full {
-      height: 100%;
     }
   }
   .el-dialog__footer {
@@ -140,12 +137,30 @@ watch(
     }
   }
 }
+.dialog_full {
+  width: 100%;
+  height: 100%;
+  .el-dialog__body {
+    .perview_content {
+      height: 100%;
+    }
+  }
+}
 @media only screen and (max-width: 768px) {
   .preview_dialog {
     width: 320px;
     .el-dialog__footer {
       .footer_btn {
         justify-content: center;
+      }
+    }
+  }
+  .dialog_full {
+    width: 100%;
+    height: 100%;
+    .el-dialog__body {
+      .perview_content {
+        height: 100%;
       }
     }
   }

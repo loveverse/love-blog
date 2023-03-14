@@ -1,18 +1,20 @@
+import { i18n } from "@/lang";
+const t = i18n.global.t;
 const statusType: any = {
-  400: "请求错误(400)",
-  401: "未授权，请重新登录(401)",
-  403: "拒绝访问(403)",
-  404: "请求出错(404)",
-  408: "请求超时(408)",
-  500: "服务器错误(500)",
-  501: "服务未实现(501)",
-  502: "网络错误(502)",
-  503: "服务不可用(503)",
-  504: "网络超时(504)",
-  505: "HTTP版本不受支持(505)",
+  400: t("requestError"),
+  401: t("unauthorized"),
+  403: t("accessDenied"),
+  404: t("requestError1"),
+  408: t("requestTimeout"),
+  500: t("serverError"),
+  501: t("serverNotRealize"),
+  502: t("networkError"),
+  503: t("serverUnavailable"),
+  504: t("networkTimeout"),
+  505: t("versionNonsupport"),
 };
 export const showMessage = (status: number | string = ""): string => {
   let message =
-    "连接出错，" + (statusType[+status] || "请检查网络或联系管理员！");
+    t("connectionError") + (statusType[+status] || t("checkNetwork"));
   return message;
 };

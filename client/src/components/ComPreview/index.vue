@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="课件预览"
+    :title="$t('filePreview')"
     class="preview_dialog"
     :close-on-click-modal="false"
     v-model="openPreviewDialog"
@@ -11,7 +11,7 @@
     <div
       v-if="fileInfo.url"
       class="perview_content"
-      element-loading-text="正在解码中"
+      :element-loading-text="$t('decodeIng')"
       v-loading="loading"
     >
       <iframe
@@ -29,9 +29,9 @@
           <span
             class="full_screen"
             @click="state.isFullScreen = !state.isFullScreen"
-            >全屏</span
+            >{{ $t("fullScreen") }}</span
           >
-          <a class="down_color">下载</a>
+          <a class="down_color">{{ $t("download") }}</a>
         </div>
       </div>
     </template>

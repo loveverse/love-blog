@@ -8,6 +8,11 @@ const routes: RouteRecordRaw[] = [
     redirect: "/home/fileLib",
     children: [
       {
+        path: "/webRTC",
+        name: "webRTC",
+        component: () => import("@/views/webRTC/index.vue"),
+      },
+      {
         path: "/home",
         name: "home",
         component: ComLayout,

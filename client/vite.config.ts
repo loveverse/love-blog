@@ -27,12 +27,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }),
       Components({
         // 必须加上importStyle，不然样式覆盖失效
-        resolvers: [ElementPlusResolver({importStyle: "sass"})],
+        resolvers: [ElementPlusResolver({ importStyle: "sass" })],
       }),
     ],
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
+        // "vue-i18n": "vue-i18n/dist/vue-i18n.cjs.js", // 隐藏警告
       },
     },
     // 问题：http://events.jianshu.io/p/4918f8d9f2b4

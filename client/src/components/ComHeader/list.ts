@@ -1,23 +1,33 @@
+import { i18n } from "@/lang";
+const t = i18n.global.t;
 // 没写children，自动隐藏
 export default [
   {
     icon: "",
+    path: "/webRTC",
+    name: "webRTC",
+    title: t("videoCall"),
+    permiss: "-1",
+    children: [],
+  },
+  {
+    icon: "",
     path: "/home/fileLib",
-    title: "文件库",
+    title: t("fileLib"),
     permiss: "0",
     children: [],
   },
   {
     icon: "",
     path: "/home/person",
-    title: "聊天室",
+    title: t("chatRoom"),
     permiss: "1",
     children: [],
   },
   {
     icon: "",
     path: "/home/issue",
-    title: "学习问题",
+    title: t("studyIssue"),
     permiss: "2",
     children: [],
   },
@@ -25,27 +35,27 @@ export default [
   {
     icon: "",
     path: "/classify",
-    title: "分类",
+    title: t("classify"),
     permiss: "4",
     children: [
       {
         icon: "",
         path: "/classify/plan",
-        title: "考试计划",
+        title: t("examPlan"),
         permiss: "3",
         children: [],
       },
       {
         icon: "",
         path: "/classify/wallpaper",
-        title: "壁纸",
+        title: t("wallpaper"),
         permiss: "5",
         children: [],
       },
       {
         icon: "",
         path: "/classify/hotword",
-        title: "网易热评",
+        title: t("netEaseHot"),
         permiss: "4",
         children: [],
       },
@@ -54,7 +64,7 @@ export default [
   {
     icon: "",
     path: "/about",
-    title: "关于",
+    title: t("about"),
     permiss: "6",
     children: [],
   },

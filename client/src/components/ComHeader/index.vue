@@ -26,6 +26,20 @@
     <div class="flex-grow" />
 
     <div class="btn_login">
+      <el-dropdown @command="toggleLanguage">
+        <span class="el-dropdown-link">
+          多语言
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="en">English</el-dropdown-item>
+            <el-dropdown-item command="zh-CN">简体中文</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
       <el-switch
         v-model="state.isDark"
         inline-prompt
@@ -129,8 +143,12 @@ import type { FormInstance } from "element-plus";
 import { Expand } from "@element-plus/icons-vue";
 import { useDark } from "@vueuse/core";
 import debounce from "lodash/debounce";
+import { i18n } from "@/lang";
+import { useLangStore } from "@/store/lang";
 import { reqRegisterUser } from "@/api/login";
+
 import ROUTER_LIST from "./list";
+import { useRouter } from "vue-router";
 // interface IState {
 //   menuList: object[];
 //   regForm: {
@@ -147,61 +165,6 @@ import ROUTER_LIST from "./list";
 const isDark = useDark();
 
 const state = reactive({
-  //#region
-  // menuList: [
-  //   {
-  //     icon: "",
-  //     path: "/home/fileLib",
-  //     title: "文件库",
-  //     permiss: "0",
-  //     children: [],
-  //   },
-  //   {
-  //     icon: "",
-  //     path: "/home/person",
-  //     title: "聊天室",
-  //     permiss: "1",
-  //     children: [],
-  //   },
-  //   {
-  //     icon: "",
-  //     path: "/home/issue",
-  //     title: "学习问题",
-  //     permiss: "2",
-  //     children: [],
-  //   },
-
-  //   {
-  //     icon: "",
-  //     path: "/classify",
-  //     title: "分类",
-  //     permiss: "4",
-  //     children: [
-  //       {
-  //         icon: "",
-  //         path: "/classify/plan",
-  //         title: "考试计划",
-  //         permiss: "3",
-  //         children: [],
-  //       },
-  //       {
-  //         icon: "",
-  //         path: "/classify/wallpaper",
-  //         title: "壁纸",
-  //         permiss: "5",
-  //         children: [],
-  //       },
-  //       {
-  //         icon: "",
-  //         path: "/classify/hotword",
-  //         title: "网易热评",
-  //         permiss: "4",
-  //         children: [],
-  //       },
-  //     ],
-  //   },
-  // ],
-  //#endregion
   regForm: {
     userName: "",
     password: "",
@@ -220,6 +183,20 @@ const registerRef = ref<FormInstance>();
 const userInfo = computed(() => {
   return JSON.parse(localStorage.getItem("userInfo")!);
 });
+const router = useRouter();
+const store = useLangStore();
+// 切换语言
+const toggleLanguage = (val: any) => {
+  
+
+  
+  // console.log(router);
+  i18n.global.locale.value = val;
+  store.updateLocale(val);
+  localStorage.setItem("lang", val);
+  router.go(0);
+  // window.location.reload();
+};
 const handleRegister = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
@@ -265,11 +242,12 @@ onMounted(() => {
   .flex-grow {
     flex-grow: 1;
   }
+
   .btn_login {
     display: flex;
     align-items: center;
     .theme_toggle {
-      margin-right: 20px;
+      margin: 0 20px;
     }
     .user_info {
       display: flex;

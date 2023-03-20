@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "automate": "sequelize-automate -c './sequelize-automate.config.js'",
     "dev": "set NODE_ENV=development && nodemon app.js"
   },
   "author": "",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "eslint": "^8.30.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "sequelize-automate": "^1.2.2"
   }
 }

@@ -9,6 +9,7 @@ function Person() {}
 // 资源共享，节约内存
 Person.prototype.findExcerpt = async function (ctx, next) {
   try {
+    console.log(getClientIP(ctx));
     // 不进行强缓存
     ctx.set("Cache-Control", "no-cache");
     // http1.0的产物
@@ -36,6 +37,7 @@ Person.prototype.findExcerpt = async function (ctx, next) {
       ETag: W/"usagi-1234"
     */
     // console.log(ctx.request.fresh);
+
     if (ifNoneMatch === etag) {
       ctx.status = 304;
     } else {

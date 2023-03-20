@@ -144,7 +144,7 @@ import { Expand } from "@element-plus/icons-vue";
 import { useDark } from "@vueuse/core";
 import debounce from "lodash/debounce";
 import { i18n } from "@/lang";
-import { useLangStore } from "@/store/lang";
+import { useLangStore } from "@/store";
 import { reqRegisterUser } from "@/api/login";
 
 import ROUTER_LIST from "./list";
@@ -187,9 +187,6 @@ const router = useRouter();
 const store = useLangStore();
 // 切换语言
 const toggleLanguage = (val: any) => {
-  
-
-  
   // console.log(router);
   i18n.global.locale.value = val;
   store.updateLocale(val);

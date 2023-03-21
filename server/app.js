@@ -64,7 +64,6 @@ server.listen(APP_PORT, () => {
   const host = server.address().address;
   const port = server.address().port;
   console.log(
-    `环境:${process.env.NODE_ENV},服务器地址:http://${host}:${port}/findExcerpt`
+    `环境:${process.env.NODE_ENV},服务器地址:http://localhost:${port}/findExcerpt`
   );
-  
 });

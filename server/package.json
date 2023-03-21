@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=development && nodemon app.js",
-    "build": "node app.js"
+    "build": "node app.js",
+    "automate": "sequelize-automate -c './sequelize-automate.config.js'"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "eslint": "^8.30.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "sequelize-automate": "^1.2.2"
   }
 }

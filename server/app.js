@@ -67,3 +67,4 @@ server.listen(APP_PORT, () => {
     `环境:${process.env.NODE_ENV},服务器地址:http://localhost:${port}/findExcerpt`
   );
 });
+module.exports = server;

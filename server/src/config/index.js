@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development ") {
   NETWORK_PATH = "blob:http://192.168.10.50:40001/";
 } else {
   APP_PORT = 40001; // 服务监听端口
-  APP_HOST = "1.15.42.9"; // 数据库ip地址
+  APP_HOST = "localhost"; // 数据库ip地址
   DATA_BASE = "verse"; // 数据库名
   USERNAME = "verse"; // 用户名
   PASSWORD = "123456"; // 密码

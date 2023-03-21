@@ -8,9 +8,12 @@
     "dev": "set NODE_ENV=development && nodemon app.js",
     "start": "node app.js",
     "automate": "sequelize-automate -c './sequelize-automate.config.js'",
-    "build": "node app.js"
+    "build": "npm i"
   },
-  "author": "",
+  "engines": {
+    "node": ">=14"
+  },
+  "author": "loveverse",
   "license": "ISC",
   "dependencies": {
     "@vercel/node": "^2.9.13",

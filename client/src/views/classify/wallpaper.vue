@@ -49,7 +49,6 @@
 </template>
 <script setup lang="ts" name="wallpaper">
 import { reqImgList } from "@/api/wallpaper";
-// import { reqDownLoad } from "@/api/common";
 
 const state = reactive({
   imgList: [] as any,
@@ -62,6 +61,14 @@ const loading = ref<boolean>(false);
 onMounted(() => {
   getImgList();
 });
+const scrollBottom = () => {
+  // nextTick(() => {
+  // 滚动到底部
+  let h: HTMLElement | null = document.getElementById("main");
+  h?.scrollTo(0, 0);
+
+  // });
+};
 const getImgList = async (page = 1) => {
   state.page = page;
   const params = {
@@ -77,7 +84,7 @@ const getImgList = async (page = 1) => {
     scrollBottom();
   } else {
     ElMessage.error(result.msg);
-  
+  }
   loading.value = false;
 };
 // const saveImg = async (info: any) => {
@@ -88,14 +95,6 @@ const getImgList = async (page = 1) => {
 //   const params = { url: info.url };
 //   const result = await reqDownLoad(params);
 // };
-const scrollBottom = () => {
-  // nextTick(() => {
-  // 滚动到底部
-  let h: HTMLElement | null = document.getElementById("main");
-  h?.scrollTo(0, 0);
-
-  // });
-};
 </script>
 <style lang="scss" scoped>
 .wrapper {

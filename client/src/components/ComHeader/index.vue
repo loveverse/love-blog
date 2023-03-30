@@ -19,7 +19,7 @@
     >
       <template #title>
         <el-icon><Expand /></el-icon>
-        <span>展开</span>
+        <span>{{ t("expansion") }}</span>
       </template>
     </el-menu-item>
 
@@ -35,8 +35,12 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="en">English</el-dropdown-item>
-            <el-dropdown-item command="zh-CN">简体中文</el-dropdown-item>
+            <el-dropdown-item
+              v-for="item in languageList"
+              :key="item.name"
+              :command="item.name"
+              >{{ item.text }}</el-dropdown-item
+            >
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -51,7 +55,7 @@
         v-if="!userInfo"
         type="primary"
         @click="state.registerDiaVis = true"
-        >登录</el-button
+        >{{ t("login") }}</el-button
       >
       <el-dropdown v-else>
         <span class="user_info">
@@ -67,10 +71,12 @@
                 type="primary"
                 target="_blank"
                 href="https://github.com/loveverse/love-blog"
-                >项目地址</el-link
+                >{{ t("projectAddress") }}</el-link
               >
             </el-dropdown-item>
-            <el-dropdown-item @click="loginOut">退出登录</el-dropdown-item>
+            <el-dropdown-item @click="loginOut">{{
+              t("logOut")
+            }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -97,8 +103,8 @@
   </el-drawer>
   <el-dialog
     v-model="state.registerDiaVis"
-    title="注册/登录"
-    width="300px"
+    :title="t('registerOrLogin')"
+    width="320px"
     center
   >
     <el-form
@@ -107,31 +113,33 @@
       status-icon
       :rules="state.regFormRules"
       label-position="left"
-      label-width="80px"
+      label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="用户名" prop="userName">
+      <el-form-item :label="t('userName')" prop="userName">
         <el-input
           v-model="state.regForm.userName"
           type="text"
           autocomplete="off"
-          placeholder="请输入用户名"
+          :placeholder="t('place.userName')"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item :label="t('password')" prop="password">
         <el-input
           v-model="state.regForm.password"
           type="password"
           autocomplete="off"
-          placeholder="请输入密码"
+          :placeholder="t('place.password')"
         />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="state.registerDiaVis = false">取消</el-button>
+        <el-button @click="state.registerDiaVis = false">{{
+          t("cancel")
+        }}</el-button>
         <el-button type="primary" @click="handleRegister(registerRef)">
-          注册
+          {{ t("register") }}
         </el-button>
       </span>
     </template>
@@ -143,7 +151,7 @@ import type { FormInstance } from "element-plus";
 import { Expand } from "@element-plus/icons-vue";
 import { useDark } from "@vueuse/core";
 import debounce from "lodash/debounce";
-import { i18n } from "@/lang";
+import { i18n, t } from "@/lang";
 import { useLangStore } from "@/store";
 import { reqRegisterUser } from "@/api/login";
 
@@ -170,8 +178,12 @@ const state = reactive({
     password: "",
   },
   regFormRules: {
-    userName: [{ required: true, message: "用户名不能为空", trigger: "blur" }],
-    password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
+    userName: [
+      { required: true, message: t("rule.userName"), trigger: "blur" },
+    ],
+    password: [
+      { required: true, message: t("rule.password"), trigger: "blur" },
+    ],
   },
   registerDiaVis: false, // 登录注册弹窗
   flag: true, // 小屏适配
@@ -183,18 +195,32 @@ const registerRef = ref<FormInstance>();
 const userInfo = computed(() => {
   return JSON.parse(localStorage.getItem("userInfo")!);
 });
+// 过滤已使用语言
+const languageList = computed(() => {
+  const language = [
+    {
+      name: "zh-CN",
+      text: "简体中文",
+    },
+    {
+      name: "en",
+      text: "English",
+    },
+  ];
+  return language.filter((k) => i18n.global.locale.value !== k.name);
+});
 const router = useRouter();
 const store = useLangStore();
 
 // 切换语言
 const toggleLanguage = (val: any) => {
-
   i18n.global.locale.value = val;
   store.updateLocale(val);
   localStorage.setItem("lang", val);
   router.go(0);
   // window.location.reload();
 };
+
 const handleRegister = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
@@ -221,7 +247,7 @@ const handleRegister = (formEl: FormInstance | undefined) => {
 const loginOut = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("userInfo");
-  ElMessage.success("退出成功");
+  ElMessage.success(t("message.logOutSuccess"));
   window.location.reload();
 };
 

@@ -9,6 +9,14 @@ export default {
   wallpaper: "wallpaper",
   netEaseHot: "NetEase Hot Review",
   about: "about",
+  expansion: "expansion",
+  login: "login",
+  projectAddress: "Project address",
+  logOut: "LogOut",
+  registerOrLogin: "Registration/login",
+  userName: "userName",
+  password: "password",
+  register: "register",
 
   // ComPreview
   filePreview: "File preview",
@@ -98,6 +106,7 @@ export default {
     delSuccess1: "Content deleted successfully!",
     disconnetWarn:
       "The connection is disconnected, the message is no longer instant push!",
+    logOutSuccess: "Exit successfully",
   },
   messageBox: {
     tip: "Are you sure to delete the file?",
@@ -121,12 +130,16 @@ export default {
     link: "Please enter the link",
     content: "Please enter the content",
     author: "Please enter author",
+    userName: "Please enter the user name",
+    password: "Please enter password",
   },
   cancel: "cancel",
   confirm: "determine",
   rule: {
     title: "The title cannot be empty",
     link: "Links cannot be empty",
+    userName: "The user name cannot be empty",
+    password: "The password cannot be empty",
   },
 
   // person

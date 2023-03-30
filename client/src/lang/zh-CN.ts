@@ -9,6 +9,14 @@ export default {
   wallpaper: "壁纸",
   netEaseHot: "网易热评",
   about: "关于",
+  expansion: "展开",
+  login: "登录",
+  projectAddress: "项目地址",
+  logOut: "退出登录",
+  registerOrLogin: "注册/登录",
+  userName: "用户名",
+  password: "密码",
+  register: "注册",
 
   // ComPreview
   filePreview: "文件预览",
@@ -94,6 +102,7 @@ export default {
     updateSuccess: "内容修改成功！",
     delSuccess1: "内容删除成功！",
     disconnetWarn: "连接断开，消息不再即时推送！",
+    logOutSuccess: "退出成功",
   },
   messageBox: {
     tip: "确定删除文件该文件吗?",
@@ -117,16 +126,20 @@ export default {
     link: "请输入链接",
     content: "请输入内容",
     author: "请输入作者",
+    userName: "请输入用户名",
+    password: "请输入密码",
   },
   cancel: "取消",
   confirm: "确定",
   rule: {
     title: "标题不能为空",
     link: "链接不能为空",
+    userName: "用户名不能为空",
+    password: "密码不能为空",
   },
-  editIssue: "编辑问题",
-
+  
   // person
+  editIssue: "编辑问题",
   comeFrom1: "--来自“",
   total: "共",
   article: "篇",

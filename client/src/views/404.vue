@@ -1,13 +1,14 @@
 <template>
   <div class="error-page">
     <div class="error-code">4<span>0</span>4</div>
-    <div class="error-desc">啊哦~ 你所访问的页面不存在</div>
+    <div class="error-desc">{{ t("notExit") }}</div>
     <div class="error-handle">
-      <el-button type="" @click="toHome">返回首页</el-button>
+      <el-button type="" @click="toHome">{{ t("backHome") }}</el-button>
     </div>
   </div>
 </template>
 <script setup lang="ts" name="404">
+import { t } from "@/lang";
 const toHome = () => {
   window.location.href = window.origin;
 };

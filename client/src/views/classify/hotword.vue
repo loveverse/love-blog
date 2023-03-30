@@ -3,7 +3,7 @@
     <ul class="out" v-if="state.findData" v-loading="loading">
       <li class="card" v-for="item in state.findData" :key="item.id">
         <p class="title">{{ item.content }}</p>
-        <a :href="item.url"> --来自网易云音乐《{{ item.name }}》 </a>
+        <a :href="item.url"> {{ $t("comeFrom") }}《{{ item.name }}》 </a>
       </li>
     </ul>
     <el-pagination
@@ -24,7 +24,7 @@
 </template>
 <script setup lang="ts" name="hotword">
 import { reqPageFindData } from "@/api/hotword";
-
+import { t } from "@/lang";
 const state = reactive({
   findData: [] as any[],
   limit: 10, // 每页显示数
@@ -79,7 +79,7 @@ onMounted(() => {
   if (Date.now() > expires + state.oneDay) {
     localStorage.setItem("expires", Date.now().toString());
     ElNotification({
-      message: "点击歌名可跳转到对应歌曲",
+      message: t("jumpMusic"),
       duration: 2000,
     });
   }

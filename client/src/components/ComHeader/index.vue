@@ -185,9 +185,10 @@ const userInfo = computed(() => {
 });
 const router = useRouter();
 const store = useLangStore();
+
 // 切换语言
 const toggleLanguage = (val: any) => {
-  // console.log(router);
+
   i18n.global.locale.value = val;
   store.updateLocale(val);
   localStorage.setItem("lang", val);

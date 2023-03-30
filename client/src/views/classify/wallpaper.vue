@@ -16,7 +16,7 @@
           lazy
         >
           <template #error>
-            <div class="image-slot">加载失败</div>
+            <div class="image-slot">{{ $t("loadingFail") }}</div>
           </template>
           <template #placeholder>
             <el-skeleton style="height: 100%" animated :throttle="500">
@@ -28,7 +28,7 @@
         </el-image>
 
         <!-- <div  > -->
-        <a :href="item.url" class="save">保存</a>
+        <a :href="item.url" class="save">{{ $t("save") }}</a>
         <!-- </div> -->
       </el-card>
     </div>
@@ -77,7 +77,7 @@ const getImgList = async (page = 1) => {
     scrollBottom();
   } else {
     ElMessage.error(result.msg);
-  }
+  
   loading.value = false;
 };
 // const saveImg = async (info: any) => {

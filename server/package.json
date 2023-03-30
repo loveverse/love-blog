@@ -8,7 +8,7 @@
     "dev": "set NODE_ENV=development && nodemon app.js",
     "start": "node app.js",
     "automate": "sequelize-automate -c './sequelize-automate.config.js'",
-    "build": "npm i"
+    "build": "node app.js"
   },
   "engines": {
     "node": ">=14"

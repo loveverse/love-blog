@@ -1,5 +1,5 @@
-import { i18n } from "@/lang";
-const t = i18n.global.t;
+import { t } from "@/lang";
+
 const statusType: any = {
   400: t("requestError"),
   401: t("unauthorized"),

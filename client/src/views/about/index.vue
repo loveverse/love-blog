@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
-    <h2>项目介绍</h2>
-    <h3>技术栈</h3>
+    <h2>{{ $t("projectIntroduction") }}</h2>
+    <h3>{{ $t("technologyStack") }}</h3>
     <ul class="inn">
       <li>
-        <span>前端</span>
+        <span>{{ $t("frontEnd") }}</span>
         <el-space wrap>
           <el-tag size="large" v-for="item in clientList" :key="item.name">
             <a :href="item.url" target="_blank">{{ item.name }}</a>
@@ -12,7 +12,7 @@
         </el-space>
       </li>
       <li>
-        <span>后端</span>
+        <span>{{ $t("backEnd") }}</span>
         <el-space wrap>
           <el-tag size="large" v-for="item in serverList" :key="item.name">
             <a :href="item.url" target="_blank">{{ item.name }}</a>
@@ -20,24 +20,18 @@
         </el-space>
       </li>
       <li>
-        <span>部署</span>
+        <span>{{ $t("deployment") }}</span>
         <el-tag size="large">nginx</el-tag>
       </li>
     </ul>
-    <h3>技术点</h3>
+    <h3>{{ $t("technicalPoint") }}</h3>
     <ul class="point">
-      <li>文件库：使用kkFileView预览服务，docker + nginx搭建。</li>
-      <li>
-        聊天室：使用websocket，心跳检测，断线重连等；使用jsonwebtoken，颁发token，设置操作权限等；使用ETag（协商缓存）。
-      </li>
-      <li>
-        学习问题：上传组件，使用koa-body实现上传，开发和生产环境路径的配置。
-      </li>
-      <li>
-        壁纸：使用element-plus的骨架屏，图片懒加载，nginx下载，反向代理，文件访问权限，证书配置等。
-      </li>
+      <li>{{ $t("fileLib1") }}</li>
+      <li>{{ $t("chatRoom1") }}</li>
+      <li>{{ $t("studyIssue1") }}</li>
+      <li>{{ $t("wallpaper1") }}</li>
     </ul>
-    <h3>时间节点</h3>
+    <h3>{{ $t("timeNode") }}</h3>
     <el-timeline class="time_line">
       <el-timeline-item
         v-for="(item, index) in timeList"
@@ -56,17 +50,18 @@
   </div>
 </template>
 <script lang="ts" setup name="about">
+import { t } from "@/lang";
 import { clientList, serverList } from "./list";
 const timeList: any[] = [
   {
     timestamp: "2023/3",
     list: [
       {
-        title: "增加文件预览服务",
-        startTime: "2023/3/9 18:13"
+        title: t("timeList.content1"),
+        startTime: "2023/3/9 18:13",
       },
       {
-        title: "完善文件上传，优化壁纸加载速度",
+        title: t("timeList.content2"),
         startTime: "2023/3/7 11:48",
       },
     ],
@@ -75,11 +70,11 @@ const timeList: any[] = [
     timestamp: "2023/2",
     list: [
       {
-        title: "学习问题增加粘贴上传(1mb以内)",
+        title: t("timeList.content3"),
         startTime: "2023/2/24 15:06",
       },
       {
-        title: "创建模块完成节点",
+        title: t("timeList.content4"),
         startTime: "2023/2/21 10:37",
       },
     ],

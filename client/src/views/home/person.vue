@@ -33,7 +33,9 @@
           </template>
           <div class="tip">
             <p class="date_now">{{ item.date }}</p>
-            <p class="author" v-if="item.author">--来自“{{ item.author }}”</p>
+            <p class="author" v-if="item.author">
+              {{ t("comeFrom1") }}{{ item.author }}”
+            </p>
           </div>
         </div>
         <el-button
@@ -42,18 +44,20 @@
           size="small"
           class="del"
           @click="del(item.id)"
-          >删除</el-button
+          >{{ t("delete") }}</el-button
         >
       </li>
     </ul>
     <div class="site_info">
       <el-tag type="success">
-        共&emsp;{{ state.findData.length }}&emsp;篇
+        {{ t("total") }} &emsp;{{ state.findData.length }}&emsp;{{
+          t("article")
+        }}
       </el-tag>
       <el-result
         class="status"
         :icon="state.connectStatus === 1 ? 'success' : 'error'"
-        :title="state.connectStatus === 1 ? '已连接' : '已关闭，请刷新'"
+        :title="state.connectStatus === 1 ? t('connected') : t('closed')"
       >
       </el-result>
     </div>
@@ -73,8 +77,10 @@
         v-model.trim="state.author"
       >
       </el-input>
-      <el-button type="primary" @click="addExcerptData">提交</el-button>
-      <el-button @click="handleClose">关闭连接</el-button>
+      <el-button type="primary" @click="addExcerptData">{{
+        t("submit")
+      }}</el-button>
+      <el-button @click="handleClose">{{ t("closeConnect") }}</el-button>
     </div>
     <el-backtop target=".el-main" :bottom="50">
       <el-icon><CaretTop /></el-icon>
@@ -82,6 +88,7 @@
   </div>
 </template>
 <script setup lang="ts" name="person">
+import { t } from "@/lang";
 import {
   reqFindExcerptData,
   reqAddExcerptData,
@@ -140,7 +147,7 @@ const vFocus = {
 
 const handleClose = () => {
   Ws.websocket.close();
-  ElMessage.warning("连接断开，消息不再即时推送！");
+  ElMessage.warning(t("message.disconnetWarn"));
 };
 // 连接断开通知
 const close_callback = () => {
@@ -183,7 +190,7 @@ const getFindExcerptData = async () => {
 // 添加数据
 const addExcerptData = async () => {
   if (!state.text.trim()) {
-    ElMessage.warning("输入的内容不能为空！");
+    ElMessage.warning(t("message.notContentWarn"));
     state.text = "";
     return;
   }
@@ -195,7 +202,7 @@ const addExcerptData = async () => {
   };
   const result = await reqAddExcerptData(params);
   if (result.code === 200) {
-    ElMessage.success("内容发布成功！");
+    ElMessage.success(t("message.releaseSuccess"));
     Ws.sendWebsocket(JSON.stringify({ type: "personData" }));
     state.text = "";
     state.author = "";
@@ -219,7 +226,7 @@ const update = async (id: number, content: string) => {
     };
     const result = await reqUpdateExcerptData(params);
     if (result.code === 200) {
-      ElMessage.success("内容修改成功！");
+      ElMessage.success(t("message.updateSuccess"));
     } else {
       ElMessage.error(result.msg);
     }
@@ -229,7 +236,7 @@ const del = async (id: number) => {
   const params = { id };
   const result = await reqDelExcerptData(params);
   if (result.code === 200) {
-    ElMessage.success("内容删除成功！");
+    ElMessage.success(t("message.delSuccess1"));
     Ws.sendWebsocket(JSON.stringify({ type: "personData" }));
   } else {
     ElMessage.error(result.msg);

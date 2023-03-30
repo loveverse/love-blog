@@ -5,7 +5,6 @@ import elementplusEn from "element-plus/lib/locale/lang/en";
 import elementplusZhCN from "element-plus/lib/locale/lang/zh-cn";
 import { useLangStoreHook } from "@/store/lang";
 const store = useLangStoreHook();
-console.log(111, store.locale);
 
 const i18n = createI18n({
   legacy: false,
@@ -13,8 +12,10 @@ const i18n = createI18n({
   globalInjection: true, // 挂载到全局
   messages: {
     "zh-CN": { ...zhCN, ...elementplusZhCN },
-    en: { ...en, elementplusEn },
+    en: { ...en, ...elementplusEn },
   },
 });
+// 在ts中使用
+const t = i18n.global.t;
 
-export { i18n };
+export { i18n, t };

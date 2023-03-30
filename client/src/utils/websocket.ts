@@ -1,4 +1,5 @@
 import { webSocketUrl } from "@/config";
+import { t } from "@/lang";
 
 const socketConfig = {
   url: webSocketUrl,
@@ -26,14 +27,14 @@ class WS {
         this.socketOnSend(data);
       }, 1000);
     } else {
-      console.log("连接已关闭，无法及时响应");
+      console.log(t("connectClose"));
     }
   }
   // mounted中初始化
   initWebsocket(callback: any = null, close_fun: any = null, url: string = "") {
     const webUrl = url || socketConfig.url;
     if (typeof WebSocket === "undefined") {
-      console.log("您的浏览器不支持WebSocket，无法获取数据");
+      console.log(t("browserNonsupport"));
       return;
     }
     this.global_callback = callback;
@@ -61,19 +62,19 @@ class WS {
   }
   socketOnOpen() {
     this.websocket.onopen = () => {
-      console.log("连接成功");
+      console.log(t("connectSuccess"));
       this.start();
     };
   }
   socketOnClose() {
     this.websocket.onclose = () => {
-      console.log("连接已关闭");
+      console.log(t("connectClose1"));
       this.close_callback();
     };
   }
   socketOnError() {
     this.websocket.onerror = () => {
-      console.log("连接失败，继续重连");
+      console.log(t("connectFail"));
       this.reconnect();
     };
   }

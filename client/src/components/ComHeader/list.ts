@@ -1,5 +1,5 @@
-import { i18n } from "@/lang";
-const t = i18n.global.t;
+import { t } from "@/lang";
+
 // 没写children，自动隐藏
 export default [
   {

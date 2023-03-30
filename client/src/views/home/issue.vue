@@ -1,29 +1,38 @@
 <template>
   <div class="wrapper">
-    <el-button type="primary" @click="handleIssueBeforeOpen('add')"
-      >新建问题</el-button
-    >
+    <el-button type="primary" @click="handleIssueBeforeOpen('add')">{{
+      $t("createIssue")
+    }}</el-button>
     <el-table
       :data="state.issueList"
       style="width: 100%; margin-top: 20px"
       v-loading="loading"
     >
-      <el-table-column type="index" label="序号" width="80" align="center" />
-      <el-table-column label="时间" align="center">
+      <el-table-column
+        type="index"
+        :label="$t('number')"
+        width="80"
+        align="center"
+      />
+      <el-table-column :label="t('time')" align="center">
         <template v-slot="{ row }">
           <span>{{ formatterTime(row.createdAt) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="title" label="问题标题" class-name="issue_title">
+      <el-table-column
+        prop="title"
+        :label="t('issueTitle')"
+        class-name="issue_title"
+      >
       </el-table-column>
-      <el-table-column prop="link" label="链接" width="auto">
+      <el-table-column prop="link" :label="t('link')" width="auto">
         <template v-slot="{ row }">
           <el-link type="primary" :href="row.link" target="_blank">{{
             row.link
           }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="问题图片" width="auto">
+      <el-table-column :label="t('issueImg')" width="auto">
         <template v-slot="{ row }">
           <el-image
             v-for="(item, index) in row.fileList"
@@ -47,13 +56,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="120" align="center">
+      <el-table-column :label="t('operation')" width="120" align="center">
         <template v-slot="{ row }">
           <div class="operation">
-            <span @click="handleIssueBeforeOpen('edit', row)">编辑</span>
-            <el-popconfirm title="是否删除该问题？" @confirm="delIssue(row.id)">
+            <span @click="handleIssueBeforeOpen('edit', row)">{{
+              t("edit")
+            }}</span>
+            <el-popconfirm :title="t('delIssue')" @confirm="delIssue(row.id)">
               <template #reference>
-                <span>删除</span>
+                <span>{{ t("delete") }}</span>
               </template>
             </el-popconfirm>
           </div>
@@ -74,17 +85,20 @@
         label-width="80px"
         label-position="left"
       >
-        <el-form-item label="标题" prop="title">
+        <el-form-item :label="t('title')" prop="title">
           <el-input
             v-model="state.issueInfo.title"
-            placeholder="请输入标题"
+            :placeholder="t('place.title')"
             maxlength="100"
           />
         </el-form-item>
-        <el-form-item label="链接" prop="link">
-          <el-input v-model="state.issueInfo.link" placeholder="请输入链接" />
+        <el-form-item :label="t('link')" prop="link">
+          <el-input
+            v-model="state.issueInfo.link"
+            :placeholder="t('place.link')"
+          />
         </el-form-item>
-        <el-form-item label="图片">
+        <el-form-item :label="t('img')">
           <el-upload
             :ref="uploadRef"
             :file-list="state.issueInfo.fileList"
@@ -103,9 +117,11 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="state.issueDialog = false">取消</el-button>
+          <el-button @click="state.issueDialog = false">{{
+            t("cancel")
+          }}</el-button>
           <el-button type="primary" @click="handleSaveIssue(issueRef)">
-            确定
+            {{ t("confirm") }}
           </el-button>
         </span>
       </template>
@@ -118,6 +134,7 @@
 <script setup lang="ts" name="issue">
 import { UploadProps, FormInstance } from "element-plus";
 import cloneDeep from "lodash/cloneDeep";
+import { t } from "@/lang";
 import {
   reqIssueList,
   reqAddIssue,
@@ -138,10 +155,10 @@ const state = reactive({
   issueDialog: false,
   issueInfo: new IssueInfo(),
   issueInfoRules: {
-    title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
-    link: [{ required: true, message: "链接不能为空", trigger: "blur" }],
+    title: [{ required: true, message: t("rule.title"), trigger: "blur" }],
+    link: [{ required: true, message: t("rule.link"), trigger: "blur" }],
   },
-  issueTitle: "新增问题",
+  issueTitle: t("createIssue"),
   imgUrl: "",
   imgPreviewDia: false,
 });
@@ -156,7 +173,7 @@ const colseIssueDia = () => {
 const handleIssueBeforeOpen = (type: string, info: any = null) => {
   document.addEventListener("paste", handlePaste);
   issueRef.value?.clearValidate();
-  state.issueTitle = type === "add" ? "新建问题" : "编辑问题";
+  state.issueTitle = type === "add" ? t("createIssue") : t("editIssue");
   state.issueInfo = type === "add" ? new IssueInfo() : cloneDeep(info);
   state.issueDialog = true;
 };
@@ -173,7 +190,7 @@ const getIssueList = async () => {
 const delIssue = async (id: number) => {
   const result = await reqDelIssue({ id });
   if (result.code === 200) {
-    ElMessage.success("删除成功");
+    ElMessage.success(t("message.delSuccess"));
     getIssueList();
   } else {
     ElMessage.error(result.msg);
@@ -186,7 +203,11 @@ const handleSaveIssue = async (formEl: FormInstance | undefined) => {
       const commonFn = state.issueInfo.id ? reqEditIssue : reqAddIssue;
       const result = await commonFn(state.issueInfo);
       if (result.code === 200) {
-        ElMessage.success(state.issueInfo.id ? "编辑成功" : "保存成功");
+        ElMessage.success(
+          state.issueInfo.id
+            ? t("message.editSuccess")
+            : t("message.saveSuccess")
+        );
         state.issueDialog = false;
         getIssueList();
       } else {
@@ -214,7 +235,7 @@ const handleUpload = async (file: any) => {
   params.append("file", file);
   const result = await reqUpload(params);
   if (result.code === 200) {
-    ElMessage.success("上传成功");
+    ElMessage.success(t("message.uploadSuccess"));
     state.issueInfo.fileList.push(result.data);
   } else {
     ElMessage.error(result.msg);
@@ -248,7 +269,7 @@ const uploadImage = async (dataUrl: any) => {
   params.append("address", dataUrl);
   const result = await reqPasteUpload(params);
   if (result.code === 200) {
-    ElMessage.success("上传成功");
+    ElMessage.success(t("message.uploadSuccess"));
     let data = import.meta.env.DEV
       ? { ...result.data, url: dataUrl }
       : result.data;

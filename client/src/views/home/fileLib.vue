@@ -1,7 +1,10 @@
 <template>
   <div class="wrapper">
-    <el-button type="primary" :icon="Upload" @click="handleCommonDrawer(true)"
-      >上传文件</el-button
+    <el-button
+      type="primary"
+      :icon="Upload"
+      @click="handleCommonDrawer(true)"
+      >{{ $t("uploadFile") }}</el-button
     >
     <!-- <el-button type="primary"> 新建文件夹 </el-button> -->
     <el-table
@@ -11,11 +14,11 @@
     >
       <el-table-column
         type="index"
-        label="序号"
+        :label="$t('number')"
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column label="文件名">
+      <el-table-column :label="$t('fileName')">
         <template v-slot="{ row }">
           <div @click="handleOpenFile(row)" class="file_info">
             <img :src="imgSrc(row.file_type)" alt="" />
@@ -24,32 +27,36 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="大小"
+        :label="$t('size')"
         prop="file_size"
         align="center"
       ></el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column :label="$t('operation')" align="center">
         <template #default="{ row }">
           <div class="operation">
-            <span><a :href="row.file_url" class="save">下载</a></span>
-            <span v-if="user" @click="handleBeforeDel(row.id)">删除</span>
+            <span
+              ><a :href="row.file_url" class="save">{{
+                $t("download")
+              }}</a></span
+            >
+            <span v-if="user" @click="handleBeforeDel(row.id)">{{
+              $t("delete")
+            }}</span>
           </div>
         </template>
       </el-table-column>
     </el-table>
     <el-drawer
       v-model="state.showUpload"
-      title="上传须知"
+      :title="$t('uploadNotice')"
       class="right_drawer"
       @close="handleCommonDrawer(false)"
     >
       <el-card class="box-card">
         <ul>
-          <li>
-            登录用户可以创建属于自己的单独空间，非本账号无法查看，删除文件。
-          </li>
-          <li>上传文件最大为512MB(不推荐大文件)；粘贴上传文件请勿超过1MB！</li>
-          <li>上传大文件时，等待时间略长！</li>
+          <li>{{ $t("noticeList.content1") }}</li>
+          <li>{{ $t("noticeList.content2") }}</li>
+          <li>{{ $t("noticeList.content3") }}</li>
         </ul>
       </el-card>
 
@@ -63,7 +70,7 @@
         :on-change="handleChange"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">选择文件 或 粘贴截图</div>
+        <div class="el-upload__text">{{ $t("uploadTip") }}</div>
         <template #file="{ file }">
           <div class="img_info">
             <el-image
@@ -102,6 +109,7 @@ import { Upload } from "@element-plus/icons-vue";
 import { reqFileList, reqSaveFile, reqDelFile } from "@/api/fileList";
 import { reqUpload, reqPasteUpload } from "@/api/common";
 import { FILE_TYPE } from "@/utils/constant";
+import { t } from "@/lang";
 interface IState {
   allFileList: any[];
   fileList: any[];
@@ -168,7 +176,7 @@ const uploadImage = async (dataUrl: any) => {
   params.append("address", dataUrl);
   const result = await reqPasteUpload(params, handleUploadProgress);
   if (result.code === 200) {
-    ElMessage.success("上传成功");
+    ElMessage.success(t("message.updateSuccess"));
     state.loadProgress = 100;
     state.showProgress = false;
     let data = import.meta.env.DEV
@@ -216,7 +224,7 @@ const handleUpload = async (file: any) => {
     handleUploadProgress(event, reactiveFile);
   });
   if (result.code === 200) {
-    ElMessage.success("上传成功");
+    ElMessage.success(t("message.updateSuccess"));
     reactiveFile.showProgress = false;
     state.fileList.push(result.data);
     await handleSaveFile(result.data);
@@ -237,9 +245,9 @@ const handleChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
   handleUpload(uploadFile);
 };
 const handleBeforeDel = (id: number) => {
-  ElMessageBox.confirm("确定删除文件该文件吗?", "删除文件", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.confirm(t("messageBox.tip"), t("messageBox.title"), {
+    confirmButtonText: t("messageBox.confirm"),
+    cancelButtonText: t("messageBox.cancel"),
     type: "error",
     center: true,
   })
@@ -252,7 +260,7 @@ const handleDelFile = async (id: number) => {
   const params = { id };
   const result = await reqDelFile(params);
   if (result.code === 200) {
-    ElMessage.success("删除文件成功");
+    ElMessage.success(t("message.fileDelSuccess"));
     getFileList();
   } else {
     ElMessage.error(result.message);

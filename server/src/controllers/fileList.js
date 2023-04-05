@@ -1,28 +1,30 @@
-const MfileList = require("../model/fileList");
 const response = require("../utils/resData");
 const { convertorFileSize } = require("../utils/common");
+const seq = require("../mysql/sequelize");
+const FileListModel = require("../models/file_list");
+const MFileList = FileListModel(seq);
 class FileList {
   async findFileLsit(ctx, next) {
     try {
       if (ctx.state.user) {
-        let data = await MfileList.findAll({
+        let data = await MFileList.findAll({
           where: { user_id: ctx.state.user.id },
           order: [["id", "DESC"]],
         });
         let list = data.map((k) => {
-          k.dataValues.file_size = convertorFileSize(parseFloat(k.file_size));
-          delete k.dataValues.user_id;
+          k.dataValues.fileSize = convertorFileSize(parseFloat(k.fileSize));
+          delete k.dataValues.userId;
           return k;
         });
         ctx.body = response.SUCCESS("common", list);
       } else {
-        let data = await MfileList.findAll({
+        let data = await MFileList.findAll({
           where: { user_id: null },
           order: [["id", "DESC"]],
         });
         let list = data.map((k) => {
-          k.dataValues.file_size = convertorFileSize(parseFloat(k.file_size));
-          delete k.dataValues.user_id;
+          k.dataValues.fileSize = convertorFileSize(parseFloat(k.fileSize));
+          delete k.dataValues.userId;
           return k;
         });
         ctx.body = response.SUCCESS("common", list);
@@ -44,7 +46,7 @@ class FileList {
       if (ctx.state.user) {
         params.user_id = ctx.state.user.id;
       }
-      const data = await MfileList.create(params);
+      const data = await MFileList.create(params);
       ctx.body = response.SUCCESS("common", data);
     } catch (error) {
       console.log(error);
@@ -57,7 +59,7 @@ class FileList {
       const { id } = ctx.request.body;
       // 只有上传用户自己或者管理员才能删除
       if (ctx.state.user) {
-        const data = await MfileList.destroy({ where: { id } });
+        const data = await MFileList.destroy({ where: { id } });
         ctx.body = response.SUCCESS("common", data);
       } else {
         ctx.body = response.ERROR("powerLacking");

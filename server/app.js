@@ -5,7 +5,9 @@ const WebSocket = require("ws");
 const { koaBody } = require("koa-body");
 const { APP_PORT, BASE_PATH } = require("./src/config/index");
 const router = require("./src/router/index");
-const Mperson = require("./src/model/person");
+const seq = require("./src/mysql/sequelize");
+const PersonModel = require("./src/models/person");
+const Mperson = PersonModel(seq);
 
 // 创建一个Koa对象
 const app = new Koa();

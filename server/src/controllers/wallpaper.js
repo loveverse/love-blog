@@ -1,5 +1,7 @@
-const Mwallpaper = require("../model/wallpaper");
 const response = require("../utils/resData");
+const seq = require("../mysql/sequelize");
+const WallpaperModel = require("../models/wallpaper");
+const Mwallpaper = WallpaperModel(seq);
 
 // 壁纸的接口----------------------------------------------------------------
 

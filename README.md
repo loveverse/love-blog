@@ -10,6 +10,7 @@
 * [x] 增加 loading 状态 
 * [x] 增加学习中遇到问题的链接，增加上传
 * [x] 全部换成 `sequlize` 操作数据库 
+* [x] 使用koa-body替换koa-bodyparser
 * [x] 生产开发环境统一配置 
 * [x] 增加连接是否成功的显示 
 * [x] 登录验证，密码加密 
@@ -30,6 +31,5 @@
 * [ ] 增加头像模块，使用爬虫从各个网站爬取（b站专栏）
 * [ ] 优化问题列表，压缩图片
 
-使用koa-body替换koa-bodyparser
 
 演示链接：(https://loveverse.top)

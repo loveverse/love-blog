@@ -1,8 +1,10 @@
-const Muser = require("../model/user");
 const response = require("../utils/resData");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/index");
+const seq = require("../mysql/sequelize");
+const UserModel = require("../models/user");
+const Muser = UserModel(seq);
 // 类定义
 class User {
   constructor() {}

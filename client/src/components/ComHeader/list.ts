@@ -59,6 +59,13 @@ export default [
         permiss: "4",
         children: [],
       },
+      {
+        icon: "",
+        path: "/classify/visit",
+        title: "到访记录",
+        permiss: "10",
+        children: [],
+      },
     ],
   },
   {

@@ -21,16 +21,17 @@ module.exports = {
                   generate models. 
   */
   dbOptions: {
-    database: "verse", 
+    database: "verse",
     username: "verse",
     password: "123456",
     dialect: "mysql",
     host: "1.15.42.9",
     port: 3306,
-    logging: false
+    logging: false,
   },
   options: {
     type: "js",
-    dir: "./src/models"
- }
-}
+    dir: "./src/models",
+    camelCase: true,
+  },
+};

@@ -1,8 +1,12 @@
+
 const { Sequelize } = require("sequelize");
 const { DATA_BASE, USERNAME, PASSWORD, APP_HOST } = require("../config/index");
 const seq = new Sequelize(DATA_BASE, USERNAME, PASSWORD, {
   host: APP_HOST,
   dialect: "mysql",
+  define: {
+    timestamps: true,
+  },
 });
 seq
   .authenticate()

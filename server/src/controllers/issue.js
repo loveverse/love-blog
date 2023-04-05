@@ -1,6 +1,7 @@
-const Missue = require("../model/issue");
 const response = require("../utils/resData");
-
+const seq = require("../mysql/sequelize");
+const IssueModel = require("../models/issue");
+const Missue = IssueModel(seq);
 // 问题接口
 async function findIssue(ctx, next) {
   try {
@@ -9,8 +10,8 @@ async function findIssue(ctx, next) {
       order: [["id", "DESC"]],
     });
     const data = list.map((k) => {
-      k.dataValues.fileList = JSON.parse(k.file_list);
-      delete k.dataValues.file_list;
+      k.dataValues.fileList = k.fileList ? JSON.parse(k.fileList) : [];
+      // delete k.dataValues.file_list;
       delete k.dataValues.status;
       return k;
     });
@@ -22,12 +23,14 @@ async function findIssue(ctx, next) {
 }
 async function addIssue(ctx, next) {
   try {
+    console.log(ctx.request.body);
     const { title, link, fileList } = ctx.request.body;
+    console.log(fileList);
     const data = await Missue.create({
       title,
       link,
       status: 1, // 逻辑位
-      file_list: fileList,
+      file_list: JSON.stringify(fileList),
     });
     ctx.body = response.SUCCESS("common", data);
   } catch (error) {
@@ -57,7 +60,7 @@ async function editIssue(ctx, next) {
           title,
           link,
           status: 1, // 逻辑位
-          file_list: fileList,
+          file_list: JSON.stringify(fileList),
         },
         {
           where: {

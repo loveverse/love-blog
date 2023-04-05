@@ -20,9 +20,9 @@ const Muser = seq.define(
       type: DataTypes.STRING(),
       comment: "设备",
     },
-    deleted_at: {
-      pa
-    }
+    // deleted_at: {
+    //   pa
+    // }
   },
   {
     // 不需要自动将表名变成复数

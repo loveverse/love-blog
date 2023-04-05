@@ -1,7 +1,9 @@
 const crypto = require("crypto");
-const Mperson = require("../model/person");
 const response = require("../utils/resData");
 const { getClientIP } = require("../utils/common");
+const seq = require("../mysql/sequelize");
+const PersonModel = require("../models/person");
+const Mperson = PersonModel(seq);
 
 // 书摘的接口----------------------------------------------------------------
 // 构造函数写法

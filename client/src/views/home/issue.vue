@@ -175,6 +175,8 @@ const handleIssueBeforeOpen = (type: string, info: any = null) => {
   issueRef.value?.clearValidate();
   state.issueTitle = type === "add" ? t("createIssue") : t("editIssue");
   state.issueInfo = type === "add" ? new IssueInfo() : cloneDeep(info);
+  console.log(state.issueInfo);
+
   state.issueDialog = true;
 };
 const getIssueList = async () => {

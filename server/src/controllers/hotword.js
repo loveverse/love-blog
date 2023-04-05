@@ -1,6 +1,7 @@
-const Mhotword = require("../model/hotword");
 const response = require("../utils/resData");
-
+const seq = require("../mysql/sequelize");
+const HotwordModel = require("../models/hotword");
+const Mhotword = HotwordModel(seq);
 // 网易热评的接口----------------------------------------------------------------
 
 // 类定义

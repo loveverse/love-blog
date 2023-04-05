@@ -21,21 +21,21 @@
       <el-table-column :label="$t('fileName')">
         <template v-slot="{ row }">
           <div @click="handleOpenFile(row)" class="file_info">
-            <img :src="imgSrc(row.file_type)" alt="" />
-            <span>{{ row.file_name }}</span>
+            <img :src="imgSrc(row.fileType)" alt="" />
+            <span>{{ row.fileName }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
         :label="$t('size')"
-        prop="file_size"
+        prop="fileSize"
         align="center"
       ></el-table-column>
       <el-table-column :label="$t('operation')" align="center">
         <template #default="{ row }">
           <div class="operation">
             <span
-              ><a :href="row.file_url" class="save">{{
+              ><a :href="row.fileUrl" class="save">{{
                 $t("download")
               }}</a></span
             >

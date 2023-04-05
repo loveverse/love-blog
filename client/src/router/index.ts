@@ -56,6 +56,11 @@ const routes: RouteRecordRaw[] = [
             name: "wallpaper",
             component: () => import("@/views/classify/wallpaper.vue"),
           },
+          {
+            path: "/classify/visit",
+            name: "visit",
+            component: () => import("@/views/classify/visit.vue"),
+          },
         ],
       },
       {

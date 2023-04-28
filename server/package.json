@@ -16,7 +16,6 @@
   "author": "loveverse",
   "license": "ISC",
   "dependencies": {
-    "@vercel/node": "^2.9.13",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.14.1",

@@ -73,7 +73,7 @@ class Tieba {
         // const formatted = await parseXML(template);
 
         const replyMessageXml = reply(
-          "亲亲陈晓珍",
+          "123456",
           xmlObj.ToUserName,
           xmlObj.FromUserName
         );

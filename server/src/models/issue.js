@@ -85,8 +85,8 @@ module.exports = sequelize => {
       field: "updatedAt"
     },
     fileList: {
-      type: DataTypes.STRING(2000),
-      allowNull: true,
+      type: DataTypes.TEXT,
+      allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,

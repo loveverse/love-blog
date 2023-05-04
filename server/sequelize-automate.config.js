@@ -58,7 +58,7 @@ const dbOptions = {
 };
 const options = {
   type: "js",
-  dir: "./src/models1",
+  dir: "./src/models",
   camelCase: true,
 };
 const automate = new Automate(dbOptions, options);

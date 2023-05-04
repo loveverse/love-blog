@@ -7,6 +7,7 @@ const {
   user,
   wallpaper,
   fileList,
+  tieba,
 } = require("../controllers/index");
 const { auth } = require("../middleware/index");
 
@@ -40,4 +41,7 @@ router.post("/file/list", auth, fileList.findFileLsit);
 router.post("/save/list", auth, fileList.saveFileInfo);
 router.post("/delete/file", auth, fileList.delFile);
 
+// 微信验证
+router.post("/wechat", tieba.wechat);
+router.get("/wechat", tieba.wechat);
 module.exports = router;

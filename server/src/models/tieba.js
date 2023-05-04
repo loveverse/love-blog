@@ -4,110 +4,101 @@ const {
 module.exports = sequelize => {
   const attributes = {
     id: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.BIGINT,
       allowNull: false,
       defaultValue: null,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: false,
       comment: null,
       field: "id"
     },
-    name: {
-      type: DataTypes.STRING(255),
+    uid: {
+      type: DataTypes.INTEGER(20),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "歌曲名",
-      field: "name"
+      comment: "uid",
+      field: "uid"
     },
-    url: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "歌曲url",
-      field: "url"
-    },
-    picurl: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      defaultValue: "1",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "歌曲图片url",
-      field: "picurl"
-    },
-    artistsname: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "歌手",
-      field: "artistsname"
-    },
-    avatarurl: {
+    username: {
       type: DataTypes.STRING(255),
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "头像url",
-      field: "avatarurl"
+      comment: "昵称",
+      field: "username"
     },
-    nickname: {
+    avatar: {
       type: DataTypes.STRING(255),
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "发表人",
-      field: "nickname"
+      comment: "头像",
+      field: "avatar"
     },
-    content: {
-      type: DataTypes.STRING(5000),
-      allowNull: false,
+    qq: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "内容",
-      field: "content"
+      comment: "关联qq",
+      field: "qq"
     },
-    identification: {
-      type: DataTypes.INTEGER(4),
-      allowNull: false,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "标识",
-      field: "identification"
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
+    wx: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: null,
-      field: "createdAt"
+      comment: "关联微信",
+      field: "wx"
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
+    ip: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: null,
-      field: "updatedAt"
+      comment: "所在地",
+      field: "ip"
+    },
+    text: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "描述",
+      field: "text"
+    },
+    screenshot: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "截图",
+      field: "screenshot"
+    },
+    status: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "账号状态",
+      field: "status"
     }
   };
   const options = {
-    tableName: "hotword",
+    tableName: "tieba",
     comment: "",
     indexes: []
   };
-  const HotwordModel = sequelize.define("hotwordModel", attributes, options);
-  return HotwordModel;
+  const TiebaModel = sequelize.define("tiebaModel", attributes, options);
+  return TiebaModel;
 };

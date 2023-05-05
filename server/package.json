@@ -6,9 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=development && nodemon app.js",
-    "start": "node app.js",
-    "automate": "sequelize-automate -c './sequelize-automate.config.js'",
-    "build": "node app.js"
+    "build": "node app.js",
+    "automate": "sequelize-automate -c './sequelize-automate.config.js'"
   },
   "engines": {
     "node": ">=14"
@@ -17,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.14.1",

@@ -1,7 +1,7 @@
 const response = require("../utils/resData");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/index");
+const { APP_JWT_SECRET } = require("../config/index");
 const seq = require("../mysql/sequelize");
 const UserModel = require("../models/user");
 const Muser = UserModel(seq);
@@ -33,7 +33,7 @@ class User {
           // 登录成功
           const { password, ...data } = res.dataValues;
           ctx.body = response.SUCCESS("userLogin", {
-            token: jwt.sign(data, JWT_SECRET, { expiresIn: "30d" }),
+            token: jwt.sign(data, APP_JWT_SECRET, { expiresIn: "30d" }),
             userInfo: res.dataValues,
           });
         } else {
@@ -47,7 +47,7 @@ class User {
         const userInfo = await Muser.create({ user_name, password: hash });
         const { password, ...data } = userInfo.dataValues;
         ctx.body = response.SUCCESS("userRegister", {
-          token: jwt.sign(data, JWT_SECRET, { expiresIn: "30d" }),
+          token: jwt.sign(data, APP_JWT_SECRET, { expiresIn: "30d" }),
           userInfo,
         });
       }

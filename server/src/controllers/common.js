@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const response = require("../utils/resData");
-const { NETWORK_PATH, FILE_PATH } = require("../config/index");
+const { APP_NETWORK_PATH, APP_FILE_PATH } = require("../config/index");
 
 class Common {
   constructor() {}
@@ -41,13 +41,13 @@ class Common {
     try {
       const { file } = ctx.request.files;
       // 检查文件夹是否存在，不存在则创建文件夹
-      if (!fs.existsSync(FILE_PATH)) {
-        FILE_PATH && fs.mkdirSync(FILE_PATH);
+      if (!fs.existsSync(APP_FILE_PATH)) {
+        APP_FILE_PATH && fs.mkdirSync(APP_FILE_PATH);
       }
       // 上传的文件具体地址
       let filePath = path.join(
-        FILE_PATH || __dirname,
-        `${FILE_PATH ? "./" : "../static/"}${file.originalFilename}`
+        APP_FILE_PATH || __dirname,
+        `${APP_FILE_PATH ? "./" : "../static/"}${file.originalFilename}`
       );
       // 创建可读流（默认一次读64kb）
       const reader = fs.createReadStream(file.filepath);
@@ -57,7 +57,7 @@ class Common {
       reader.pipe(upStream);
       const fileInfo = {
         id: Date.now(),
-        url: NETWORK_PATH + file.originalFilename,
+        url: APP_NETWORK_PATH + file.originalFilename,
         name: file.originalFilename,
         size: file.size,
         type: file.originalFilename.match(/[^.]+$/)[0],
@@ -77,8 +77,8 @@ class Common {
       // 文件名
       const filename = hash + ".png";
       let filePath = path.join(
-        FILE_PATH || __dirname,
-        `${FILE_PATH ? "./" : "../static/"}${filename}`
+        APP_FILE_PATH || __dirname,
+        `${APP_FILE_PATH ? "./" : "../static/"}${filename}`
       );
       // 以写入模式打开文件，文件不存在则创建
       const fd = fs.openSync(filePath, "w");
@@ -88,7 +88,7 @@ class Common {
       fs.closeSync(fd);
       const fileInfo = {
         id: Date.now(),
-        url: NETWORK_PATH + filename,
+        url: APP_NETWORK_PATH + filename,
         name: filename,
         size: file.size || "",
         type: 'png',

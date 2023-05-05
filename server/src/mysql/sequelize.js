@@ -1,7 +1,7 @@
-
 const { Sequelize } = require("sequelize");
-const { DATA_BASE, USERNAME, PASSWORD, APP_HOST } = require("../config/index");
-const seq = new Sequelize(DATA_BASE, USERNAME, PASSWORD, {
+const { APP_DATA_BASE, APP_USERNAME, APP_PASSWORD, APP_HOST } = require("../config/index");
+console.log('[  ] >', APP_DATA_BASE, APP_USERNAME, APP_PASSWORD, APP_HOST)
+const seq = new Sequelize(APP_DATA_BASE, APP_USERNAME, APP_PASSWORD, {
   host: APP_HOST,
   dialect: "mysql",
   define: {

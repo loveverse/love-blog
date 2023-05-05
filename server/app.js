@@ -3,7 +3,7 @@ const http = require("http");
 const cors = require("koa2-cors");
 const WebSocket = require("ws");
 const { koaBody } = require("koa-body");
-const { APP_PORT, BASE_PATH } = require("./src/config/index");
+const { APP_PORT, APP_BASE_PATH } = require("./src/config/index");
 const router = require("./src/router/index");
 const seq = require("./src/mysql/sequelize");
 const PersonModel = require("./src/models/person");
@@ -13,7 +13,7 @@ const Mperson = PersonModel(seq);
 const app = new Koa();
 const server = http.createServer(app.callback());
 // 同时需要在nginx配置/ws
-const wss = new WebSocket.Server({ server, path: BASE_PATH }); // 同一端口监听不同的服务
+const wss = new WebSocket.Server({ server, path: APP_BASE_PATH }); // 同一端口监听不同的服务
 // 使用了代理
 app.proxy = true;
 // 处理跨域
@@ -66,7 +66,9 @@ server.listen(APP_PORT, () => {
   const host = server.address().address;
   const port = server.address().port;
   console.log(
-    `环境:${process.env.NODE_ENV},服务器地址:http://localhost:${port}/findExcerpt`
+    `环境:${
+      process.env.NODE_ENV ? "开发环境" : "生产环境"
+    },服务器地址:http://localhost:${port}/findExcerpt`
   );
 });
 module.exports = server;

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/index");
+const { APP_JWT_SECRET } = require("../config/index");
 const response = require("../utils/resData");
 
 // 上传文件时，如果存在token，将token添加到state，方便后面使用，没有或者失效，则返回null
@@ -8,7 +8,7 @@ const auth = async (ctx, next) => {
   const token = ctx.request.header["love-token"];
   if (token) {
     try {
-      const user = jwt.verify(token, JWT_SECRET);
+      const user = jwt.verify(token, APP_JWT_SECRET);
       // 在已经颁发token接口上面添加user对象，便于使用
       ctx.state.user = user;
     } catch (error) {

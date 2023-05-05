@@ -3,10 +3,14 @@ const xml2js = require("xml2js");
 const ejs = require("ejs");
 const response = require("../utils/resData");
 const { template } = require("../utils/constant");
+const { APP_ID, APP_SECRET, APP_TOKEN } = require("../config/index");
+const seq = require("../mysql/sequelize");
+const TiebaModel = require("../models/tieba");
+const MTieba = TiebaModel(seq);
 const wechat = {
-  appID: "wxdf583bd01f25d2a0",
-  appSecret: "11e3556b3ac6d21387256f56ed571e4e",
-  token: "123456",
+  appID: APP_ID,
+  appSecret: APP_SECRET,
+  token: APP_TOKEN,
 };
 
 const compiled = ejs.compile(template);
@@ -31,22 +35,6 @@ function reply(content = "", fromUsername, toUsername) {
   return compiled(info);
 }
 
-function parseXML(xml) {
-  return new Promise((resolve, reject) => {
-    xml2js.parseString(
-      xml,
-      { trim: true, explicitArray: false, ignoreAttrs: true },
-      function (err, result) {
-        if (err) {
-          return reject(err);
-        }
-        console.log("[ result ] >", result);
-        resolve(result);
-      }
-    );
-  });
-}
-
 class Tieba {
   constructor() {}
   async wechat(ctx, next) {
@@ -64,25 +52,41 @@ class Tieba {
       if (sha1 !== signature) {
         ctx.body = "token验证失败";
       } else {
-        let obj = await xml2js.parseStringPromise(ctx.request.body);
-        let xmlObj = {};
-        for (const item in obj.xml) {
-          xmlObj[item] = obj.xml[item][0];
+        // 验证成功
+        if (JSON.stringify(ctx.request.body) === "{}") {
+          console.log("[  ] >", echostr);
+          ctx.body = echostr;
+        } else {
+          let obj = await xml2js.parseStringPromise(ctx.request.body);
+          let xmlObj = {};
+          for (const item in obj.xml) {
+            xmlObj[item] = obj.xml[item][0];
+          }
+          const replyMessageXml = reply(
+            "123454",
+            xmlObj.ToUserName,
+            xmlObj.FromUserName
+          );
+          console.log("[ re ] >", replyMessageXml);
+          ctx.type = "application/xml";
+          ctx.body = replyMessageXml;
         }
-        console.log("[ xmlObj ] >", xmlObj);
-        // const formatted = await parseXML(template);
-
-        const replyMessageXml = reply(
-          "123454",
-          xmlObj.ToUserName,
-          xmlObj.FromUserName
-        );
-        console.log("[ rep ] >", replyMessageXml);
-        ctx.type = "application/xml";
-
-        ctx.body = replyMessageXml;
-        // ctx.body = echostr;
       }
+    } catch (error) {
+      console.log(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
+  async findUserInfo(ctx, next) {
+    try {
+      const { limit, page } = ctx.request.body;
+      const total = await Mwallpaper.findAndCountAll();
+      const data = await MTieba.findAll({
+        order: [["id"]],
+        limit: parseInt(limit),
+        offset: parseInt(limit) * (page - 1),
+      });
+      ctx.body = response.SUCCESS("common", { total: total.count, data });
     } catch (error) {
       console.log(error);
       ctx.body = response.SERVER_ERROR();

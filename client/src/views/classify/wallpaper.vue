@@ -9,7 +9,7 @@
       >
         <el-image
           class="box-img"
-          :src="item.url_small"
+          :src="item.urlSmall"
           :initial-index="index"
           :preview-src-list="state.srcList"
           fit="cover"

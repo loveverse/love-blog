@@ -7,10 +7,10 @@ async function findIssue(ctx, next) {
   try {
     let list = await Missue.findAll({
       where: { status: 1 },
-      order: [["id", "DESC"]],
+      order: [["id", "DESC"]],  
     });
     const data = list.map((k) => {
-      k.dataValues.fileList = k.fileList ? JSON.parse(k.fileList) : [];
+      k.dataValues.fileList = k.fileList !== "[]" ? JSON.parse(k.fileList) : [];
       // delete k.dataValues.file_list;
       delete k.dataValues.status;
       return k;
@@ -23,9 +23,7 @@ async function findIssue(ctx, next) {
 }
 async function addIssue(ctx, next) {
   try {
-    console.log(ctx.request.body);
     const { title, link, fileList } = ctx.request.body;
-    console.log(fileList);
     const data = await Missue.create({
       title,
       link,

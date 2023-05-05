@@ -59,7 +59,7 @@
       >
       <el-dropdown v-else>
         <span class="user_info">
-          <span class="name">{{ userInfo.user_name }}</span>
+          <span class="name">{{ userInfo.userName }}</span>
           <el-icon class="el-icon--right">
             <arrow-down />
           </el-icon>

@@ -71,7 +71,6 @@ class Tieba {
           let str;
           if (userInfo) {
             const textInfo = JSON.parse(userInfo.text);
-
             const my = `来自我的提示\n关联wx:${userInfo.wx || "无"}\n关联qq:${
               userInfo.qq || "无"
             }\n\n`;

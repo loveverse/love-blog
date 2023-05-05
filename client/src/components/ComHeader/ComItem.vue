@@ -22,7 +22,7 @@ interface IProps {
   };
 }
 // 类型推断排除null、undefined
-const isAdmin = JSON.parse(localStorage.getItem("userInfo")!)?.is_admin;
+const isAdmin = JSON.parse(localStorage.getItem("userInfo")!)?.isAdmin;
 const props = defineProps<IProps>();
 onMounted(() => {
   // console.log("[ props.item ] >", props.menuItem);

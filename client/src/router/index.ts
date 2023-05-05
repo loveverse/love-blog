@@ -92,4 +92,11 @@ const router = createRouter({
   },
 });
 
+// router.beforeEach(async (to, form, next) => {
+//   if (to.path === "/classify/wechat") {
+//     next({ path: "/" });
+//   } else {
+//     next();
+//   }
+// });
 export default router;

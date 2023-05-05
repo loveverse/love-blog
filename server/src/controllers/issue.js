@@ -7,7 +7,7 @@ async function findIssue(ctx, next) {
   try {
     let list = await Missue.findAll({
       where: { status: 1 },
-      order: [["id", "DESC"]],  
+      order: [["id", "DESC"]],
     });
     const data = list.map((k) => {
       k.dataValues.fileList = k.fileList !== "[]" ? JSON.parse(k.fileList) : [];
@@ -27,7 +27,7 @@ async function addIssue(ctx, next) {
       title,
       link,
       status: 1, // 逻辑位
-      file_list: JSON.stringify(fileList),
+      fileList: JSON.stringify(fileList),
     });
     ctx.body = response.SUCCESS("common", data);
   } catch (error) {
@@ -57,7 +57,7 @@ async function editIssue(ctx, next) {
           title,
           link,
           status: 1, // 逻辑位
-          file_list: JSON.stringify(fileList),
+          fileList: JSON.stringify(fileList),
         },
         {
           where: {

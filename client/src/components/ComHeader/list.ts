@@ -70,7 +70,7 @@ export default [
         icon: "",
         path: "/classify/wechat",
         title: "查询",
-        permiss: "10",
+        permiss: "3",
         children: [],
       },
     ],

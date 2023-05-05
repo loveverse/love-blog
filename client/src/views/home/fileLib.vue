@@ -137,8 +137,8 @@ const handlePerviewClose = () => {
 };
 const handleOpenFile = (item: any) => {
   state.previewFileInfo = {
-    name: item.file_name,
-    url: item.file_url,
+    name: item.fileName,
+    url: item.fileUrl,
   };
   state.previewVisible = true;
 };

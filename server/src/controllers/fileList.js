@@ -8,7 +8,7 @@ class FileList {
     try {
       if (ctx.state.user) {
         let data = await MFileList.findAll({
-          where: { user_id: ctx.state.user.id },
+          where: { userId: ctx.state.user.id },
           order: [["id", "DESC"]],
         });
         let list = data.map((k) => {
@@ -19,7 +19,7 @@ class FileList {
         ctx.body = response.SUCCESS("common", list);
       } else {
         let data = await MFileList.findAll({
-          where: { user_id: null },
+          where: { userId: null },
           order: [["id", "DESC"]],
         });
         let list = data.map((k) => {
@@ -38,13 +38,13 @@ class FileList {
     try {
       const info = ctx.request.body;
       const params = {
-        file_name: info.name,
-        file_size: info.size,
-        file_type: info.type,
-        file_url: info.url,
+        fileName: info.name,
+        fileSize: info.size,
+        fileType: info.type,
+        fileUrl: info.url,
       };
       if (ctx.state.user) {
-        params.user_id = ctx.state.user.id;
+        params.userId = ctx.state.user.id;
       }
       const data = await MFileList.create(params);
       ctx.body = response.SUCCESS("common", data);

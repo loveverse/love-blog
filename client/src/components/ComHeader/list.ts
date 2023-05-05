@@ -66,6 +66,13 @@ export default [
         permiss: "10",
         children: [],
       },
+      {
+        icon: "",
+        path: "/classify/wechat",
+        title: "查询",
+        permiss: "10",
+        children: [],
+      },
     ],
   },
   {

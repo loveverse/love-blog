@@ -79,12 +79,12 @@ class Tieba {
   }
   async findUserInfo(ctx, next) {
     try {
-      const { limit, page } = ctx.request.body;
-      const total = await Mwallpaper.findAndCountAll();
+      const { size, page } = ctx.request.body;
+      const total = await MTieba.findAndCountAll();
       const data = await MTieba.findAll({
         order: [["id"]],
-        limit: parseInt(limit),
-        offset: parseInt(limit) * (page - 1),
+        limit: parseInt(size),
+        offset: parseInt(size) * (page - 1),
       });
       ctx.body = response.SUCCESS("common", { total: total.count, data });
     } catch (error) {

@@ -11,7 +11,6 @@ async function findIssue(ctx, next) {
     });
     const data = list.map((k) => {
       k.dataValues.fileList = k.fileList !== "[]" ? JSON.parse(k.fileList) : [];
-      // delete k.dataValues.file_list;
       delete k.dataValues.status;
       return k;
     });

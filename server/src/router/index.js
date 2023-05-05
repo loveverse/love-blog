@@ -44,5 +44,6 @@ router.post("/delete/file", auth, fileList.delFile);
 // 微信验证
 router.post("/wechat", tieba.wechat);
 router.get("/wechat", tieba.wechat);
-router.post("/wechat/find/userInfo",tieba.findUserInfo)
+router.post("/wechat/find/userInfo", tieba.findUserInfo);
+router.post("/wechat/add/userInfo", tieba.addUserInfo);
 module.exports = router;

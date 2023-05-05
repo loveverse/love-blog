@@ -13,13 +13,14 @@ module.exports = sequelize => {
       field: "id"
     },
     uid: {
-      type: DataTypes.INTEGER(20),
+      type: DataTypes.STRING(100),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: "uid",
-      field: "uid"
+      field: "uid",
+      unique: "uid"
     },
     username: {
       type: DataTypes.STRING(255),
@@ -67,7 +68,7 @@ module.exports = sequelize => {
       field: "ip"
     },
     text: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(5000),
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
@@ -76,7 +77,7 @@ module.exports = sequelize => {
       field: "text"
     },
     screenshot: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(5000),
       allowNull: true,
       defaultValue: null,
       primaryKey: false,

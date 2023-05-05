@@ -50,11 +50,10 @@ class Tieba {
       let str = [token, timestamp, nonce].sort().join("");
       let sha1 = crypto.createHash("sha1").update(str).digest("hex");
       if (sha1 !== signature) {
-        ctx.body = "token验证失败";
+        ctx.body = "token验证失";
       } else {
         // 验证成功
         if (JSON.stringify(ctx.request.body) === "{}") {
-          console.log("[  ] >", echostr);
           ctx.body = echostr;
         } else {
           let obj = await xml2js.parseStringPromise(ctx.request.body);
@@ -62,12 +61,32 @@ class Tieba {
           for (const item in obj.xml) {
             xmlObj[item] = obj.xml[item][0];
           }
+          console.log("[ xmlObj.Content ] >", xmlObj.Content);
+          const userInfo = await MTieba.findOne({
+            where: {
+              uid: xmlObj.Content,
+            },
+          });
+          // 查询到信息
+          let str;
+          if (userInfo) {
+            const textInfo = JSON.parse(userInfo.text);
+
+            const my = `来自我的提示\n关联wx:${userInfo.wx || "无"}\n关联qq:${
+              userInfo.qq || "无"
+            }\n\n`;
+            const qiqi = `来自的提示\n${textInfo.qiqi || "无"}\n\n`;
+            const muqin = `来自的提示\n${textInfo.muqin || "无"}\n\n`;
+            const yuequ = `来自的提示\n${textInfo.yuequ || "无"}`;
+            str = my + muqin + qiqi + yuequ;
+          } else {
+            str = "暂未收录";
+          }
           const replyMessageXml = reply(
-            "123454",
+            str,
             xmlObj.ToUserName,
             xmlObj.FromUserName
           );
-          console.log("[ re ] >", replyMessageXml);
           ctx.type = "application/xml";
           ctx.body = replyMessageXml;
         }
@@ -87,6 +106,23 @@ class Tieba {
         offset: parseInt(size) * (page - 1),
       });
       ctx.body = response.SUCCESS("common", { total: total.count, data });
+    } catch (error) {
+      console.log(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
+  async addUserInfo(ctx, next) {
+    try {
+      const { uid, name, wx, qq, textInfo } = ctx.request.body;
+      const data = await MTieba.create({
+        id: Date.now(),
+        username: name,
+        uid,
+        wx,
+        qq,
+        text: JSON.stringify(textInfo),
+      });
+      ctx.body = response.SUCCESS("common", data);
     } catch (error) {
       console.log(error);
       ctx.body = response.SERVER_ERROR();

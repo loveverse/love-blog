@@ -1,4 +1,6 @@
 import { post } from "@/utils/http/index";
 
-export const reqRegisterUser = (params: any) =>
+export const reqUserInfo = (params: any) =>
   post("/wechat/find/userInfo", params);
+export const reqAddUserInfo = (params: any) =>
+  post("/wechat/add/userInfo", params);

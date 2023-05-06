@@ -1,9 +1,10 @@
 const crypto = require("crypto");
 const response = require("../utils/resData");
-const { getClientIP } = require("../utils/common");
+
 const seq = require("../mysql/sequelize");
 const PersonModel = require("../models/person");
 const Mperson = PersonModel(seq);
+const { addIps } = require("../controllers/ips");
 
 // 书摘的接口----------------------------------------------------------------
 // 构造函数写法
@@ -11,7 +12,6 @@ function Person() {}
 // 资源共享，节约内存
 Person.prototype.findExcerpt = async function (ctx, next) {
   try {
-    console.log(getClientIP(ctx));
     // 不进行强缓存
     ctx.set("Cache-Control", "no-cache");
     // http1.0的产物
@@ -43,6 +43,7 @@ Person.prototype.findExcerpt = async function (ctx, next) {
     if (ifNoneMatch === etag) {
       ctx.status = 304;
     } else {
+      await addIps(ctx, next);
       ctx.set("ETag", etag);
       // console.log(getClientIP(ctx));
       // fileBuffer.ip = getClientIP(ctx);

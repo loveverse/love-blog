@@ -134,6 +134,7 @@
 <script setup lang="ts" name="issue">
 import { UploadProps, FormInstance } from "element-plus";
 import cloneDeep from "lodash/cloneDeep";
+import throttle from "lodash/throttle";
 import { t } from "@/lang";
 import {
   reqIssueList,
@@ -171,7 +172,7 @@ const colseIssueDia = () => {
   document.removeEventListener("paste", handlePaste);
 };
 const handleIssueBeforeOpen = (type: string, info: any = null) => {
-  document.addEventListener("paste", handlePaste);
+  document.addEventListener("paste", throttle(handlePaste, 500));
   issueRef.value?.clearValidate();
   state.issueTitle = type === "add" ? t("createIssue") : t("editIssue");
   state.issueInfo = type === "add" ? new IssueInfo() : cloneDeep(info);

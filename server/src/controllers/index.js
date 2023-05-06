@@ -6,6 +6,7 @@ const common = require("./common");
 const wallpaper = require("./wallpaper");
 const fileList = require("./fileList");
 const tieba = require("./tieba");
+const ips = require("./ips");
 module.exports = {
   hotword,
   issue,
@@ -15,4 +16,5 @@ module.exports = {
   wallpaper,
   fileList,
   tieba,
+  ips,
 };

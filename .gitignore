@@ -1,2 +1,5 @@
 .vercel
+.idea
+
 node_modules
+server.zip

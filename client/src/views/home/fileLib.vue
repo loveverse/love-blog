@@ -176,7 +176,7 @@ const uploadImage = async (dataUrl: any) => {
   params.append("address", dataUrl);
   const result = await reqPasteUpload(params, handleUploadProgress);
   if (result.code === 200) {
-    ElMessage.success(t("message.updateSuccess"));
+    ElMessage.success(t("message.uploadSuccess"));
     state.loadProgress = 100;
     state.showProgress = false;
     let data = import.meta.env.DEV
@@ -224,7 +224,7 @@ const handleUpload = async (file: any) => {
     handleUploadProgress(event, reactiveFile);
   });
   if (result.code === 200) {
-    ElMessage.success(t("message.updateSuccess"));
+    ElMessage.success(t("message.uploadSuccess"));
     reactiveFile.showProgress = false;
     state.fileList.push(result.data);
     await handleSaveFile(result.data);

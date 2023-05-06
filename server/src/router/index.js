@@ -8,6 +8,7 @@ const {
   wallpaper,
   fileList,
   tieba,
+  ips,
 } = require("../controllers/index");
 const { auth } = require("../middleware/index");
 
@@ -46,4 +47,7 @@ router.post("/wechat", tieba.wechat);
 router.get("/wechat", tieba.wechat);
 router.post("/wechat/find/userInfo", tieba.findUserInfo);
 router.post("/wechat/add/userInfo", tieba.addUserInfo);
+
+// ip
+router.post("/find/ipList", ips.findIpsList);
 module.exports = router;

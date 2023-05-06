@@ -5,6 +5,11 @@
       <el-table-column prop="ip" label="ip"> </el-table-column>
       <el-table-column prop="address" label="地址"> </el-table-column>
       <el-table-column prop="operator" label="运营商"> </el-table-column>
+      <el-table-column prop="" label="时间">
+        <template #default="{ row }">
+          <span>{{ formatterTime(row.createdAt) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="210">
         <template #default>
           <el-button type="primary" plain size="small">查询</el-button>
@@ -28,6 +33,7 @@
 </template>
 <script setup lang="ts" name="visit">
 import { reqIpList } from "@/api/ips";
+import { formatterTime } from "@/utils/common";
 const state = reactive({
   ipList: [],
   page: 1,

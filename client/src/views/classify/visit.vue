@@ -4,6 +4,7 @@
       <el-table-column type="index" label="序号" width="80"> </el-table-column>
       <el-table-column prop="ip" label="ip"> </el-table-column>
       <el-table-column prop="address" label="地址"> </el-table-column>
+      <el-table-column prop="operator" label="运营商"> </el-table-column>
       <el-table-column label="操作" width="210">
         <template #default>
           <el-button type="primary" plain size="small">查询</el-button>

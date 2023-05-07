@@ -94,7 +94,11 @@ const router = createRouter({
 
 router.beforeEach(async (to, form, next) => {
   if (to.path === "/classify/wechat") {
-    next({ path: "/" });
+    if (import.meta.env.DEV) {
+      next();
+    } else {
+      next({ path: "/" });
+    }
   } else {
     next();
   }

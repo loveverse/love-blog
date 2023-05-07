@@ -45,8 +45,6 @@ Person.prototype.findExcerpt = async function (ctx, next) {
     } else {
       await addIps(ctx, next);
       ctx.set("ETag", etag);
-      // console.log(getClientIP(ctx));
-      // fileBuffer.ip = getClientIP(ctx);
       ctx.body = response.SUCCESS("common", fileBuffer);
     }
   } catch (error) {

@@ -52,7 +52,7 @@ class User {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
@@ -85,7 +85,7 @@ class User {
 
   //     ctx.body = SUCESS_RES.getCode({ total: total.count, list });
   //   } catch (error) {
-  //     console.log(error);
+  //     console.error(error);
   //     ctx.body = ERROR_RES.getCode(null);
   //   }
   // }

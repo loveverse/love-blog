@@ -4,7 +4,7 @@ const response = require("../utils/resData");
 const seq = require("../mysql/sequelize");
 const PersonModel = require("../models/person");
 const Mperson = PersonModel(seq);
-const { addIps } = require("../controllers/ips");
+
 
 // 书摘的接口----------------------------------------------------------------
 // 构造函数写法
@@ -43,14 +43,11 @@ Person.prototype.findExcerpt = async function (ctx, next) {
     if (ifNoneMatch === etag) {
       ctx.status = 304;
     } else {
-      await addIps(ctx, next);
       ctx.set("ETag", etag);
-      // console.log(getClientIP(ctx));
-      // fileBuffer.ip = getClientIP(ctx);
       ctx.body = response.SUCCESS("common", fileBuffer);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 };
@@ -62,7 +59,7 @@ Person.prototype.addExcerpt = async function (ctx, next) {
       await Mperson.create({ content, author, flag, date })
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 };
@@ -85,7 +82,7 @@ Person.prototype.updateExcerpt = async function (ctx, next) {
       )
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 };
@@ -104,7 +101,7 @@ Person.prototype.delExcerpt = async function (ctx, next) {
       })
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 };

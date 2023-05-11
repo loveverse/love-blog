@@ -39,6 +39,7 @@ const state = reactive({
   page: 1,
   size: 20,
   total: 0,
+  oneDay: 1000 * 60 * 60 * 24,
 });
 const getIpList = async (page = 1) => {
   state.page = page;
@@ -56,6 +57,16 @@ const getIpList = async (page = 1) => {
 };
 onMounted(() => {
   getIpList();
+  // 当前时间戳大于过期时间，执行一次
+  const expires = Number(localStorage.getItem("expires1")) || 0;
+  if (Date.now() > expires + state.oneDay) {
+    localStorage.setItem("expires1", Date.now().toString());
+    ElNotification({
+      message: "重复ip每隔10分钟记录一次",
+      type: "warning",
+      duration: 2000,
+    });
+  }
 });
 </script>
 <style lang="scss" scoped></style>

@@ -30,7 +30,7 @@ class FileList {
         ctx.body = response.SUCCESS("common", list);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
@@ -49,7 +49,7 @@ class FileList {
       const data = await MFileList.create(params);
       ctx.body = response.SUCCESS("common", data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
@@ -65,7 +65,7 @@ class FileList {
         ctx.body = response.ERROR("powerLacking");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }

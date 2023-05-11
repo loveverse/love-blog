@@ -63,12 +63,12 @@ wss.on("connection", function (ws) {
 // app.use(staticFiles(path.join(__dirname + '/dist/')))
 
 server.listen(APP_PORT, () => {
-  const host = server.address().address;
-  const port = server.address().port;
+  const host = process.env.APP_REDIS_HOST;
+  const port = process.env.APP_PORT;
   console.log(
     `环境:${
       process.env.NODE_ENV ? "开发环境" : "生产环境"
-    },服务器地址:http://localhost:${port}/findExcerpt`
+    },服务器地址:http://${host}:${port}/findExcerpt`
   );
 });
 module.exports = server;

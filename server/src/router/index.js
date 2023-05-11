@@ -49,5 +49,5 @@ router.post("/wechat/find/userInfo", tieba.findUserInfo);
 router.post("/wechat/add/userInfo", tieba.addUserInfo);
 
 // ip
-router.post("/find/ipList", ips.findIpsList);
+router.post("/find/ipList", (ctx, next) =>  ips.findIpsList(ctx, next));
 module.exports = router;

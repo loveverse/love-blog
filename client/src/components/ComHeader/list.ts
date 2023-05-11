@@ -2,21 +2,15 @@ import { t } from "@/lang";
 
 // 没写children，自动隐藏
 export default [
-  {
-    icon: "",
-    path: "/webRTC",
-    name: "webRTC",
-    title: t("videoCall"),
-    permiss: "-1",
-    children: [],
-  },
-  {
-    icon: "",
-    path: "/home/fileLib",
-    title: t("fileLib"),
-    permiss: "0",
-    children: [],
-  },
+  // {
+  //   icon: "",
+  //   path: "/webRTC",
+  //   name: "webRTC",
+  //   title: t("videoCall"),
+  //   permiss: "-1",
+  //   children: [],
+  // },
+
   {
     icon: "",
     path: "/home/person",
@@ -31,13 +25,26 @@ export default [
     permiss: "2",
     children: [],
   },
-
+  {
+    icon: "",
+    path: "/classify/visit",
+    title: "到访记录",
+    permiss: "10",
+    children: [],
+  },
   {
     icon: "",
     path: "/classify",
     title: t("classify"),
     permiss: "4",
     children: [
+      {
+        icon: "",
+        path: "/classify/wechat",
+        title: "查询",
+        permiss: "3",
+        children: [],
+      },
       {
         icon: "",
         path: "/classify/plan",
@@ -54,23 +61,16 @@ export default [
       },
       {
         icon: "",
+        path: "/home/fileLib",
+        title: t("fileLib"),
+        permiss: "0",
+        children: [],
+      },
+      {
+        icon: "",
         path: "/classify/hotword",
         title: t("netEaseHot"),
         permiss: "4",
-        children: [],
-      },
-      {
-        icon: "",
-        path: "/classify/visit",
-        title: "到访记录",
-        permiss: "10",
-        children: [],
-      },
-      {
-        icon: "",
-        path: "/classify/wechat",
-        title: "查询",
-        permiss: "3",
         children: [],
       },
     ],

@@ -55,7 +55,7 @@ class Wallpaper {
       ctx.set("Cache-Control", "max-age=3600");
       ctx.body = response.SUCCESS("common", { total: total.count, list });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }

@@ -91,7 +91,7 @@ class Tieba {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
@@ -106,7 +106,7 @@ class Tieba {
       });
       ctx.body = response.SUCCESS("common", { total: total.count, data });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
@@ -123,7 +123,7 @@ class Tieba {
       });
       ctx.body = response.SUCCESS("common", data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }

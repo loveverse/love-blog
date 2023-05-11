@@ -16,7 +16,7 @@ async function findIssue(ctx, next) {
     });
     ctx.body = response.SUCCESS("common", data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 }
@@ -31,7 +31,7 @@ async function addIssue(ctx, next) {
     });
     ctx.body = response.SUCCESS("common", data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 }
@@ -42,7 +42,7 @@ async function delIssue(ctx, next) {
     const data = await Missue.update({ status: 0 }, { where: { id } });
     ctx.body = response.SUCCESS("common", data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 }
@@ -67,7 +67,7 @@ async function editIssue(ctx, next) {
       )
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     ctx.body = response.SERVER_ERROR();
   }
 }

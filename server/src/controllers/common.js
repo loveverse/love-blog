@@ -33,7 +33,7 @@ class Common {
       // ctx.s
       // ctx.body = fs.createReadStream(filepath);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
@@ -64,7 +64,7 @@ class Common {
       };
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.ERROR("upload");
     }
   }
@@ -95,7 +95,7 @@ class Common {
       };
       ctx.body = response.SUCCESS("common", fileInfo);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.ERROR("upload");
     }
   }

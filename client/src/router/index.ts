@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: () => import("@/views/index.vue"),
-    redirect: "/home/fileLib",
+    redirect: "/classify/visit",
     children: [
       {
         path: "/webRTC",

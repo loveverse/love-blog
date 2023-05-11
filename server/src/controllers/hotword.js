@@ -43,7 +43,7 @@ class Hotword {
 
       ctx.body = response.SUCCESS("common", { total: total.count, list });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }

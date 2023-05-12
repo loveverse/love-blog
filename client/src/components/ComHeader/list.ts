@@ -40,20 +40,6 @@ export default [
     children: [
       {
         icon: "",
-        path: "/classify/wechat",
-        title: "查询",
-        permiss: "3",
-        children: [],
-      },
-      {
-        icon: "",
-        path: "/classify/plan",
-        title: t("examPlan"),
-        permiss: "3",
-        children: [],
-      },
-      {
-        icon: "",
         path: "/classify/wallpaper",
         title: t("wallpaper"),
         permiss: "5",
@@ -71,6 +57,20 @@ export default [
         path: "/classify/hotword",
         title: t("netEaseHot"),
         permiss: "4",
+        children: [],
+      },
+      {
+        icon: "",
+        path: "/classify/wechat",
+        title: "查询",
+        permiss: "3",
+        children: [],
+      },
+      {
+        icon: "",
+        path: "/classify/plan",
+        title: t("examPlan"),
+        permiss: "3",
         children: [],
       },
     ],

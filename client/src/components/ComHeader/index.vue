@@ -266,7 +266,9 @@ const loginOut = () => {
 };
 
 onMounted(() => {
-  state.routerList = import.meta.env ? ROUTER_LIST : routerList(ROUTER_LIST);
+  state.routerList = import.meta.env.DEV
+    ? ROUTER_LIST
+    : routerList(ROUTER_LIST);
   let w = window.outerWidth;
   state.flag = w > 768;
   window.onresize = debounce(() => {

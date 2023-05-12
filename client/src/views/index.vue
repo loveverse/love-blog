@@ -27,6 +27,10 @@
   .interval {
     padding: 0;
   }
+  .el-header {
+    box-shadow: 0px 2px 5px 0px #ddd;
+    z-index: 99;
+  }
   .el-main {
     @include scroll-default;
     @include tranition;

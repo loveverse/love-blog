@@ -263,6 +263,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .el-menu-demo {
   transition: all 0.3s;
+  border: none;
   .flex-grow {
     flex-grow: 1;
   }

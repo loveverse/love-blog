@@ -1,7 +1,11 @@
 <template>
   <div class="wrapper">
-    <el-table :data="state.ipList" style="margin: 20px 0">
-      <el-table-column type="index" label="序号" width="80"> </el-table-column>
+    <el-table :data="state.ipList" style="margin-bottom: 20px">
+      <el-table-column type="index" label="序号" width="80">
+        <template #default="{ $index }">
+          <span>{{ (state.page - 1) * state.size + $index + 1 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="ip" label="ip"> </el-table-column>
       <el-table-column prop="address" label="地址"> </el-table-column>
       <el-table-column prop="operator" label="运营商"> </el-table-column>
@@ -10,13 +14,13 @@
           <span>{{ formatterTime(row.createdAt) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="210">
+      <!-- <el-table-column label="操作" width="210">
         <template #default>
           <el-button type="primary" plain size="small">查询</el-button>
           <el-button type="warning" plain size="small">编辑</el-button>
           <el-button type="danger" plain size="small">删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <el-pagination
       small

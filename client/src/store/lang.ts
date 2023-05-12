@@ -3,7 +3,7 @@ import store from "./index";
 export const useLangStore = defineStore("lang", {
   state: () => {
     return {
-      locale: localStorage.getItem("lang") || "en",
+      locale: localStorage.getItem("lang") || "zh-CN",
     };
   },
   actions: {

@@ -7,6 +7,7 @@ import { useLangStoreHook } from "@/store/lang";
 const store = useLangStoreHook();
 
 const i18n = createI18n({
+  
   legacy: false,
   locale: store.locale,
   globalInjection: true, // 挂载到全局

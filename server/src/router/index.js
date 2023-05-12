@@ -7,8 +7,9 @@ const {
   user,
   wallpaper,
   fileList,
-  tieba,
+  wechat,
   ips,
+  audit,
 } = require("../controllers/index");
 const { auth } = require("../middleware/index");
 
@@ -43,11 +44,15 @@ router.post("/save/list", auth, fileList.saveFileInfo);
 router.post("/delete/file", auth, fileList.delFile);
 
 // 微信验证
-router.post("/wechat", tieba.wechat);
-router.get("/wechat", tieba.wechat);
-router.post("/wechat/find/userInfo", tieba.findUserInfo);
-router.post("/wechat/add/userInfo", tieba.addUserInfo);
+router.post("/wechat", wechat.verifyWechat);
+router.get("/wechat", wechat.verifyWechat);
+// 查询
+router.post("/wechat/find/userInfo", wechat.findUserInfo);
+router.post("/wechat/add/userInfo", wechat.addUserInfo);
+// 审核
+router.post("/wechat/find/auditList", audit.findAuditPage);
+router.post("/wechat/update/audit", audit.updateAudit);
 
 // ip
-router.post("/find/ipList", (ctx, next) =>  ips.findIpsList(ctx, next));
+router.post("/find/ipList", (ctx, next) => ips.findIpsList(ctx, next));
 module.exports = router;

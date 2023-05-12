@@ -15,7 +15,7 @@ export default [
     icon: "",
     path: "/home/person",
     title: t("chatRoom"),
-    permiss: "1",
+    permiss: "2",
     children: [],
   },
   {
@@ -49,7 +49,7 @@ export default [
         icon: "",
         path: "/home/fileLib",
         title: t("fileLib"),
-        permiss: "0",
+        permiss: "4",
         children: [],
       },
       {
@@ -63,14 +63,21 @@ export default [
         icon: "",
         path: "/classify/wechat",
         title: "查询",
-        permiss: "3",
+        permiss: "0", // 不显示设置为0,禁用为1
+        children: [],
+      },
+      {
+        icon: "",
+        path: "/classify/audit",
+        title: "审核",
+        permiss: "0",
         children: [],
       },
       {
         icon: "",
         path: "/classify/plan",
         title: t("examPlan"),
-        permiss: "3",
+        permiss: "1",
         children: [],
       },
     ],

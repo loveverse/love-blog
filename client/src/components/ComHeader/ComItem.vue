@@ -9,7 +9,7 @@
     <el-menu-item
       v-else
       :index="menuItem.path"
-      :disabled="menuItem.permiss === '3' && !isAdmin"
+      :disabled="menuItem.permiss === '1' && !isAdmin"
       >{{ menuItem.title }}</el-menu-item
     >
   </template>

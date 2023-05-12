@@ -1,12 +1,14 @@
 const crypto = require("crypto");
 const xml2js = require("xml2js");
 const ejs = require("ejs");
-const response = require("../utils/resData");
-const { template } = require("../utils/constant");
+const { template, RESULT_STATUS } = require("../utils/constant");
 const { APP_ID, APP_SECRET, APP_TOKEN } = require("../config/index");
+const response = require("../utils/resData");
 const seq = require("../mysql/sequelize");
-const TiebaModel = require("../models/tieba");
-const MTieba = TiebaModel(seq);
+const WechatModel = require("../models/wechat");
+const MWechat = WechatModel(seq);
+const AuditModel = require("../models/audit");
+const MAudit = AuditModel(seq);
 const wechat = {
   appID: APP_ID,
   appSecret: APP_SECRET,
@@ -35,9 +37,9 @@ function reply(content = "", fromUsername, toUsername) {
   return compiled(info);
 }
 
-class Tieba {
+class Wechat {
   constructor() {}
-  async wechat(ctx, next) {
+  async verifyWechat(ctx, next) {
     try {
       let {
         signature = "",
@@ -56,38 +58,64 @@ class Tieba {
         if (JSON.stringify(ctx.request.body) === "{}") {
           ctx.body = echostr;
         } else {
+          // 解析公众号xml
           let obj = await xml2js.parseStringPromise(ctx.request.body);
           let xmlObj = {};
           for (const item in obj.xml) {
             xmlObj[item] = obj.xml[item][0];
           }
-          console.log("[ xmlObj.Content ] >", xmlObj.Content);
-          const userInfo = await MTieba.findOne({
+          console.log("[ xmlObj.Content ] >", xmlObj);
+          const userInfo = await MWechat.findOne({
             where: {
               uid: xmlObj.Content,
             },
           });
           // 查询到信息
-          let str;
+
           if (userInfo) {
+            await MWechat.update(
+              { count: userInfo.count + 1 },
+              {
+                where: {
+                  id: userInfo.id,
+                },
+              }
+            );
             const textInfo = JSON.parse(userInfo.text);
-            const my = `来自我的提示\n${textInfo.my || '无'}\n关联wx:${userInfo.wx || "无"}\n关联qq:${
-              userInfo.qq || "无"
-            }\n\n`;
-            const qiqi = `来自的提示\n${textInfo.qiqi || "无"}\n\n`;
-            const muqin = `来自的提示\n${textInfo.muqin || "无"}\n\n`;
-            const yuequ = `来自的提示\n${textInfo.yuequ || "无"}`;
-            str = my + muqin + qiqi + yuequ;
+            const my = `我的提示\n${textInfo.my || "无"}\n关联wx:${
+              userInfo.wx || "无"
+            }\n关联qq:${userInfo.qq || "无"}\n\n`;
+            const qiqi = `qiqi\n${textInfo.qiqi || "无"}\n\n`;
+            const muqin = `muqin\n${textInfo.muqin || "无"}\n\n`;
+            const yuequ = `yuequ\n${textInfo.yuequ || "无"}`;
+            const count = [
+              textInfo.qiqi,
+              textInfo.muqin,
+              textInfo.yuequ,
+            ].filter((k) => k);
+            const result = `结论：${RESULT_STATUS[count.length]}\n\n`;
+            const str = result + my + muqin + qiqi + yuequ;
+            const replyMessageXml = reply(
+              str,
+              xmlObj.ToUserName,
+              xmlObj.FromUserName
+            );
+            ctx.type = "application/xml";
+            ctx.body = replyMessageXml;
           } else {
-            str = "暂未收录";
+            const regContent = /[a-zA-Z\d_-]{5,19}/;
+            // 5到19位数字或字母_-才增加
+            if (regContent.test(xmlObj.Content)) {
+              await MAudit.create({
+                id: Date.now(),
+                wid: xmlObj.FromUserName,
+                content: xmlObj.Content,
+                count: 0,
+                status: false, // 默认未审核
+              });
+            }
+            ctx.body = null;
           }
-          const replyMessageXml = reply(
-            str,
-            xmlObj.ToUserName,
-            xmlObj.FromUserName
-          );
-          ctx.type = "application/xml";
-          ctx.body = replyMessageXml;
         }
       }
     } catch (error) {
@@ -98,9 +126,9 @@ class Tieba {
   async findUserInfo(ctx, next) {
     try {
       const { size, page } = ctx.request.body;
-      const total = await MTieba.findAndCountAll();
-      const data = await MTieba.findAll({
-        order: [["id"]],
+      const total = await MWechat.findAndCountAll();
+      const data = await MWechat.findAll({
+        order: [["id", "DESC"]],
         limit: parseInt(size),
         offset: parseInt(size) * (page - 1),
       });
@@ -113,7 +141,7 @@ class Tieba {
   async addUserInfo(ctx, next) {
     try {
       const { uid, name, wx, qq, textInfo } = ctx.request.body;
-      const data = await MTieba.create({
+      const data = await MWechat.create({
         id: Date.now(),
         username: name,
         uid,
@@ -129,4 +157,4 @@ class Tieba {
   }
 }
 
-module.exports = new Tieba();
+module.exports = new Wechat();

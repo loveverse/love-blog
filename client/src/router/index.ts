@@ -66,6 +66,11 @@ const routes: RouteRecordRaw[] = [
             name: "wechat",
             component: () => import("@/views/classify/wechat.vue"),
           },
+          {
+            path: "/classify/audit",
+            name: "audit",
+            component: () => import("@/views/classify/audit.vue"),
+          },
         ],
       },
       {
@@ -92,8 +97,10 @@ const router = createRouter({
   },
 });
 
+// 不允许访问的路由
+const whiteList = ["/classify/wechat", "/classify/audit"];
 router.beforeEach(async (to, form, next) => {
-  if (to.path === "/classify/wechat") {
+  if (whiteList.includes(to.path)) {
     if (import.meta.env.DEV) {
       next();
     } else {

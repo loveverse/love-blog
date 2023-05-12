@@ -7,7 +7,7 @@
     :router="state.flag"
   >
     <template v-if="state.flag">
-      <template v-for="item in ROUTER_LIST">
+      <template v-for="item in state.routerList">
         <ComItem :menuItem="item"></ComItem>
       </template>
     </template>
@@ -96,7 +96,7 @@
       :ellipsis="false"
       router
     >
-      <template v-for="item in ROUTER_LIST">
+      <template v-for="item in state.routerList">
         <ComItem :menuItem="item"></ComItem>
       </template>
     </el-menu>
@@ -189,7 +189,21 @@ const state = reactive({
   flag: true, // 小屏适配
   showAside: false, // 显示抽屉
   isDark,
+  routerList: [],
 });
+const routerList = (arr: any): any => {
+  if (!arr.length) return;
+  return arr.filter((item: any) => {
+    if (item.permiss !== "0") {
+      if (item.children.length) {
+        item.children = routerList(item.children);
+      }
+      return true;
+    }
+    return false;
+  });
+};
+// console.log("[ routerList ] >", routerList());
 const registerRef = ref<FormInstance>();
 
 const userInfo = computed(() => {
@@ -252,6 +266,7 @@ const loginOut = () => {
 };
 
 onMounted(() => {
+  state.routerList = import.meta.env ? ROUTER_LIST : routerList(ROUTER_LIST);
   let w = window.outerWidth;
   state.flag = w > 768;
   window.onresize = debounce(() => {

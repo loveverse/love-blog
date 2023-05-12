@@ -94,6 +94,15 @@ module.exports = sequelize => {
       comment: "账号状态",
       field: "status"
     },
+    count: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "查询次数",
+      field: "count"
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -114,10 +123,10 @@ module.exports = sequelize => {
     }
   };
   const options = {
-    tableName: "tieba",
+    tableName: "wechat",
     comment: "",
     indexes: []
   };
-  const TiebaModel = sequelize.define("tiebaModel", attributes, options);
-  return TiebaModel;
+  const WechatModel = sequelize.define("wechatModel", attributes, options);
+  return WechatModel;
 };

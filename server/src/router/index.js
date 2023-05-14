@@ -49,6 +49,7 @@ router.get("/wechat", wechat.verifyWechat);
 // 查询
 router.post("/wechat/find/userInfo", wechat.findUserInfo);
 router.post("/wechat/add/userInfo", wechat.addUserInfo);
+router.post("/wechat/find/one/userInfo",wechat.findOneUserInfo)
 // 审核
 router.post("/wechat/find/auditList", audit.findAuditPage);
 router.post("/wechat/update/audit", audit.updateAudit);

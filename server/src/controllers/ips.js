@@ -4,7 +4,7 @@ const { getClientIP } = require("../utils/common");
 const seq = require("../mysql/sequelize");
 const IpsModel = require("../models/ips");
 const MIps = IpsModel(seq);
-const client = require("../utils/redis");
+// const client = require("../utils/redis");
 const { reqIp } = require("../api/ip");
 
 class Ips {
@@ -31,14 +31,14 @@ class Ips {
       // const a = searcher.btreeSearchSync("223.104.68.243");
       // console.log(a);
       const ip = getClientIP(ctx);
-      const res = await client.get(ip);
+      // const res = await client.get(ip);
       // 没有才在redis中设置
       if (!res) {
         // 需要将值转为字符串
-        await client.set(ip, new Date().toString(), {
-          EX: 10 * 60, // 以秒为单位存储10分钟
-          NX: true, // 键不存在时才进行set操作
-        });
+        // await client.set(ip, new Date().toString(), {
+        //   EX: 10 * 60, // 以秒为单位存储10分钟
+        //   NX: true, // 键不存在时才进行set操作
+        // });
         if (ip.length > 6) {
           const obj = {
             id: Date.now(),

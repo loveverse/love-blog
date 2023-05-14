@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const xml2js = require("xml2js");
 const ejs = require("ejs");
+const { Op } = require("sequelize");
 const { template, RESULT_STATUS } = require("../utils/constant");
 const { APP_ID, APP_SECRET, APP_TOKEN } = require("../config/index");
 const response = require("../utils/resData");
@@ -148,6 +149,24 @@ class Wechat {
         wx,
         qq,
         text: JSON.stringify(textInfo),
+      });
+      ctx.body = response.SUCCESS("common", data);
+    } catch (error) {
+      console.error(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
+  async findOneUserInfo(ctx, next) {
+    try {
+      const { uid } = ctx.request.body;
+      const data = await MWechat.findAll({
+        // 返回特定的属性
+        attributes: ["id", "uid"],
+        where: {
+          uid: {
+            [Op.like]: "%" + uid + "%",
+          },
+        },
       });
       ctx.body = response.SUCCESS("common", data);
     } catch (error) {

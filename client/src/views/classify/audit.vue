@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-table :data="state.auditList" style="margin-bottom: 20px">
-      <el-table-column type="index" label="序号" width="80">
+      <el-table-column type="index" label="序号" width="80" align="center">
         <template #default="{ $index }">
           <span>{{ (state.page - 1) * state.size + $index + 1 }}</span>
         </template>
@@ -24,7 +24,7 @@
           <span>{{ formatterTime(row.createdAt) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="操作">
+      <el-table-column prop="" label="操作" width="80" align="center">
         <template #default="{ row }">
           <el-button
             type="danger"

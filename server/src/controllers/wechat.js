@@ -67,56 +67,74 @@ class Wechat {
             xmlObj[item] = obj.xml[item][0];
           }
           console.info("[ xmlObj.Content ] >", xmlObj);
-          const userInfo = await MWechat.findOne({
-            where: {
-              uid: xmlObj.Content,
-            },
-          });
-          // 查询到信息
-
-          if (userInfo) {
-            await MWechat.update(
-              { count: userInfo.count + 1 },
-              {
-                where: {
-                  id: userInfo.id,
-                },
+          // 文本消息
+          if (xmlObj.MsgType === "text") {
+            const userInfo = await MWechat.findOne({
+              where: {
+                uid: xmlObj.Content.trim(), // 去掉首尾空格
+              },
+            });
+            // 查询到信息
+            if (userInfo) {
+              await MWechat.update(
+                { count: userInfo.count + 1 },
+                { where: { id: userInfo.id } }
+              );
+              const textInfo = JSON.parse(userInfo.text);
+              const my = `我的提示\n${textInfo.my || "无"}\n关联wx：${
+                userInfo.wx || "无"
+              }\n关联qq：${userInfo.qq || "无"}\n`;
+              const qiqi = `qiqi\n${textInfo.qiqi || "无"}\n`;
+              const muqin = `muqin\n${textInfo.muqin || "无"}\n`;
+              const yuequ = `yuequ\n${textInfo.yuequ || "无"}`;
+              const count = [
+                textInfo.qiqi,
+                textInfo.muqin,
+                textInfo.yuequ,
+              ].filter((k) => k);
+              const result = `结论：${RESULT_STATUS[count.length]}\n\n`;
+              const str = result + my + muqin + qiqi + yuequ;
+              const replyMessageXml = reply(
+                str,
+                xmlObj.ToUserName,
+                xmlObj.FromUserName
+              );
+              ctx.type = "application/xml";
+              ctx.body = replyMessageXml;
+            } else {
+              const regContent = /[a-zA-Z\d_-]{5,19}/;
+              // 5到19位数字或字母_-才增加
+              if (regContent.test(xmlObj.Content)) {
+                await MAudit.create({
+                  id: Date.now(),
+                  wid: xmlObj.FromUserName,
+                  content: xmlObj.Content,
+                  count: 0,
+                  status: false, // 默认未审核
+                });
               }
-            );
-            const textInfo = JSON.parse(userInfo.text);
-            const my = `我的提示\n${textInfo.my || "无"}\n关联wx:${
-              userInfo.wx || "无"
-            }\n关联qq:${userInfo.qq || "无"}\n\n`;
-            const qiqi = `qiqi\n${textInfo.qiqi || "无"}\n\n`;
-            const muqin = `muqin\n${textInfo.muqin || "无"}\n\n`;
-            const yuequ = `yuequ\n${textInfo.yuequ || "无"}`;
-            const count = [
-              textInfo.qiqi,
-              textInfo.muqin,
-              textInfo.yuequ,
-            ].filter((k) => k);
-            const result = `结论：${RESULT_STATUS[count.length]}\n\n`;
-            const str = result + my + muqin + qiqi + yuequ;
+              ctx.body = null;
+            }
+            // 关注消息
+          } else if (xmlObj.MsgType === "event") {
+            if (xmlObj.Event === "subscribe") {
+              const replyMessageXml = reply(
+                "感谢关注！",
+                xmlObj.ToUserName,
+                xmlObj.FromUserName
+              );
+              ctx.type = "application/xml";
+              ctx.body = replyMessageXml;
+            }
+            // 其他消息
+          } else {
             const replyMessageXml = reply(
-              str,
+              "暂时不支持该消息格式，请联系管理员，提出你的想法或者建议，也许在将来的某一天会实现！(v:zcb99735)",
               xmlObj.ToUserName,
               xmlObj.FromUserName
             );
             ctx.type = "application/xml";
             ctx.body = replyMessageXml;
-          } else {
-            const regContent = /[a-zA-Z\d_-]{5,19}/;
-            // 5到19位数字或字母_-才增加
-            if (regContent.test(xmlObj.Content)) {
-              await MAudit.create({
-                id: Date.now(),
-                wid: xmlObj.FromUserName,
-                content: xmlObj.Content,
-                count: 0,
-                status: false, // 默认未审核
-              });
-            }
-            ctx.body = null;
           }
         }
       }

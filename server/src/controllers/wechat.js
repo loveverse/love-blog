@@ -163,6 +163,30 @@ class Wechat {
       ctx.body = response.SERVER_ERROR();
     }
   }
+  // 编辑用户
+  async editUserInfo(ctx, next) {
+    try {
+      const { id, uid, name, wx, qq, textInfo } = ctx.request.body;
+      const data = await MWechat.update(
+        {
+          username: name,
+          uid,
+          wx,
+          qq,
+          text: JSON.stringify(textInfo),
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+      ctx.body = response.SUCCESS("edit", data);
+    } catch (error) {
+      console.error(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
   // 删除用户
   async deleteUser(ctx, next) {
     try {

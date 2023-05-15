@@ -7,9 +7,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="wid" label="微信标识"> </el-table-column>
-      <el-table-column prop="count" label="uid">
+      <el-table-column prop="count" label="uid" class-name="uid">
         <template #default="{ row }">
-          <span @click="handleCopy(row)">{{ row.count }}</span>
+          <div @click="handleCopy(row)">{{ row.count }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -22,6 +22,17 @@
       <el-table-column prop="" label="发送时间">
         <template #default="{ row }">
           <span>{{ formatterTime(row.createdAt) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="" label="操作">
+        <template #default="{ row }">
+          <el-button
+            type="danger"
+            plain
+            size="small"
+            @click="handleOperation('del', row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -40,13 +51,25 @@
 </template>
 <script setup lang="ts" name="audit">
 import { formatterTime } from "@/utils/common";
-import { reqAuditList, reqUpdateAudit } from "@/api/wechat";
+import { reqAuditList, reqUpdateAudit, reqDeleteAudit } from "@/api/wechat";
 const state = reactive({
   auditList: [],
   page: 1,
   size: 20,
   total: 0,
 });
+const handleOperation = (type: string, info: any = null) => {
+  deleteAudit(info.id);
+};
+const deleteAudit = async (id: string) => {
+  const result = await reqDeleteAudit({ id });
+  if (result.code === 200) {
+    ElMessage.success("删除成功");
+    getAuditList(state.page);
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
 const handleCopy = (info: any) => {
   navigator.clipboard.writeText(info.count).then(
     () => {
@@ -87,4 +110,10 @@ onMounted(() => {
   getAuditList();
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.wrapper {
+  :deep(.uid) {
+    cursor: pointer;
+  }
+}
+</style>

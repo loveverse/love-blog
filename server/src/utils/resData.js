@@ -23,6 +23,7 @@ const success = {
   upload: "上传成功",
   common: "成功",
   delete: "删除成功",
+  edit: "编辑成功"
 };
 const ERROR = (str, data = null) => {
   return {

@@ -30,5 +30,15 @@ class Audit {
       ctx.body = response.SERVER_ERROR();
     }
   }
+  async deleteAudit(ctx, next) {
+    try {
+      const { id } = ctx.request.body;
+      const data = await MAudit.destroy({ where: { id } });
+      ctx.body = response.SUCCESS("delete", data);
+    } catch (error) {
+      console.error(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
 }
 module.exports = new Audit();

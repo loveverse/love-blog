@@ -1,16 +1,14 @@
 <template>
   <div class="wrapper">
     <div>
-      <el-button type="primary" @click="state.userInfoDia = true"
-        >添加</el-button
-      >
+      <el-button type="primary" @click="handleOperation('add')">添加</el-button>
     </div>
     <el-table
       :data="state.userInfoList"
       style="margin: 20px 0"
       v-loading="loading"
     >
-      <el-table-column type="index" label="序号" width="80">
+      <el-table-column type="index" label="序号" width="80" align="center">
         <template #default="{ row, $index }">
           <span
             :style="{ backgroundColor: row.uid === '414495642' ? 'red' : '' }"
@@ -22,7 +20,7 @@
       <el-table-column prop="qq" label="qq"> </el-table-column>
       <el-table-column prop="wx" label="wx"> </el-table-column>
       <el-table-column prop="status" label="账号状态"> </el-table-column>
-      <el-table-column prop="text" label="描述">
+      <el-table-column prop="text" label="描述" min-width="300">
         <template #default="{ row }">
           <div v-if="row.text.my">我：{{ row.text.my }}</div>
           <div v-if="row.text.qiqi">qiqi：{{ row.text.qiqi }}</div>
@@ -30,10 +28,22 @@
           <div v-if="row.text.yuequ">yuequ：{{ row.text.yuequ }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="210">
-        <template #default>
-          <el-button type="warning" plain size="small">编辑</el-button>
-          <el-button type="danger" plain size="small">删除</el-button>
+      <el-table-column label="操作" width="160" align="center">
+        <template #default="{ row }">
+          <el-button
+            type="warning"
+            plain
+            size="small"
+            @click="handleOperation('edit', row)"
+            >编辑</el-button
+          >
+          <el-button
+            type="danger"
+            plain
+            size="small"
+            @click="handleOperation('del', row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -138,7 +148,13 @@
 </template>
 <script setup lang="ts" name="wechat">
 import { FormInstance } from "element-plus";
-import { reqUserInfo, reqAddUserInfo, reqFindOneUserInfo } from "@/api/wechat";
+import {
+  reqUserInfo,
+  reqAddUserInfo,
+  reqFindOneUserInfo,
+  reqDeleteUser,
+  reqEditUser,
+} from "@/api/wechat";
 
 interface IState {
   userInfoList: {
@@ -163,6 +179,7 @@ const state = reactive<IState>({
   userInfoDia: false,
   options: [],
   form: {
+    id: "",
     uid: "",
     name: "",
     wx: "",
@@ -178,6 +195,29 @@ const state = reactive<IState>({
 const loading = ref(false);
 const formRef = ref<FormInstance>();
 
+const handleOperation = (type: string, info: any = null) => {
+  if (type === "del") {
+    deleteUser(info.id);
+  } else if (type === "edit") {
+    state.form = { ...info };
+    state.form.textInfo = { ...state.form.text };
+    state.userInfoDia = true;
+  } else {
+    state.form.uid = "";
+    state.form.id = "";
+    state.userInfoDia = true;
+  }
+};
+
+const deleteUser = async (id: string) => {
+  const result = await reqDeleteUser({ id });
+  if (result.code === 200) {
+    ElMessage.success("删除成功");
+    getUserInfoList(state.page);
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
 // 远程搜索
 const remoteMethod = async (queryString: string, cb: (arg: any) => void) => {
   if (queryString) {
@@ -190,7 +230,7 @@ const remoteMethod = async (queryString: string, cb: (arg: any) => void) => {
     state.options = [];
   }
 };
-const handleOneUserInfo = async (uid: any) => {
+const handleOneUserInfo = async (uid: string) => {
   const result = await reqFindOneUserInfo({ uid });
   if (result.code === 200) {
     state.options = result.data;
@@ -220,10 +260,11 @@ const handSaveUserInfo = async (formEl: FormInstance | undefined) => {
   await formEl?.validate(async (valid, fieIds) => {
     if (valid) {
       const params = { ...state.form };
-      const result = await reqAddUserInfo(params);
+      const commonFn = state.form.id ? reqEditUser : reqAddUserInfo;
+      const result = await commonFn(params);
       if (result.code === 200) {
         state.userInfoDia = false;
-        ElMessage.success("添加成功");
+        ElMessage.success(state.form.id ? "编辑成功" : "添加成功");
         getUserInfoList(state.page);
       } else {
         ElMessage.error(result.msg);

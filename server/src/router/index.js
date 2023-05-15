@@ -51,9 +51,12 @@ router.post("/wechat/find/userInfo", wechat.findUserInfo);
 router.post("/wechat/add/userInfo", wechat.addUserInfo);
 router.post("/wechat/find/one/userInfo", wechat.findOneUserInfo);
 router.post("/wechat/delete/user", wechat.deleteUser);
+router.post("/wechat/edit/user", wechat.editUserInfo);
+
 // 审核
 router.post("/wechat/find/auditList", audit.findAuditPage);
 router.post("/wechat/update/audit", audit.updateAudit);
+router.post("/wechat/delete/audit", audit.deleteAudit);
 
 // ip
 router.post("/find/ipList", (ctx, next) => ips.findIpsList(ctx, next));

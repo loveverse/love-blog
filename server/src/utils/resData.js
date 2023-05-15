@@ -22,6 +22,7 @@ const success = {
   userRegister: "注册成功",
   upload: "上传成功",
   common: "成功",
+  delete: "删除成功",
 };
 const ERROR = (str, data = null) => {
   return {

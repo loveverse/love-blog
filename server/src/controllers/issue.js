@@ -40,7 +40,7 @@ async function delIssue(ctx, next) {
   try {
     const { id } = ctx.request.body;
     const data = await Missue.update({ status: 0 }, { where: { id } });
-    ctx.body = response.SUCCESS("common", data);
+    ctx.body = response.SUCCESS("delete", data);
   } catch (error) {
     console.error(error);
     ctx.body = response.SERVER_ERROR();

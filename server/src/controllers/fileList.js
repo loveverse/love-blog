@@ -60,7 +60,7 @@ class FileList {
       // 只有上传用户自己或者管理员才能删除
       if (ctx.state.user) {
         const data = await MFileList.destroy({ where: { id } });
-        ctx.body = response.SUCCESS("common", data);
+        ctx.body = response.SUCCESS("delete", data);
       } else {
         ctx.body = response.ERROR("powerLacking");
       }

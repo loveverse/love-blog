@@ -1,4 +1,4 @@
-const searcher = require("node-ip2region").create();
+
 const response = require("../utils/resData");
 const { getClientIP } = require("../utils/common");
 const seq = require("../mysql/sequelize");
@@ -28,7 +28,6 @@ class Ips {
   async addIps(ctx, next) {
     try {
       // const a = await reqIp({ ip:"223.104.68.243" });
-      // const a = searcher.btreeSearchSync("223.104.68.243");
       // console.log(a);
       const ip = getClientIP(ctx);
       // const res = await client.get(ip);

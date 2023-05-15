@@ -10,12 +10,12 @@ const WechatModel = require("../models/wechat");
 const MWechat = WechatModel(seq);
 const AuditModel = require("../models/audit");
 const MAudit = AuditModel(seq);
+
 const wechat = {
   appID: APP_ID,
   appSecret: APP_SECRET,
   token: APP_TOKEN,
 };
-
 const compiled = ejs.compile(template);
 function reply(content = "", fromUsername, toUsername) {
   const info = {};
@@ -40,6 +40,7 @@ function reply(content = "", fromUsername, toUsername) {
 
 class Wechat {
   constructor() {}
+  // 公众号验证
   async verifyWechat(ctx, next) {
     try {
       let {
@@ -65,7 +66,7 @@ class Wechat {
           for (const item in obj.xml) {
             xmlObj[item] = obj.xml[item][0];
           }
-          console.log("[ xmlObj.Content ] >", xmlObj);
+          console.info("[ xmlObj.Content ] >", xmlObj);
           const userInfo = await MWechat.findOne({
             where: {
               uid: xmlObj.Content,
@@ -124,6 +125,7 @@ class Wechat {
       ctx.body = response.SERVER_ERROR();
     }
   }
+  // 分页用户列表
   async findUserInfo(ctx, next) {
     try {
       const { size, page } = ctx.request.body;
@@ -133,12 +135,17 @@ class Wechat {
         limit: parseInt(size),
         offset: parseInt(size) * (page - 1),
       });
-      ctx.body = response.SUCCESS("common", { total: total.count, data });
+      const list = data.map((item) => {
+        item.text = JSON.parse(item.text);
+        return item;
+      });
+      ctx.body = response.SUCCESS("common", { total: total.count, data: list });
     } catch (error) {
       console.error(error);
       ctx.body = response.SERVER_ERROR();
     }
   }
+  // 增加用户
   async addUserInfo(ctx, next) {
     try {
       const { uid, name, wx, qq, textInfo } = ctx.request.body;
@@ -156,6 +163,20 @@ class Wechat {
       ctx.body = response.SERVER_ERROR();
     }
   }
+  // 删除用户
+  async deleteUser(ctx, next) {
+    try {
+      const { id } = ctx.request.body;
+      const data = await MWechat.destroy({
+        where: { id },
+      });
+      ctx.body = response.SUCCESS("delete", data);
+    } catch (error) {
+      console.error(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
+  // 模糊查询用户uid筛选
   async findOneUserInfo(ctx, next) {
     try {
       const { uid } = ctx.request.body;

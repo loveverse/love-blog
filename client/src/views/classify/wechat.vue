@@ -5,7 +5,11 @@
         >添加</el-button
       >
     </div>
-    <el-table :data="state.userInfoList" style="margin: 20px 0">
+    <el-table
+      :data="state.userInfoList"
+      style="margin: 20px 0"
+      v-loading="loading"
+    >
       <el-table-column type="index" label="序号" width="80">
         <template #default="{ row, $index }">
           <span
@@ -18,14 +22,20 @@
       <el-table-column prop="qq" label="qq"> </el-table-column>
       <el-table-column prop="wx" label="wx"> </el-table-column>
       <el-table-column prop="status" label="账号状态"> </el-table-column>
-      <el-table-column prop="text" label="描述"> </el-table-column>
-      <!-- <el-table-column label="操作" width="210">
+      <el-table-column prop="text" label="描述">
+        <template #default="{ row }">
+          <div v-if="row.text.my">我：{{ row.text.my }}</div>
+          <div v-if="row.text.qiqi">qiqi：{{ row.text.qiqi }}</div>
+          <div v-if="row.text.muqin">muqin：{{ row.text.muqin }}</div>
+          <div v-if="row.text.yuequ">yuequ：{{ row.text.yuequ }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="210">
         <template #default>
-          <el-button type="primary" plain size="small">查询</el-button>
           <el-button type="warning" plain size="small">编辑</el-button>
           <el-button type="danger" plain size="small">删除</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <el-pagination
       small
@@ -41,7 +51,7 @@
     <el-dialog v-model="state.userInfoDia" width="60%" title="添加">
       <el-form :model="state.form" label-width="100" ref="formRef">
         <el-form-item label="uid">
-          <el-select
+          <!-- <el-select
             v-model="state.form.uid"
             filterable
             remote
@@ -58,16 +68,20 @@
               :label="item.uid"
               :value="item.id"
             />
-          </el-select>
-          <el-tag :type="state.options.length ? 'success' : 'danger'">{{
-            state.options.length ? "已查到" : "未查到"
-          }}</el-tag>
-          <!-- <el-autocomplete
+          </el-select> -->
+          <el-autocomplete
             v-model="state.form.uid"
             placeholder="请输入uid"
             clearable
-            :fetch-suggestions="querySearchAsync"
-          /> -->
+            value-key="uid"
+            class="uid"
+            :fetch-suggestions="remoteMethod"
+          />
+          <el-tag
+            size="large"
+            :type="state.options.length ? 'success' : 'danger'"
+            >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
+          >
         </el-form-item>
         <el-form-item label="昵称">
           <el-input v-model="state.form.name" placeholder="请输入昵称" />
@@ -123,14 +137,29 @@
   </div>
 </template>
 <script setup lang="ts" name="wechat">
-import { ElMessageBox, FormInstance } from "element-plus";
+import { FormInstance } from "element-plus";
 import { reqUserInfo, reqAddUserInfo, reqFindOneUserInfo } from "@/api/wechat";
 
-const state = reactive({
+interface IState {
+  userInfoList: {
+    [key in string]: any;
+  };
+  page: number;
+  size: number;
+  total: number;
+  timer: NodeJS.Timer | undefined;
+  userInfoDia: boolean;
+  options: { id: string; uid: string }[];
+  form: {
+    [key in string]: any;
+  };
+}
+const state = reactive<IState>({
   userInfoList: [],
-  size: 20,
   page: 1,
+  size: 20,
   total: 0,
+  timer: null,
   userInfoDia: false,
   options: [],
   form: {
@@ -149,12 +178,13 @@ const state = reactive({
 const loading = ref(false);
 const formRef = ref<FormInstance>();
 
-const remoteMethod = (query: string) => {
-  if (query) {
-    loading.value = true;
-    setTimeout(() => {
-      loading.value = false;
-      handleOneUserInfo(query);
+// 远程搜索
+const remoteMethod = async (queryString: string, cb: (arg: any) => void) => {
+  if (queryString) {
+    await handleOneUserInfo(queryString);
+    clearTimeout(state.timer);
+    state.timer = setTimeout(() => {
+      cb(state.options);
     }, 200);
   } else {
     state.options = [];
@@ -163,10 +193,7 @@ const remoteMethod = (query: string) => {
 const handleOneUserInfo = async (uid: any) => {
   const result = await reqFindOneUserInfo({ uid });
   if (result.code === 200) {
-    console.log("[ result.data ] >", result.data);
-    state.options = result.data.filter((item: any) => {
-      return item.uid.includes(uid);
-    });
+    state.options = result.data;
   } else {
     ElMessage.error(result.msg);
   }
@@ -178,6 +205,7 @@ const getUserInfoList = async (page = 1) => {
     page: state.page,
     size: state.size,
   };
+  loading.value = true;
   const result = await reqUserInfo(params);
   if (result.code === 200) {
     state.total = +result.data.total;
@@ -185,6 +213,7 @@ const getUserInfoList = async (page = 1) => {
   } else {
     ElMessage.error(result.msg);
   }
+  loading.value = false;
 };
 
 const handSaveUserInfo = async (formEl: FormInstance | undefined) => {
@@ -207,4 +236,11 @@ onMounted(() => {
   getUserInfoList();
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.wrapper {
+  :deep(.uid) {
+    width: 200px;
+    margin-right: 5px;
+  }
+}
+</style>

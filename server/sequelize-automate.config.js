@@ -53,7 +53,7 @@ const dbOptions = {
     dialectOptions: {
       collate: "utf8_general_ci",
     },
-    timestamps: true,
+    timestamps: true, // 自动创建createAt和updateAt
   },
 };
 const options = {

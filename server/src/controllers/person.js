@@ -93,7 +93,7 @@ Person.prototype.delExcerpt = async function (ctx, next) {
       return;
     }
     ctx.body = response.SUCCESS(
-      "common",
+      "delete",
       await Mperson.destroy({
         where: {
           id: ctx.request.query.id,

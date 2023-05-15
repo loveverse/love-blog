@@ -9,3 +9,6 @@ export const reqAuditList = (params: any) =>
   post("/wechat/find/auditList", params);
 export const reqUpdateAudit = (params: any) =>
   post("/wechat/update/audit", params);
+// 查询单个uid
+export const reqFindOneUserInfo = (params: any) =>
+  post("/wechat/find/one/userInfo", params);

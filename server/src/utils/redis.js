@@ -1,17 +1,17 @@
-const Redis = require("redis");
-const client = Redis.createClient({
-  host: "localhost",
-  port: 6379,
-});
+// const Redis = require("redis");
+// const client = Redis.createClient({
+//   host: "localhost",
+//   port: 6379,
+// });
 
-client.connect();
-client.on("connect", () => {
-  console.log("Redis client connected");
-});
-// 连接错误处理
-client.on("error", (err) => {
-  console.error(err);
-});
+// client.connect();
+// client.on("connect", () => {
+//   console.log("Redis client connected");
+// });
+// // 连接错误处理
+// client.on("error", (err) => {
+//   console.error(err);
+// });
 // client.set("age", 1);
 // redis数据的存和取
 // const setRedisData = {
@@ -51,4 +51,4 @@ client.on("error", (err) => {
 //     });
 //   },
 // };
-module.exports = client;
+// module.exports = client;

@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const xml2js = require("xml2js");
 const ejs = require("ejs");
 const { Op } = require("sequelize");
-const { template, RESULT_STATUS } = require("../utils/constant");
+const { template, RESULT_STATUS, NAME_INFO } = require("../utils/constant");
 const { APP_ID, APP_SECRET, APP_TOKEN } = require("../config/index");
 const response = require("../utils/resData");
 const seq = require("../mysql/sequelize");
@@ -86,9 +86,9 @@ class Wechat {
               const my = `我的提示\n${textInfo.my || "无"}\n关联wx：${
                 userInfo.wx || "无"
               }\n关联qq：${userInfo.qq || "无"}\n`;
-              const qiqi = `qiqi\n${textInfo.qiqi || "无"}\n`;
-              const muqin = `muqin\n${textInfo.muqin || "无"}\n`;
-              const yuequ = `yuequ\n${textInfo.yuequ || "无"}`;
+              const qiqi = `${NAME_INFO.q}\n${textInfo.qiqi || "无"}\n`;
+              const muqin = `${NAME_INFO.m}\n${textInfo.muqin || "无"}\n`;
+              const yuequ = `${NAME_INFO.y}\n${textInfo.yuequ || "无"}`;
               const count = [
                 textInfo.my,
                 textInfo.qiqi,

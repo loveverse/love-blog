@@ -47,6 +47,20 @@ const RESULT_STATUS = {
   0: "未知",
   1: "可能是骗子！",
   2: "骗子！！",
-  3: "百分百骗子！！！"
-}
-module.exports = { template,RESULT_STATUS };
+  3: "百分百骗子！！！",
+  4: "回头是岸！！！！",
+};
+
+const NAME_INFO = process.env.NODE_ENV
+  ? {
+      q: "qiqi",
+      m: "muqin",
+      y: "yuequ",
+    }
+  : {
+      q: "\u4e03\u4e03",
+      m: "\u6728\u7434",
+      y: "\u7ca4\u533a",
+    };
+
+module.exports = { template, RESULT_STATUS, NAME_INFO };

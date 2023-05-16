@@ -47,6 +47,7 @@ const RESULT_STATUS = {
   0: "未知",
   1: "可能是骗子！",
   2: "骗子！！",
-  3: "百分百骗子！！！"
-}
-module.exports = { template,RESULT_STATUS };
+  3: "百分百骗子！！！",
+  4: "回头是岸！！！！",
+};
+module.exports = { template, RESULT_STATUS };

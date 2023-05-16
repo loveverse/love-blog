@@ -94,6 +94,15 @@ module.exports = sequelize => {
       comment: "账号状态",
       field: "status"
     },
+    isFraud: {
+      type: DataTypes.INTEGER(1),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "0：真人；1：骗子",
+      field: "is_fraud"
+    },
     count: {
       type: DataTypes.INTEGER(11),
       allowNull: true,

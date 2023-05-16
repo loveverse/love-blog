@@ -40,7 +40,7 @@ const Automate = require("sequelize-automate");
 const dbOptions = {
   database: "verse",
   username: "verse",
-  password: "123456",
+  password: "ECaeGfjdKJhYhXzD",
   dialect: "mysql",
   host: "1.15.42.9",
   port: 3306,

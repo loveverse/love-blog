@@ -88,12 +88,16 @@ class Wechat {
               const muqin = `muqin\n${textInfo.muqin || "无"}\n`;
               const yuequ = `yuequ\n${textInfo.yuequ || "无"}`;
               const count = [
+                textInfo.my,
                 textInfo.qiqi,
                 textInfo.muqin,
                 textInfo.yuequ,
               ].filter((k) => k);
               const result = `结论：${RESULT_STATUS[count.length]}\n\n`;
-              const str = result + my + muqin + qiqi + yuequ;
+              // 0:真人
+              const str = userInfo.isFraud
+                ? result + my + muqin + qiqi + yuequ
+                : textInfo.my;
               const replyMessageXml = reply(
                 str,
                 xmlObj.ToUserName,
@@ -118,18 +122,24 @@ class Wechat {
             // 关注消息
           } else if (xmlObj.MsgType === "event") {
             if (xmlObj.Event === "subscribe") {
+              const str =
+                "您好，谢谢您的关注！输入uid即可进行查询，如有包含骗子字段，请注意防骗！如未回复，说明没有收录。";
               const replyMessageXml = reply(
-                "感谢关注！",
+                str,
                 xmlObj.ToUserName,
                 xmlObj.FromUserName
               );
               ctx.type = "application/xml";
               ctx.body = replyMessageXml;
+            } else {
+              ctx.body = null;
             }
             // 其他消息
           } else {
+            const str =
+              "暂时不支持该消息格式，如果您有好的建议或者想法，请联系管理员，也许会在将来的某一天实现！(v:zcb99735)";
             const replyMessageXml = reply(
-              "暂时不支持该消息格式，请联系管理员，提出你的想法或者建议，也许在将来的某一天会实现！(v:zcb99735)",
+              str,
               xmlObj.ToUserName,
               xmlObj.FromUserName
             );
@@ -146,12 +156,31 @@ class Wechat {
   // 分页用户列表
   async findUserInfo(ctx, next) {
     try {
-      const { size, page } = ctx.request.body;
-      const total = await MWechat.findAndCountAll();
+      const { size, page, searchVal } = ctx.request.body;
+      const obj = searchVal
+        ? {
+            [Op.or]: [
+              {
+                uid: {
+                  [Op.like]: "%" + searchVal + "%",
+                },
+              },
+              {
+                wx: {
+                  [Op.like]: "%" + searchVal + "%",
+                },
+              },
+            ],
+          }
+        : {};
+      const total = await MWechat.findAndCountAll({
+        where: obj,
+      });
       const data = await MWechat.findAll({
         order: [["id", "DESC"]],
         limit: parseInt(size),
         offset: parseInt(size) * (page - 1),
+        where: obj,
       });
       const list = data.map((item) => {
         item.text = JSON.parse(item.text);
@@ -166,13 +195,14 @@ class Wechat {
   // 增加用户
   async addUserInfo(ctx, next) {
     try {
-      const { uid, name, wx, qq, textInfo } = ctx.request.body;
+      const { uid, name, wx, qq, textInfo, isFraud } = ctx.request.body;
       const data = await MWechat.create({
         id: Date.now(),
         username: name,
         uid,
         wx,
         qq,
+        isFraud,
         text: JSON.stringify(textInfo),
       });
       ctx.body = response.SUCCESS("common", data);
@@ -184,20 +214,17 @@ class Wechat {
   // 编辑用户
   async editUserInfo(ctx, next) {
     try {
-      const { id, uid, name, wx, qq, textInfo } = ctx.request.body;
+      const { id, uid, name, wx, qq, textInfo, isFraud } = ctx.request.body;
       const data = await MWechat.update(
         {
           username: name,
           uid,
           wx,
           qq,
+          isFraud,
           text: JSON.stringify(textInfo),
         },
-        {
-          where: {
-            id,
-          },
-        }
+        { where: { id } }
       );
       ctx.body = response.SUCCESS("edit", data);
     } catch (error) {

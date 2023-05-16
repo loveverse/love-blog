@@ -1,7 +1,14 @@
 <template>
   <div class="wrapper">
-    <div>
+    <div class="header">
       <el-button type="primary" @click="handleOperation('add')">添加</el-button>
+      <el-input
+        v-model.trim="state.searchVal"
+        :prefix-icon="Search"
+        clearable
+        placeholder="请输入uid/wx"
+        @input="handleSearch"
+      />
     </div>
     <el-table
       :data="state.userInfoList"
@@ -11,7 +18,7 @@
       <el-table-column type="index" label="序号" width="80" align="center">
         <template #default="{ row, $index }">
           <span
-            :style="{ backgroundColor: row.uid === '414495642' ? 'red' : '' }"
+            :style="{ backgroundColor: row.uid === '414495642' ? '' : '' }"
             >{{ (state.page - 1) * state.size + $index + 1 }}</span
           >
         </template>
@@ -80,7 +87,7 @@
             />
           </el-select> -->
           <el-autocomplete
-            v-model="state.form.uid"
+            v-model.trim="state.form.uid"
             placeholder="请输入uid"
             clearable
             value-key="uid"
@@ -93,15 +100,44 @@
             >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
           >
         </el-form-item>
-        <el-form-item label="昵称">
-          <el-input v-model="state.form.name" placeholder="请输入昵称" />
-        </el-form-item>
-        <el-form-item label="关联wx">
-          <el-input v-model="state.form.wx" placeholder="请输入wx" />
-        </el-form-item>
-        <el-form-item label="关联qq">
-          <el-input v-model="state.form.qq" placeholder="请输入qq" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="昵称">
+              <el-input
+                v-model="state.form.name"
+                placeholder="请输入昵称"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item label="关联wx">
+              <el-input
+                v-model="state.form.wx"
+                placeholder="请输入wx"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="真实性">
+              <el-select v-model="state.form.isFraud">
+                <el-option
+                  v-for="item in state.authList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="关联qq">
+              <el-input
+                v-model="state.form.qq"
+                placeholder="请输入qq"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="我的描述">
           <el-input
             v-model="state.form.textInfo.my"
@@ -147,7 +183,9 @@
   </div>
 </template>
 <script setup lang="ts" name="wechat">
+import debounce from "lodash/debounce";
 import { FormInstance } from "element-plus";
+import { Search } from "@element-plus/icons-vue";
 import {
   reqUserInfo,
   reqAddUserInfo,
@@ -166,9 +204,11 @@ interface IState {
   timer: NodeJS.Timer | undefined;
   userInfoDia: boolean;
   options: { id: string; uid: string }[];
+  searchVal: string | number;
   form: {
     [key in string]: any;
   };
+  authList: { value: string | number; label: string }[];
 }
 const state = reactive<IState>({
   userInfoList: [],
@@ -178,12 +218,14 @@ const state = reactive<IState>({
   timer: null,
   userInfoDia: false,
   options: [],
+  searchVal: "",
   form: {
     id: "",
     uid: "",
     name: "",
     wx: "",
     qq: "",
+    isFraud: 1,
     textInfo: {
       my: "",
       qiqi: "",
@@ -191,6 +233,16 @@ const state = reactive<IState>({
       yuequ: "",
     },
   },
+  authList: [
+    {
+      value: 0,
+      label: "真人",
+    },
+    {
+      value: 1,
+      label: "骗子",
+    },
+  ],
 });
 const loading = ref(false);
 const formRef = ref<FormInstance>();
@@ -205,9 +257,16 @@ const handleOperation = (type: string, info: any = null) => {
   } else {
     state.form.uid = "";
     state.form.id = "";
+    state.form.wx = "";
+    state.form.qq = "";
+    state.form.name = "";
+    state.form.isFraud = 1;
     state.userInfoDia = true;
   }
 };
+const handleSearch = debounce(function (val: string | number) {
+  getUserInfoList();
+}, 300);
 
 const deleteUser = async (id: string) => {
   const result = await reqDeleteUser({ id });
@@ -225,7 +284,7 @@ const remoteMethod = async (queryString: string, cb: (arg: any) => void) => {
     clearTimeout(state.timer);
     state.timer = setTimeout(() => {
       cb(state.options);
-    }, 200);
+    }, 300);
   } else {
     state.options = [];
   }
@@ -244,6 +303,7 @@ const getUserInfoList = async (page = 1) => {
   const params = {
     page: state.page,
     size: state.size,
+    searchVal: state.searchVal,
   };
   loading.value = true;
   const result = await reqUserInfo(params);
@@ -279,6 +339,13 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .wrapper {
+  .header {
+    display: flex;
+    .el-input {
+      width: 280px;
+      margin-left: 20px;
+    }
+  }
   :deep(.uid) {
     width: 200px;
     margin-right: 5px;

@@ -9,7 +9,7 @@
       <el-table-column prop="wid" label="微信标识"> </el-table-column>
       <el-table-column prop="count" label="uid" class-name="uid">
         <template #default="{ row }">
-          <div @click="handleCopy(row)">{{ row.count }}</div>
+          <div @click="handleCopy(row)">{{ row.content }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">

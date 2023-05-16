@@ -71,7 +71,7 @@ const deleteAudit = async (id: string) => {
   }
 };
 const handleCopy = (info: any) => {
-  navigator.clipboard.writeText(info.count).then(
+  navigator.clipboard.writeText(info.content).then(
     () => {
       ElMessage.success("复制成功");
       updateAudit(info);

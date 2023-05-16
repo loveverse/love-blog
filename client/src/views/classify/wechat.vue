@@ -18,7 +18,7 @@
       <el-table-column type="index" label="序号" width="80" align="center">
         <template #default="{ row, $index }">
           <span
-            :style="{ backgroundColor: row.uid === '414495642' ? '' : '' }"
+            :style="{ backgroundColor: row.uid === '36741043' ? 'red' : '' }"
             >{{ (state.page - 1) * state.size + $index + 1 }}</span
           >
         </template>

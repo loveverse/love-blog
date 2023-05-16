@@ -10,6 +10,8 @@ const WechatModel = require("../models/wechat");
 const MWechat = WechatModel(seq);
 const AuditModel = require("../models/audit");
 const MAudit = AuditModel(seq);
+const InvalidModel = require("../models/invalid");
+const MInvalid = InvalidModel(seq);
 
 const wechat = {
   appID: APP_ID,
@@ -116,6 +118,12 @@ class Wechat {
                   count: 0,
                   status: false, // 默认未审核
                 });
+              } else {
+                // 数据分析
+                await MInvalid.create({
+                  wid: xmlObj.FromUserName,
+                  content: xmlObj.Content,
+                });
               }
               ctx.body = null;
             }
@@ -150,7 +158,8 @@ class Wechat {
       }
     } catch (error) {
       console.error(error);
-      ctx.body = response.SERVER_ERROR();
+      // 返回500，公众号会报错
+      ctx.body = null;
     }
   }
   // 分页用户列表

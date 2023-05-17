@@ -2,7 +2,12 @@ const crypto = require("crypto");
 const xml2js = require("xml2js");
 const ejs = require("ejs");
 const { Op } = require("sequelize");
-const { template, RESULT_STATUS, NAME_INFO } = require("../utils/constant");
+const {
+  template,
+  RESULT_STATUS,
+  NAME_INFO,
+  msg,
+} = require("../utils/constant");
 const { APP_ID, APP_SECRET, APP_TOKEN } = require("../config/index");
 const response = require("../utils/resData");
 const seq = require("../mysql/sequelize");
@@ -71,9 +76,24 @@ class Wechat {
           console.info("[ xmlObj.Content ] >", xmlObj);
           // 文本消息
           if (xmlObj.MsgType === "text") {
+            if (xmlObj.Content === "投稿") {
+              const str = msg.contribute;
+              const replyMessageXml = reply(
+                str,
+                xmlObj.ToUserName,
+                xmlObj.FromUserName
+              );
+              ctx.type = "application/xml";
+              ctx.body = replyMessageXml;
+              return;
+            }
+            // 解析输入的内容(方便直接复制)
+            const regContent = /#(\d+)#/;
+            const match = xmlObj.Content.match(regContent);
+            const parseContent = match ? match[1] : xmlObj.Content.trim();
             const userInfo = await MWechat.findOne({
               where: {
-                uid: xmlObj.Content.trim(), // 去掉首尾空格
+                uid: parseContent, // 去掉首尾空格
               },
             });
             // 查询到信息
@@ -83,7 +103,7 @@ class Wechat {
                 { where: { id: userInfo.id } }
               );
               const textInfo = JSON.parse(userInfo.text);
-              const my = `我的提示\n${textInfo.my || "无"}\n关联wx：${
+              const my = `我的提示：\n${textInfo.my || "无"}\n关联wx：${
                 userInfo.wx || "无"
               }\n关联qq：${userInfo.qq || "无"}\n`;
               const qiqi = `${NAME_INFO.q}\n${textInfo.qiqi || "无"}\n`;
@@ -130,8 +150,7 @@ class Wechat {
             // 关注消息
           } else if (xmlObj.MsgType === "event") {
             if (xmlObj.Event === "subscribe") {
-              const str =
-                "您好，谢谢您的关注！输入uid即可进行查询，如有包含骗子字段，请注意防骗！如未回复，说明没有收录。";
+              const str = msg.attendion;
               const replyMessageXml = reply(
                 str,
                 xmlObj.ToUserName,
@@ -144,8 +163,7 @@ class Wechat {
             }
             // 其他消息
           } else {
-            const str =
-              "暂时不支持该消息格式，如果您有好的建议或者想法，请联系管理员，也许会在将来的某一天实现！(v:zcb99735)";
+            const str = msg.other;
             const replyMessageXml = reply(
               str,
               xmlObj.ToUserName,

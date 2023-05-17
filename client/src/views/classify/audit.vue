@@ -71,7 +71,11 @@ const deleteAudit = async (id: string) => {
   }
 };
 const handleCopy = (info: any) => {
-  navigator.clipboard.writeText(info.count).then(
+  // 方便复制
+  const regContent = /#(\d+)#/;
+  const match = info.content.match(regContent);
+  const copyText = match ? match[1] : info.content;
+  navigator.clipboard.writeText(copyText).then(
     () => {
       ElMessage.success("复制成功");
       updateAudit(info);

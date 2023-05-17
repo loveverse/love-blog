@@ -291,6 +291,26 @@ class Wechat {
       ctx.body = response.SERVER_ERROR();
     }
   }
+  // 查询count次数最大的10条数据
+  async findMaxUserInfo(ctx, next) {
+    try {
+      const { size, page } = ctx.request.body;
+      const data = await MWechat.findAll({
+        order: [["count", "DESC"]],
+        limit: parseInt(size),
+        offset: parseInt(size) * (page - 1),
+        where: {
+          isFraud: {
+            [Op.ne]: 0, // 不等于0的
+          },
+        },
+      });
+      ctx.body = response.SUCCESS("common", data);
+    } catch (error) {
+      console.error(error);
+      ctx.body = response.SERVER_ERROR();
+    }
+  }
 }
 
 module.exports = new Wechat();

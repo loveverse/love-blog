@@ -2,6 +2,7 @@
   <div class="wrapper">
     <div class="header">
       <el-button type="primary" @click="handleOperation('add')">添加</el-button>
+      <el-button type="info" @click="handleMaxUser">统计</el-button>
       <el-input
         v-model.trim="state.searchVal"
         :prefix-icon="Search"
@@ -192,6 +193,7 @@ import {
   reqFindOneUserInfo,
   reqDeleteUser,
   reqEditUser,
+  reqMaxUser,
 } from "@/api/wechat";
 
 interface IState {
@@ -247,6 +249,18 @@ const state = reactive<IState>({
 const loading = ref(false);
 const formRef = ref<FormInstance>();
 
+const handleMaxUser = async () => {
+  const params = {
+    page: 1,
+    size: 10,
+  };
+  const result = await reqMaxUser(params);
+  if (result.code === 200) {
+    console.log(result.data);
+  } else {
+    ElMessage.error(result.msg);
+  }
+};
 const handleOperation = (type: string, info: any = null) => {
   if (type === "del") {
     deleteUser(info.id);
@@ -343,7 +357,9 @@ onMounted(() => {
     display: flex;
     .el-input {
       width: 280px;
-      margin-left: 20px;
+    }
+    .el-button + .el-button {
+      margin: 0 20px;
     }
   }
   :deep(.uid) {

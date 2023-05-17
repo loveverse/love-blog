@@ -52,6 +52,7 @@ router.post("/wechat/add/userInfo", wechat.addUserInfo);
 router.post("/wechat/find/one/userInfo", wechat.findOneUserInfo);
 router.post("/wechat/delete/user", wechat.deleteUser);
 router.post("/wechat/edit/user", wechat.editUserInfo);
+router.post("/wechat/max/user", wechat.findMaxUserInfo);
 
 // 审核
 router.post("/wechat/find/auditList", audit.findAuditPage);

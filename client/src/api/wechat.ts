@@ -13,6 +13,7 @@ export const reqDeleteUser = (params: any) =>
   post("/wechat/delete/user", params);
 // 编辑用户
 export const reqEditUser = (params: any) => post("/wechat/edit/user", params);
+export const reqMaxUser = (params: any) => post("/wechat/max/user", params);
 
 // 审核
 export const reqAuditList = (params: any) =>

@@ -14,6 +14,7 @@ import store from "@/store/index";
 import "element-plus/es/components/message/style/css";
 import "element-plus/es/components/notification/style/css";
 
+// import components from "@/components/index";
 // 生产环境时防止debugger
 if (!import.meta.env.DEV) {
   check();
@@ -23,6 +24,10 @@ const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }
+// 注册全局组件
+// for (const component in components) {
+//   app.component(component, components[component]);
+// }
 // 全局引入
 // app.config.globalProperties.$message = ElMessage;
 

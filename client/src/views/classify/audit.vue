@@ -52,7 +52,13 @@
 <script setup lang="ts" name="audit">
 import { formatterTime } from "@/utils/common";
 import { reqAuditList, reqUpdateAudit, reqDeleteAudit } from "@/api/wechat";
-const state = reactive({
+interface IState {
+  auditList: any[];
+  page: number;
+  size: number;
+  total: number;
+}
+const state = reactive<IState>({
   auditList: [],
   page: 1,
   size: 20,

@@ -21,15 +21,28 @@ export function createPreviewUrl(url: string) {
 export function check() {
   function doCheck(a: any) {
     if (("" + a / a)["length"] !== 1 || a % 20 === 0) {
-      (function () {}["constructor"]("debugger")());
+      (function () {})["constructor"]("debugger")();
     } else {
-      (function () {}["constructor"]("debugger")());
+      (function () {})["constructor"]("debugger")();
     }
     doCheck(++a);
   }
   try {
     doCheck(0);
   } catch (err) {}
+}
+
+export function filterUniqueObj(arr: any[]) {
+  const uniqueValues = new Set();
+  const result = [];
+  for (const obj of arr) {
+    const value = obj.content;
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  }
+  return result;
 }
 
 // export function dispatchEventStroage(){

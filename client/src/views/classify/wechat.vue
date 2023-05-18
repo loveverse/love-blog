@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="header">
       <el-button type="primary" @click="handleOperation('add')">添加</el-button>
-      <el-button type="info" @click="handleMaxUser">统计</el-button>
+      <el-button type="info" @click="handleOperation('total')">统计</el-button>
       <el-input
         v-model.trim="state.searchVal"
         :prefix-icon="Search"
@@ -67,7 +67,12 @@
     >
     </el-pagination>
     <el-dialog v-model="state.userInfoDia" width="60%" title="添加">
-      <el-form :model="state.form" label-width="100" ref="formRef">
+      <el-form
+        :model="state.form"
+        label-width="100"
+        ref="formRef"
+        class="user_form"
+      >
         <el-form-item label="uid">
           <!-- <el-select
             v-model="state.form.uid"
@@ -88,13 +93,18 @@
             />
           </el-select> -->
           <el-autocomplete
+            ref="uidRef"
             v-model.trim="state.form.uid"
             placeholder="请输入uid"
             clearable
             value-key="uid"
             class="uid"
             :fetch-suggestions="remoteMethod"
-          />
+          >
+            <template #append>
+              <el-button @click="handlePaste">粘贴</el-button>
+            </template>
+          </el-autocomplete>
           <el-tag
             size="large"
             :type="state.options.length ? 'success' : 'danger'"
@@ -181,12 +191,17 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog v-model="state.statisticsDia" title="统计" fullscreen>
+      <ComEcharts :echartsInfo="state.echartsInfo" />
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts" name="wechat">
 import debounce from "lodash/debounce";
 import { FormInstance } from "element-plus";
 import { Search } from "@element-plus/icons-vue";
+import ComEcharts from "@/components/ComEcharts/index.vue";
+import echarts from "@/utils/echarts";
 import {
   reqUserInfo,
   reqAddUserInfo,
@@ -205,12 +220,14 @@ interface IState {
   total: number;
   timer: NodeJS.Timer | undefined;
   userInfoDia: boolean;
+  statisticsDia: boolean;
   options: { id: string; uid: string }[];
   searchVal: string | number;
   form: {
     [key in string]: any;
   };
   authList: { value: string | number; label: string }[];
+  echartsInfo: any;
 }
 const state = reactive<IState>({
   userInfoList: [],
@@ -219,6 +236,7 @@ const state = reactive<IState>({
   total: 0,
   timer: null,
   userInfoDia: false,
+  statisticsDia: false,
   options: [],
   searchVal: "",
   form: {
@@ -245,10 +263,65 @@ const state = reactive<IState>({
       label: "骗子",
     },
   ],
+  echartsInfo: {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    },
+    yAxis: {
+      type: "value",
+      minInterval: 1,
+      // axisTick: {
+      //   inside: true,
+      // },
+    },
+    series: [
+      {
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: "bar",
+        showBackground: true,
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: "#DF001F" },
+            { offset: 0.5, color: "#C52639" },
+            { offset: 1, color: "#FFDFDF" },
+          ]),
+        },
+      },
+    ],
+    dataZoom: [
+      {
+        //添加X轴滚动条
+        type: "inside", // slide增加滚动条
+        start: 0,
+        end: 100,
+      },
+    ],
+  },
 });
+
 const loading = ref(false);
 const formRef = ref<FormInstance>();
+const uidRef = ref<any>(null);
 
+// 粘贴
+const handlePaste = () => {
+  navigator.clipboard
+    .readText()
+    .then((text) => {
+      state.form.uid = text;
+      uidRef.value.focus();
+    })
+    .catch((error) => {
+      ElMessage.error(error);
+    });
+};
 const handleMaxUser = async () => {
   const params = {
     page: 1,
@@ -256,7 +329,17 @@ const handleMaxUser = async () => {
   };
   const result = await reqMaxUser(params);
   if (result.code === 200) {
-    console.log(result.data);
+    const list = result.data;
+    state.echartsInfo.xAxis.data = list.map((k: any) => k.uid);
+    state.echartsInfo.series[0].data = list.map((k: any) => k.count);
+    state.echartsInfo.tooltip.formatter = (params: any) => {
+      const uid = params[0].name;
+      const wx = list[params[0].dataIndex].wx;
+      const qq = list[params[0].dataIndex].qq;
+      const count = params[0].data;
+      const str = `uid：${uid}<br>wx：${wx}<br>qq：${qq}<br>次数：${count}`;
+      return str;
+    };
   } else {
     ElMessage.error(result.msg);
   }
@@ -268,14 +351,17 @@ const handleOperation = (type: string, info: any = null) => {
     state.form = { ...info };
     state.form.textInfo = { ...state.form.text };
     state.userInfoDia = true;
-  } else {
+  } else if (type === "add") {
     state.form.uid = "";
     state.form.id = "";
     state.form.wx = "";
     state.form.qq = "";
     state.form.name = "";
     state.form.isFraud = 1;
+    state.options.length = 0;
     state.userInfoDia = true;
+  } else {
+    state.statisticsDia = true;
   }
 };
 const handleSearch = debounce(function (val: string | number) {
@@ -349,6 +435,8 @@ const handSaveUserInfo = async (formEl: FormInstance | undefined) => {
 };
 onMounted(() => {
   getUserInfoList();
+  // 统计报表
+  handleMaxUser();
 });
 </script>
 <style lang="scss" scoped>
@@ -362,9 +450,14 @@ onMounted(() => {
       margin: 0 20px;
     }
   }
-  :deep(.uid) {
-    width: 200px;
-    margin-right: 5px;
+  .user_form {
+    :deep(.uid) {
+      width: 243px;
+      margin-right: 5px;
+    }
+    .el-select {
+      width: 100%;
+    }
   }
 }
 </style>

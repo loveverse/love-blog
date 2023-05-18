@@ -276,6 +276,7 @@ const scrollBottom = () => {
           font-size: 20px;
           margin-bottom: 10px;
           line-height: 33px;
+          white-space: pre-wrap;
           /* 允许在单词内换行 */
           word-break: break-all;
         }

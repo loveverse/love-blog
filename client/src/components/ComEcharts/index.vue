@@ -5,6 +5,7 @@
   ></div>
 </template>
 <script setup lang="ts" name="ComEcharts">
+import { onBeforeRouteLeave } from "vue-router";
 import debound from "lodash/debounce";
 import echarts from "@/utils/echarts";
 
@@ -21,11 +22,11 @@ const props = withDefaults(defineProps<Props>(), {
 let chart = reactive<any>({});
 const echartsRef = ref<any>(null);
 const handleResize = debound(() => {
-  console.log(3234);
   chart.resize();
 }, 300);
 
 const getEchartsInfo = () => {
+  // 先打开，然后调整窗口大小，再打开会变成默认100px（使用v-if）
   nextTick(() => {
     chart = echarts.init(echartsRef.value);
     const options = props.echartsInfo;
@@ -43,9 +44,14 @@ watch(
 onMounted(() => {
   getEchartsInfo();
 });
-// 无法清除
-onUnmounted(() => {
+// 销毁事件
+onBeforeRouteLeave((to, from, next) => {
   window.removeEventListener("resize", handleResize);
+  next();
 });
+// 无法清除
+// onUnmounted(() => {
+//   window.removeEventListener("resize", handleResize);
+// });
 </script>
 <style lang="scss" scoped></style>

@@ -98,6 +98,7 @@ class Wechat {
             });
             // 查询到信息
             if (userInfo) {
+              // 增加redis缓存，
               await MWechat.update(
                 { count: userInfo.count + 1 },
                 { where: { id: userInfo.id } }

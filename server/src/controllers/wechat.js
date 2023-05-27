@@ -222,7 +222,7 @@ class Wechat {
   // 增加用户
   async addUserInfo(ctx, next) {
     try {
-      const { uid, name, wx, qq, textInfo, isFraud } = ctx.request.body;
+      const { uid, name, wx, qq, textInfo, isFraud,status } = ctx.request.body;
       const data = await MWechat.create({
         id: Date.now(),
         username: name,
@@ -230,6 +230,7 @@ class Wechat {
         wx,
         qq,
         isFraud,
+        status,
         text: JSON.stringify(textInfo),
       });
       ctx.body = response.SUCCESS("common", data);
@@ -241,7 +242,7 @@ class Wechat {
   // 编辑用户
   async editUserInfo(ctx, next) {
     try {
-      const { id, uid, name, wx, qq, textInfo, isFraud } = ctx.request.body;
+      const { id, uid, name, wx, qq, textInfo, isFraud,status } = ctx.request.body;
       const data = await MWechat.update(
         {
           username: name,
@@ -249,6 +250,7 @@ class Wechat {
           wx,
           qq,
           isFraud,
+          status,
           text: JSON.stringify(textInfo),
         },
         { where: { id } }

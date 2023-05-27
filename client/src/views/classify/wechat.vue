@@ -19,7 +19,7 @@
       <el-table-column type="index" label="序号" width="80" align="center">
         <template #default="{ row, $index }">
           <span
-            :style="{ backgroundColor: row.uid === '3677719209' ? 'red' : '' }"
+            :style="{ backgroundColor: row.uid === '3961275320' ? 'red' : '' }"
             >{{ (state.page - 1) * state.size + $index + 1 }}</span
           >
         </template>
@@ -27,7 +27,11 @@
       <el-table-column prop="uid" label="uid"> </el-table-column>
       <el-table-column prop="qq" label="qq"> </el-table-column>
       <el-table-column prop="wx" label="wx"> </el-table-column>
-      <el-table-column prop="status" label="账号状态"> </el-table-column>
+      <el-table-column prop="status" label="账号状态" align="center">
+        <template #default="{ row }">
+          <span>{{ dict.statusLabel[row.status] }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="text" label="描述" min-width="300">
         <template #default="{ row }">
           <div v-if="row.text.my">我：{{ row.text.my }}</div>
@@ -66,15 +70,17 @@
       :total="state.total"
     >
     </el-pagination>
-    <el-dialog v-model="state.userInfoDia" width="60%" title="添加">
+    <el-dialog v-model="state.userInfoDia" width="70%" title="添加">
       <el-form
         :model="state.form"
         label-width="100"
         ref="formRef"
         class="user_form"
       >
-        <el-form-item label="uid">
-          <!-- <el-select
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="uid">
+              <!-- <el-select
             v-model="state.form.uid"
             filterable
             remote
@@ -92,27 +98,25 @@
               :value="item.id"
             />
           </el-select> -->
-          <el-autocomplete
-            ref="uidRef"
-            v-model.trim="state.form.uid"
-            placeholder="请输入uid"
-            clearable
-            value-key="uid"
-            class="uid"
-            :fetch-suggestions="remoteMethod"
-          >
-            <template #append>
-              <el-button @click="handlePaste">粘贴</el-button>
-            </template>
-          </el-autocomplete>
-          <el-tag
-            size="large"
-            :type="state.options.length ? 'success' : 'danger'"
-            >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
-          >
-        </el-form-item>
-        <el-row>
-          <el-col :span="12">
+              <el-autocomplete
+                ref="uidRef"
+                v-model.trim="state.form.uid"
+                placeholder="请输入uid"
+                clearable
+                value-key="uid"
+                class="uid"
+                :fetch-suggestions="remoteMethod"
+              >
+                <template #append>
+                  <el-button @click="handlePaste">粘贴</el-button>
+                </template>
+              </el-autocomplete>
+              <el-tag
+                size="large"
+                :type="state.options.length ? 'success' : 'danger'"
+                >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
+              >
+            </el-form-item>
             <el-form-item label="昵称">
               <el-input
                 v-model="state.form.name"
@@ -129,6 +133,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="状态">
+              <el-select v-model="state.form.status" placeholder="">
+                <el-option
+                  v-for="item in dict.statusList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="真实性">
               <el-select v-model="state.form.isFraud">
                 <el-option
@@ -210,7 +225,7 @@ import {
   reqEditUser,
   reqMaxUser,
 } from "@/api/wechat";
-
+import { dict } from "@/utils/constant";
 interface IState {
   userInfoList: {
     [key in string]: any;
@@ -245,6 +260,7 @@ const state = reactive<IState>({
     name: "",
     wx: "",
     qq: "",
+    status: "0", // 0: 存活；1：已屏蔽；2：查无此人
     isFraud: 1,
     textInfo: {
       my: "",
@@ -357,6 +373,7 @@ const handleOperation = (type: string, info: any = null) => {
     state.form.wx = "";
     state.form.qq = "";
     state.form.name = "";
+    state.form.status = "0";
     state.form.isFraud = 1;
     state.options.length = 0;
     state.userInfoDia = true;

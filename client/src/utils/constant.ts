@@ -38,3 +38,25 @@ export const FILE_TYPE = [
   "xml",
   "zip",
 ];
+
+export const dict: any = {
+  statusList: [
+    {
+      value: "0",
+      label: "存活",
+    },
+    {
+      value: "1",
+      label: "已屏蔽",
+    },
+    {
+      value: "2",
+      label: "查无此人",
+    },
+  ],
+  statusLabel: {
+    "0": "存活",
+    "1": "已屏蔽",
+    "2": "查无此人",
+  },
+};

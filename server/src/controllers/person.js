@@ -65,7 +65,7 @@ Person.prototype.addExcerpt = async function (ctx, next) {
 };
 Person.prototype.updateExcerpt = async function (ctx, next) {
   try {
-    if (!ctx.state.user.is_admin) {
+    if (!ctx.state.user.isAdmin) {
       ctx.body = response.ERROR("powerLacking");
       return;
     }
@@ -88,7 +88,7 @@ Person.prototype.updateExcerpt = async function (ctx, next) {
 };
 Person.prototype.delExcerpt = async function (ctx, next) {
   try {
-    if (!ctx.state.user.is_admin) {
+    if (!ctx.state.user.isAdmin) {
       ctx.body = response.ERROR("powerLacking");
       return;
     }

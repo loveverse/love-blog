@@ -116,6 +116,9 @@
                 :type="state.options.length ? 'success' : 'danger'"
                 >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
               >
+              <el-button type="primary" @click="handleGenerateUid"
+                >生成uid</el-button
+              >
             </el-form-item>
             <el-form-item label="昵称">
               <el-input
@@ -212,6 +215,7 @@
   </div>
 </template>
 <script setup lang="ts" name="wechat">
+import { v4 as uuidv4 } from "uuid";
 import debounce from "lodash/debounce";
 import { FormInstance } from "element-plus";
 import { Search } from "@element-plus/icons-vue";
@@ -337,6 +341,12 @@ const handlePaste = () => {
     .catch((error) => {
       ElMessage.error(error);
     });
+};
+const handleGenerateUid = () => {
+  console.log(uuidv4());
+  
+  state.form.uid = uuidv4();
+  uidRef.value.focus();
 };
 const handleMaxUser = async () => {
   const params = {

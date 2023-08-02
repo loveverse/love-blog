@@ -61,7 +61,7 @@ class Wechat {
       let str = [token, timestamp, nonce].sort().join("");
       let sha1 = crypto.createHash("sha1").update(str).digest("hex");
       if (sha1 !== signature) {
-        ctx.body = "token验证失";
+        ctx.body = "token验证失败";
       } else {
         // 验证成功
         if (JSON.stringify(ctx.request.body) === "{}") {
@@ -93,8 +93,15 @@ class Wechat {
             const parseContent = match ? match[1] : xmlObj.Content.trim();
             const userInfo = await MWechat.findOne({
               where: {
-                uid: parseContent, // 去掉首尾空格
-              },
+                [Op.or]: [
+                  {
+                    uid: parseContent
+                  },
+                  {
+                    wx: parseContent
+                  }
+                ]
+              },// 去掉首尾空格
             });
             // 查询到信息
             if (userInfo) {

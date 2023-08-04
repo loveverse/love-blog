@@ -9,6 +9,7 @@ import "@/assets/css/index.scss";
 import "element-plus/theme-chalk/dark/css-vars.css";
 import { i18n } from "@/lang";
 import store from "@/store/index";
+import directive from "@/utils/directive";
 
 // 弹窗不显示，需要手动引入样式,参考：https://github.com/element-plus/element-plus/issues/5108（官方文档也有说明）
 import "element-plus/es/components/message/style/css";
@@ -35,25 +36,6 @@ app.use(i18n);
 app.use(router);
 app.use(store);
 app.use(ElementPlus);
-
-app.directive("focus", {
-  mounted: function (el: any) {
-    if (el.tagName == "INPUT") {
-      el.focus();
-    } else if (el.tagName === "TEXTEA") {
-    } else {
-      el.querySelector("input") && el.querySelector("input").focus();
-    }
-  },
-  updated: function (el: any, binding: any, vnode: any) {
-    if (el.tagName == "INPUT") {
-      el.focus();
-    } else {
-      // // inserted是插入到dom时才会触发，上面使用v-show只是隐藏，不会触发指令中的函数
-      // vnode.context.nextTick(() => {
-      el.querySelector("input") && el.querySelector("input").focus();
-      // });
-    }
-  },
-});
+// 自定义指令
+app.use(directive)
 app.mount("#app");

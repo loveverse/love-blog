@@ -1,28 +1,32 @@
 import { webSocketUrl } from "@/config";
 import { t } from "@/lang";
 
-const socketConfig = {
+interface ISocketConfig {
+  url: string;
+  retryTimeout: number;
+}
+const socketConfig: ISocketConfig = {
   url: webSocketUrl,
   retryTimeout: 20000, // 心跳时间
 };
 
 class WS {
   constructor() {}
-  websocket: any = null; // websocket连接
-  global_callback: any = null;
-  close_callback: any = null; // 连接关闭的通知函数
-  timeoutObj: any = null; // 心跳定时器
-  serverTimeoutObj: any = null; // 服务超时定时关闭
+  websocket: WebSocket | null = null; // websocket连接
+  global_callback: ((data: any) => void) | null = null;
+  close_callback: (() => void) | null = null; // 连接关闭的通知函数
+  timeoutObj: ReturnType<typeof setTimeout> | undefined; // 心跳定时器
+  serverTimeoutObj: ReturnType<typeof setTimeout> | undefined; // 服务超时定时关闭
   lockReconnect: boolean = false; //  是否真正建立连接
-  timeoutnum: any = null; // 重新连接的定时器
+  timeoutnum: ReturnType<typeof setTimeout> | undefined; // 重新连接的定时器
 
   // 发送消息
   sendWebsocket(data: any) {
     // 开启状态
-    if (this.websocket.readyState === 1) {
+    if (this.websocket?.readyState === WebSocket.OPEN) {
       this.socketOnSend(data);
       // 连接中
-    } else if (this.websocket.readyState === 0) {
+    } else if (this.websocket?.readyState === WebSocket.CONNECTING) {
       setTimeout(() => {
         this.socketOnSend(data);
       }, 1000);
@@ -31,7 +35,11 @@ class WS {
     }
   }
   // mounted中初始化
-  initWebsocket(callback: any = null, close_fun: any = null, url: string = "") {
+  initWebsocket(
+    callback: ((data: any) => void) | null = null,
+    close_fun: () => void = () => {},
+    url: string = ""
+  ) {
     const webUrl = url || socketConfig.url;
     if (typeof WebSocket === "undefined") {
       console.log(t("browserNonsupport"));
@@ -58,32 +66,32 @@ class WS {
   }
   // 发送消息
   socketOnSend(data: any) {
-    this.websocket.send(data);
+    this.websocket?.send(data);
   }
   socketOnOpen() {
-    this.websocket.onopen = () => {
+    this.websocket?.addEventListener("open", () => {
       console.log(t("connectSuccess"));
       this.start();
-    };
+    });
   }
   socketOnClose() {
-    this.websocket.onclose = () => {
+    this.websocket?.addEventListener("close", () => {
       console.log(t("connectClose1"));
-      this.close_callback();
-    };
+      this.close_callback?.();
+    });
   }
   socketOnError() {
-    this.websocket.onerror = () => {
+    this.websocket?.addEventListener("error", () => {
       console.log(t("connectFail"));
       this.reconnect();
-    };
+    });
   }
   // 数据接收
   socketOnMessage() {
-    this.websocket.onmessage = (e: any) => {
-      this.global_callback(e.data);
+    this.websocket?.addEventListener("message", (e: MessageEvent) => {
+      this.global_callback?.(e.data);
       this.reset();
-    };
+    });
   }
   // 开启心跳
   start() {
@@ -91,7 +99,7 @@ class WS {
     this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
     this.timeoutObj = setTimeout(() => {
       // 发送一个心跳，后端收到返回一个心跳消息
-      if (this.websocket.readyState === 1) {
+      if (this.websocket?.readyState === WebSocket.OPEN) {
         // 连接正常，给后端发送指定消息
         this.websocket.send(JSON.stringify({ type: "ping" }));
       } else {
@@ -100,7 +108,7 @@ class WS {
       }
       this.serverTimeoutObj = setTimeout(() => {
         // 超时关闭连接
-        this.websocket.close();
+        this.websocket?.close();
       }, socketConfig.retryTimeout);
     }, socketConfig.retryTimeout);
   }

@@ -29,7 +29,7 @@
       <el-table-column prop="wx" label="wx"> </el-table-column>
       <el-table-column prop="status" label="账号状态" align="center">
         <template #default="{ row }">
-          <span>{{ dict.statusLabel[row.status] }}</span>
+          <span>{{ dicts.label["survivalStatus"][row.status] }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="text" label="描述" min-width="300">
@@ -77,10 +77,8 @@
         ref="formRef"
         class="user_form"
       >
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="uid">
-              <!-- <el-select
+        <el-form-item label="uid">
+          <!-- <el-select
             v-model="state.form.uid"
             filterable
             remote
@@ -98,27 +96,36 @@
               :value="item.id"
             />
           </el-select> -->
-              <el-autocomplete
-                ref="uidRef"
-                v-model.trim="state.form.uid"
-                placeholder="请输入uid"
+          <el-autocomplete
+            ref="uidRef"
+            v-model.trim="state.form.uid"
+            placeholder="请输入uid"
+            clearable
+            value-key="uid"
+            class="uid"
+            :fetch-suggestions="remoteMethod"
+          >
+            <template #append>
+              <el-button @click="handlePaste">粘贴</el-button>
+            </template>
+          </el-autocomplete>
+          <el-tag
+            size="large"
+            :type="state.options.length ? 'success' : 'danger'"
+            >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
+          >
+          <el-button type="primary" @click="handleGenerateUid"
+            >生成uid</el-button
+          >
+        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="关联wx">
+              <el-input
+                v-model="state.form.wx"
+                placeholder="请输入wx"
                 clearable
-                value-key="uid"
-                class="uid"
-                :fetch-suggestions="remoteMethod"
-              >
-                <template #append>
-                  <el-button @click="handlePaste">粘贴</el-button>
-                </template>
-              </el-autocomplete>
-              <el-tag
-                size="large"
-                :type="state.options.length ? 'success' : 'danger'"
-                >{{ state.options.length ? "已查到" : "未查到" }}</el-tag
-              >
-              <el-button type="primary" @click="handleGenerateUid"
-                >生成uid</el-button
-              >
+              />
             </el-form-item>
             <el-form-item label="昵称">
               <el-input
@@ -127,19 +134,30 @@
                 clearable
               />
             </el-form-item>
-            <el-form-item label="关联wx">
-              <el-input
-                v-model="state.form.wx"
-                placeholder="请输入wx"
-                clearable
-              />
+            <el-form-item label="来源">
+              <el-select v-model="state.form.status" placeholder="">
+                <el-option
+                  v-for="item in dicts.dict['survivalStatus']"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="关联qq">
+              <el-input
+                v-model="state.form.qq"
+                placeholder="请输入qq"
+                clearable
+              />
+            </el-form-item>
             <el-form-item label="状态">
               <el-select v-model="state.form.status" placeholder="">
                 <el-option
-                  v-for="item in dict.statusList"
+                  v-for="item in dicts.dict['survivalStatus']"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -150,19 +168,12 @@
             <el-form-item label="真实性">
               <el-select v-model="state.form.isFraud">
                 <el-option
-                  v-for="item in state.authList"
+                  v-for="item in dicts.dict['person']"
                   :key="item.value"
                   :value="item.value"
                   :label="item.label"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="关联qq">
-              <el-input
-                v-model="state.form.qq"
-                placeholder="请输入qq"
-                clearable
-              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -229,7 +240,7 @@ import {
   reqEditUser,
   reqMaxUser,
 } from "@/api/wechat";
-import { dict } from "@/utils/constant";
+import { dicts } from "@/utils/constant";
 interface IState {
   userInfoList: {
     [key in string]: any;
@@ -245,7 +256,7 @@ interface IState {
   form: {
     [key in string]: any;
   };
-  authList: { value: string | number; label: string }[];
+
   echartsInfo: any;
 }
 const state = reactive<IState>({
@@ -265,7 +276,7 @@ const state = reactive<IState>({
     wx: "",
     qq: "",
     status: "0", // 0: 存活；1：已屏蔽；2：查无此人
-    isFraud: 1,
+    isFraud: "1",
     textInfo: {
       my: "",
       qiqi: "",
@@ -273,16 +284,6 @@ const state = reactive<IState>({
       yuequ: "",
     },
   },
-  authList: [
-    {
-      value: 0,
-      label: "真人",
-    },
-    {
-      value: 1,
-      label: "骗子",
-    },
-  ],
   echartsInfo: {
     tooltip: {
       trigger: "axis",
@@ -344,7 +345,7 @@ const handlePaste = () => {
 };
 const handleGenerateUid = () => {
   console.log(uuidv4());
-  
+
   state.form.uid = uuidv4();
   uidRef.value.focus();
 };

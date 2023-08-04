@@ -39,24 +39,48 @@ export const FILE_TYPE = [
   "zip",
 ];
 
-export const dict: any = {
-  statusList: [
-    {
-      value: "0",
-      label: "存活",
-    },
-    {
-      value: "1",
-      label: "已屏蔽",
-    },
-    {
-      value: "2",
-      label: "查无此人",
-    },
-  ],
-  statusLabel: {
-    "0": "存活",
-    "1": "已屏蔽",
-    "2": "查无此人",
+type DictItem = {
+  value: string | number;
+  label: string;
+};
+type Label = {
+  [key: string]: {
+    [key: string | number]: string;
+  };
+};
+type Dict = {
+  [key: string]: DictItem[];
+};
+
+type Dicts = {
+  label: Label;
+  dict: Dict;
+};
+
+const label: Label = {
+  survivalStatus: {
+    0: "存活",
+    1: "已屏蔽",
+    2: "查无此人",
+  },
+  person: {
+    0: "真人",
+    1: "骗子",
   },
 };
+const dict: Dict = {};
+Object.keys(label).forEach((item) => {
+  dict[item] = Object.entries(label[item]).reduce((pre: DictItem[], cur) => {
+    const [value, label] = cur;
+    console.log(cur);
+
+    pre = pre.concat({ value, label });
+    return pre;
+  }, []);
+});
+
+export const dicts: Dicts = {
+  dict,
+  label,
+};
+console.log(dicts);

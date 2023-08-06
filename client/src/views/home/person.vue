@@ -128,22 +128,7 @@ watch(
     }
   }, 500)
 );
-const vFocus = {
-  mounted: function (el: any) {
-    if (el.tagName == "TEXTAREA") {
-      el.focus();
-    } else {
-      el.querySelector("textarea") && el.querySelector("textarea").focus();
-    }
-  },
-  updated: function (el: any, binding: any, vnode: any) {
-    if (el.tagName == "TEXTAREA") {
-      el.focus();
-    } else {
-      el.querySelector("textarea") && el.querySelector("textarea").focus();
-    }
-  },
-};
+
 
 const handleClose = () => {
   Ws.websocket.close();

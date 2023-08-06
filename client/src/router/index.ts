@@ -99,7 +99,7 @@ const router = createRouter({
 
 // 不允许访问的路由
 const whiteList = ["/classify/wechat", "/classify/audit"];
-router.beforeEach(async (to, form, next) => {
+router.beforeEach((to, form, next) => {
   if (whiteList.includes(to.path)) {
     if (import.meta.env.DEV) {
       next();

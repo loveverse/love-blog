@@ -9,6 +9,10 @@ const label = {
     0: "真人",
     1: "骗子",
   },
+	anonymity: {
+		0: "匿名",
+		1: "不匿名"
+	}
 };
 const dict = {};
 Object.keys(label).forEach((item) => {

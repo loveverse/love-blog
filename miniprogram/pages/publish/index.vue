@@ -23,6 +23,10 @@
 				<uni-data-checkbox v-model="form.status" :localdata="dicts.dict['survivalStatus']">
 				</uni-data-checkbox>
 			</uni-forms-item>
+			<uni-forms-item label="匿名提交">
+				<uni-data-checkbox v-model="form.status" :localdata="dicts.dict['anonymity']">
+				</uni-data-checkbox>
+			</uni-forms-item>
 			<uni-forms-item label="描述">
 				<uni-easyinput type="textarea" maxlength="5000" v-model="form.describe" placeholder="请补全详细内容" />
 			</uni-forms-item>
@@ -43,6 +47,7 @@
 					qq: "",
 					name: "",
 					status: "0",
+					anonymity: "0",
 					describe: "",
 					fileList: []
 				},

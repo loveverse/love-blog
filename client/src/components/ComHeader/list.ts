@@ -61,20 +61,6 @@ export default [
       },
       {
         icon: "",
-        path: "/classify/wechat",
-        title: "查询",
-        permiss: "0", // 不显示设置为0,禁用为1
-        children: [],
-      },
-      {
-        icon: "",
-        path: "/classify/audit",
-        title: "审核",
-        permiss: "0",
-        children: [],
-      },
-      {
-        icon: "",
         path: "/classify/plan",
         title: t("examPlan"),
         permiss: "1",

@@ -7,9 +7,7 @@ const {
   user,
   wallpaper,
   fileList,
-  wechat,
   ips,
-  audit,
 } = require("../controllers/index");
 const { auth } = require("../middleware/index");
 
@@ -42,22 +40,6 @@ router.get("/wallpaper/findList", wallpaper.findPageWallpaper);
 router.post("/file/list", auth, fileList.findFileLsit);
 router.post("/save/list", auth, fileList.saveFileInfo);
 router.post("/delete/file", auth, fileList.delFile);
-
-// 微信验证
-router.post("/wechat", wechat.verifyWechat);
-router.get("/wechat", wechat.verifyWechat);
-// 查询
-router.post("/wechat/find/userInfo", wechat.findUserInfo);
-router.post("/wechat/add/userInfo", wechat.addUserInfo);
-router.post("/wechat/find/one/userInfo", wechat.findOneUserInfo);
-router.post("/wechat/delete/user", wechat.deleteUser);
-router.post("/wechat/edit/user", wechat.editUserInfo);
-router.post("/wechat/max/user", wechat.findMaxUserInfo);
-
-// 审核
-router.post("/wechat/find/auditList", audit.findAuditPage);
-router.post("/wechat/update/audit", audit.updateAudit);
-router.post("/wechat/delete/audit", audit.deleteAudit);
 
 // ip
 router.post("/find/ipList", (ctx, next) => ips.findIpsList(ctx, next));

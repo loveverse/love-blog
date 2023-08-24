@@ -5,9 +5,7 @@ const user = require("./user");
 const common = require("./common");
 const wallpaper = require("./wallpaper");
 const fileList = require("./fileList");
-const wechat = require("./wechat");
 const ips = require("./ips");
-const audit = require("./audit");
 module.exports = {
   hotword,
   issue,
@@ -16,7 +14,5 @@ module.exports = {
   common,
   wallpaper,
   fileList,
-  wechat,
   ips,
-  audit,
 };

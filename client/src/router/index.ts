@@ -61,16 +61,6 @@ const routes: RouteRecordRaw[] = [
             name: "visit",
             component: () => import("@/views/classify/visit.vue"),
           },
-          {
-            path: "/classify/wechat",
-            name: "wechat",
-            component: () => import("@/views/classify/wechat.vue"),
-          },
-          {
-            path: "/classify/audit",
-            name: "audit",
-            component: () => import("@/views/classify/audit.vue"),
-          },
         ],
       },
       {

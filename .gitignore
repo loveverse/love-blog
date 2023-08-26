@@ -1,5 +1,6 @@
 .vercel
 .idea
-
+.vscode
+.venv
 node_modules
 server.zip

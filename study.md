@@ -65,3 +65,7 @@ Host github.com
    # 走 socks5 代理（如小飞机 or V2xxx）
    ProxyCommand connect -S 127.0.0.1:10808 %h %p
 ```
+
+## docker命令
+- docker run -it -d -p 8012:8012 keking/kkfileview，后台运行镜像服务
+- docker update --restart=always 231b40283e1d，设置镜像服务开机自启

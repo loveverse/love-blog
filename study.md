@@ -2,7 +2,7 @@
 
 `eslint.js` 和 `eslint.cjs` 文件都是 ESLint 的配置文件，但它们的主要区别在于它们使用的模块系统不同。
 
-`eslint.js` 是使用 CommonJS 模块系统的配置文件，而 `eslint.cjs` 是使用 ECMAScript 模块系统的配置文件。在 Node.js v12 及更高版本中，可以使用 ECMAScript 模块系统，但在之前的版本中，只能使用 CommonJS 模块系统。
+`eslint.js` 是使用 ECMAScript 模块系统的配置文件，而 `eslint.cjs` 是使用 CommonJS 模块系统 的配置文件。在 Node.js v12 及更高版本中，可以使用 ECMAScript 模块系统，但在之前的版本中，只能使用 CommonJS 模块系统。
 
 因此，如果您使用的是 Node.js v12 及更高版本，则可以使用 `eslint.cjs` 配置文件，否则您需要使用 `eslint.js` 配置文件。
 
@@ -17,7 +17,7 @@
 强缓存可以减少请求次数，从而提高网站的访问速度，但是如果缓存时间过长，可能会导致用户无法及时获取到最新的资源。协商缓存可以更加精确地控制缓存的更新时间，但是需要向服务器发送请求，会增加服务器的压力。在实际应用中，我们需要根据业务需求和性能考虑，综合使用强缓存和协商缓存来控制资源的缓存策略。
 
 get请求的数据会被浏览器缓存下来，post请求不会
-Etag是对比资源内容，确定修改；Last-Modified是对比资源的最后一次修改时间，确定修改
+Etag是对比资源内容，确定修改，基于文件内容生成的哈希值；Last-Modified是对比资源的最后一次修改时间，确定修改，基于文件的修改时间
 
 ## scss和sass的区别
 
@@ -67,5 +67,5 @@ Host github.com
 ```
 
 ## docker命令
-- docker run -it -d -p 8012:8012 keking/kkfileview，后台运行镜像服务
+- docker run -d -p 8012:8012 keking/kkfileview，后台运行镜像服务
 - docker update --restart=always 231b40283e1d，设置镜像服务开机自启

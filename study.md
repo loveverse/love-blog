@@ -52,3 +52,16 @@ Sass 语法比较简洁，可读性更强，但是由于使用缩进来表示层
 4.导入导出
 - commonjs导入和导出是值的拷贝
 - es6导入是绑定，导出是值的引用
+
+## github推送超时使用v2ray代理
+在用户的`.ssh/config`中配置
+```
+# 必须是 github.com
+Host github.com
+   HostName github.com
+   User git
+   # 走 HTTP 代理
+   # ProxyCommand socat - PROXY:127.0.0.1:%h:%p,proxyport=8080
+   # 走 socks5 代理（如小飞机 or V2xxx）
+   ProxyCommand connect -S 127.0.0.1:10808 %h %p
+```
